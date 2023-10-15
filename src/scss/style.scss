@@ -1,0 +1,28 @@
+$table-border: 1px solid #b6afa8;
+
+.dataflow-table {
+  border-right: $table-border;
+  border-bottom: $table-border;
+
+  & td, th {
+    border-left: $table-border;
+    border-top: $table-border;
+    padding: .5rem
+  }
+
+  & th {
+    &::after {
+      right: .5rem;
+      content: "▼";
+      float: right;
+      color: #b6afa8;
+    }
+  }
+
+  & tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.075);
+  }
+  & tr {
+    background-color: white;
+  }
+}

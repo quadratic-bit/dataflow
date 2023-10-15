@@ -1,0 +1,30 @@
+{
+    "name": "dataflow",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "main": "./dist/main.cjs",
+    "module": "./dist/main.js",
+    "sass": "src/scss/dataflow.scss",
+    "style": "dist/css/dataflow.css",
+    "typings": "./dist/main.d.ts",
+    "files": [
+        "dist/css/*.css"
+    ],
+    "exports": {
+        ".": {
+            "import": "./dist/main.js",
+            "require": "./dist/main.cjs"
+        }
+    },
+    "scripts": {
+        "build": "tsc && vite build"
+    },
+    "devDependencies": {
+        "@types/node": "^20.8.2",
+        "sass": "^1.69.0",
+        "typescript": "^5.0.2",
+        "vite": "^4.4.5",
+        "vite-plugin-dts": "^3.6.0"
+    }
+}
