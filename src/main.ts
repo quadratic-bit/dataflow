@@ -1,5 +1,3 @@
-import "./scss/style.scss"
-
 import { TableDOM } from "./dom/table"
 import type { TableCell, TableColumn } from "./types/columns"
 
