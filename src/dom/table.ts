@@ -2,16 +2,18 @@ import { TableCell, TableColumn } from "../types/columns"
 
 export class TableDOM {
     private _container: Element
+    private _footer!: HTMLDivElement
     private _tableBody!: HTMLTableSectionElement
     private _headers: TableColumn[]
 
     constructor(container: Element, headers: TableColumn[]) {
         this._container = container
         this._headers = headers
-        this.init()
+        this.initTable()
+        this.initFooter()
     }
 
-    init(): void {
+    initTable(): void {
         const tbl: HTMLTableElement = document.createElement("table")
         const tblHead: HTMLTableSectionElement = document.createElement("thead")
         const tblBody: HTMLTableSectionElement = document.createElement("tbody")
@@ -30,6 +32,13 @@ export class TableDOM {
         this._container.appendChild(tbl)
     }
 
+    initFooter(): void {
+        const footerDOM: HTMLDivElement = document.createElement("div")
+        footerDOM.classList.add("dataflow-table-footer")
+        this._container.appendChild(footerDOM)
+        this._footer = footerDOM
+    }
+
     add(rows: TableCell[][]): void {
         for (const row of rows) {
             const tr: HTMLTableRowElement = document.createElement("tr")
@@ -44,5 +53,9 @@ export class TableDOM {
 
     get container(): Element {
         return this._container
+    }
+
+    get footer(): HTMLDivElement {
+        return this._footer
     }
 }

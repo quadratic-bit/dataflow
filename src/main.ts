@@ -1,3 +1,4 @@
+import { PagintaionDOM } from "./dom/pagination"
 import { TableDOM } from "./dom/table"
 import type { TableCell, TableColumn } from "./types/columns"
 
@@ -12,6 +13,7 @@ export class TableCollection {
         if (mountDOM == null) {
             throw Error(`Mount point "${mount}" does not exist in DOM`)
         }
+        mountDOM.classList.add("dataflow-table-wrapper")
         this.mount = mountDOM
         this.handler = handler
         this.getter = getter
@@ -61,19 +63,53 @@ class _TableFactory {
     }
 }
 
+interface PaginationSome {
+    kind: "some"
+    amount: number
+}
+
+interface PaginationAll {
+    kind: "all"
+}
+
+type PaginationLen = PaginationSome | PaginationAll
+
+class Pagination {
+    private _length: PaginationLen
+    private _dom: PagintaionDOM
+
+    constructor(mount: HTMLDivElement, pageLength: PaginationLen) {
+        this._length = pageLength
+        this._dom = new PagintaionDOM(mount)
+    }
+
+    updatePageNum(dataSize: number) {
+        switch (this._length.kind) {
+            case "some":
+                this._dom.changePageNum(Math.ceil(dataSize / this._length.amount))
+                break
+            case "all":
+                this._dom.changePageNum(1)
+        }
+    }
+}
+
 export class Table {
     private _config: TableConfig
     private _dom: TableDOM
     private _data: TableCell[][] = []
+    private _pagination: Pagination
 
     constructor(config: TableConfig) {
         this._config = config
         this._dom = new TableDOM(config.outer.mount, config.columns)
+        this._pagination = new Pagination(this._dom.footer, { kind: "some", amount: 10 })
     }
 
     add(rows: TableCell[][]): void {
         this._data = this._data.concat(rows)
         this._dom.add(rows)
+        this._pagination.updatePageNum(this._data.length)
     }
 
     get rows(): TableCell[][] {
