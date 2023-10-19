@@ -2,6 +2,7 @@ import { TableCell, TableColumn } from "../types/columns"
 
 export class TableDOM {
     private _container: Element
+    private _cover!: HTMLDivElement
     private _footer!: HTMLDivElement
     private _tableBody!: HTMLTableSectionElement
     private _headers: TableColumn[]
@@ -9,8 +10,16 @@ export class TableDOM {
     constructor(container: Element, headers: TableColumn[]) {
         this._container = container
         this._headers = headers
+        this.initCover()
         this.initTable()
         this.initFooter()
+    }
+
+    initCover(): void {
+        const coverDOM: HTMLDivElement = document.createElement("div")
+        coverDOM.classList.add("dataflow-table-header")
+        this._container.appendChild(coverDOM)
+        this._cover = coverDOM
     }
 
     initTable(): void {
@@ -53,6 +62,10 @@ export class TableDOM {
 
     get container(): Element {
         return this._container
+    }
+
+    get header(): HTMLDivElement {
+        return this._cover
     }
 
     get footer(): HTMLDivElement {
