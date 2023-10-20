@@ -1,10 +1,10 @@
 {
     "name": "dataflow",
     "version": "0.0.0",
-    "main": "./dist/main.js",
+    "main": "./dist/dataflow.js",
     "sass": "src/scss/style.scss",
     "style": "dist/css/dataflow.css",
-    "typings": "./dist/main.d.ts",
+    "typings": "./dist/dataflow.d.ts",
     "files": [
         "dist/css/*.css"
     ],
