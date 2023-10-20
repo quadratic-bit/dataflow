@@ -1,6 +1,6 @@
-import { PagintaionDOM } from "./dom/pagination"
 import { TableDOM } from "./dom/table"
 import type { TableCell, TableColumn } from "./types/columns"
+import { Pagination } from "./pagination"
 
 export class TableCollection {
     mount: Element
@@ -60,37 +60,6 @@ class _TableFactory {
 
     init(): Table {
         return new Table(this._data)
-    }
-}
-
-interface PaginationSome {
-    kind: "some"
-    amount: number
-}
-
-interface PaginationAll {
-    kind: "all"
-}
-
-type PaginationLen = PaginationSome | PaginationAll
-
-class Pagination {
-    private _length: PaginationLen
-    private _dom: PagintaionDOM
-
-    constructor(mount: HTMLDivElement, pageLength: PaginationLen) {
-        this._length = pageLength
-        this._dom = new PagintaionDOM(mount)
-    }
-
-    updatePageNum(dataSize: number) {
-        switch (this._length.kind) {
-            case "some":
-                this._dom.changePageNum(Math.ceil(dataSize / this._length.amount))
-                break
-            case "all":
-                this._dom.changePageNum(1)
-        }
     }
 }
 
