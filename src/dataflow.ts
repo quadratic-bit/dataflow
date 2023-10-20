@@ -72,13 +72,25 @@ export class Table {
     constructor(config: TableConfig) {
         this._config = config
         this._dom = new TableDOM(config.outer.mount, config.columns)
-        this._pagination = new Pagination(this._dom.footer, { kind: "some", amount: 10 })
+        this._pagination = new Pagination(this._dom.footer, { kind: "some", amount: 10 }, this)
+    }
+
+    setActivePage(pageIndex: number) {
+        this._pagination.setActivePage(pageIndex)
+        this.refresh()
     }
 
     add(rows: TableCell[][]): void {
         this._data = this._data.concat(rows)
-        this._dom.add(rows)
-        this._pagination.updatePageNum(this._data.length)
+        this.refresh()
+    }
+
+    refresh() {
+        // TODO: Address performance
+        const [pageStart, pageEnd] = this._pagination.getDisplayRange(this._data.length)
+        this._dom.clear()
+        this._dom.add(this._data.slice(pageStart, pageEnd))
+        this._pagination.updatePagination(this._data.length)
     }
 
     get rows(): TableCell[][] {

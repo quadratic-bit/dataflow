@@ -48,6 +48,13 @@ export class TableDOM {
         this._footer = footerDOM
     }
 
+    clear() {
+        // TODO: Address performance
+        while (this._tableBody.lastChild) {
+            this._tableBody.removeChild(this._tableBody.lastChild)
+        }
+    }
+
     add(rows: TableCell[][]): void {
         for (const row of rows) {
             const tr: HTMLTableRowElement = document.createElement("tr")
