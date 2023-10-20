@@ -75,7 +75,7 @@ export class Table {
         this._pagination = new Pagination(this._dom.footer, { kind: "some", amount: 10 }, this)
     }
 
-    setActivePage(pageIndex: number) {
+    setActivePage(pageIndex: number): void {
         this._pagination.setActivePage(pageIndex)
         this.refresh()
     }
@@ -85,7 +85,7 @@ export class Table {
         this.refresh()
     }
 
-    refresh() {
+    refresh(): void {
         // TODO: Address performance
         const [pageStart, pageEnd] = this._pagination.getDisplayRange(this._data.length)
         this._dom.clear()

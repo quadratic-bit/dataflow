@@ -18,7 +18,7 @@ export class PagintaionDOM {
         this.repopulateButtons(1)
     }
 
-    private repopulateButtons(amount: number) {
+    private repopulateButtons(amount: number): void {
         const previousAmount = this._buttonsAmount
         this._buttonsAmount = amount
         if (previousAmount == amount) {
@@ -49,7 +49,7 @@ export class PagintaionDOM {
         }
     }
 
-    updatePagination(pagesNum: number) {
+    updatePagination(pagesNum: number): void {
         this.repopulateButtons(pagesNum)
     }
 

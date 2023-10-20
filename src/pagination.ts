@@ -21,7 +21,7 @@ export class Pagination {
         this._dom = new PagintaionDOM(mount, table)
     }
 
-    setActivePage(pageIndex: number) {
+    setActivePage(pageIndex: number): void {
         this._dom.activePage = pageIndex
     }
 
@@ -36,7 +36,7 @@ export class Pagination {
         }
     }
 
-    updatePagination(dataSize: number) {
+    updatePagination(dataSize: number): void {
         switch (this._length.kind) {
             case "some":
                 this._dom.updatePagination(Math.ceil(dataSize / this._length.amount))
