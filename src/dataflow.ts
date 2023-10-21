@@ -1,6 +1,6 @@
 import { TableDOM } from "./dom/table"
 import type { TableCell, TableColumn } from "./types/columns"
-import { Pagination, PaginationSizeSelector } from "./pagination"
+import { Pagination } from "./pagination"
 import { Status } from "./status"
 import { PaginationLen } from "./types/pagination"
 
@@ -83,8 +83,7 @@ export class Table {
         this._dom = new TableDOM(config.outer.mount, config.columns)
         this._status = new Status(this._dom.footer)
         this._status.setIdle()
-        this._pagination = new Pagination(this._dom.footer, this._config.pageSizes.at(0) ?? { kind: "some", amount: 20 }, this)
-        new PaginationSizeSelector(this._dom.header, this._config.pageSizes, this)
+        this._pagination = new Pagination(this, this._config.pageSizes.at(0) ?? { kind: "some", amount: 20 }, this._config.pageSizes)
     }
 
     setActivePage(pageIndex: number): void {

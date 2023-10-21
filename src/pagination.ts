@@ -1,5 +1,5 @@
 import { Table } from "./dataflow"
-import { PaginationSizeSelectorDOM, PagintaionDOM } from "./dom/pagination"
+import { PagintaionDOM } from "./dom/pagination"
 import { PaginationLen } from "./types/pagination"
 
 export class Pagination {
@@ -7,9 +7,9 @@ export class Pagination {
     private _dom: PagintaionDOM
     private _lastDataSize: number = 1
 
-    constructor(mount: HTMLDivElement, pageLength: PaginationLen, table: Table) {
+    constructor(table: Table, pageLength: PaginationLen, options: PaginationLen[]) {
         this._length = pageLength
-        this._dom = new PagintaionDOM(mount, table)
+        this._dom = new PagintaionDOM(table, options)
     }
 
     setActivePage(pageIndex: number): void {
@@ -18,6 +18,7 @@ export class Pagination {
 
     setPageSize(size: PaginationLen): void {
         this._length = size
+        this.setActivePage(0)
         this.updatePagination(this._lastDataSize)
     }
 
@@ -41,33 +42,5 @@ export class Pagination {
             case "all":
                 this._dom.updatePagination(1)
         }
-    }
-}
-
-export class PaginationSizeSelector {
-    private _owner: Table
-    private _dom: PaginationSizeSelectorDOM
-
-    constructor(mount: HTMLDivElement, options: PaginationLen[], table: Table) {
-        this._owner = table
-        this._dom = new PaginationSizeSelectorDOM(mount, options, this)
-    }
-
-    setPageSize(size: number): void {
-        switch (size) {
-            case NaN:
-                throw Error("Page size cannot be zero")
-            case 0:
-                this._owner.pagination.setPageSize({ kind: "all" })
-                this._owner.refresh()
-                break
-            default:
-                this._owner.pagination.setPageSize({ kind: "some", amount: size })
-                this._owner.refresh()
-        }
-    }
-
-    get dom(): PaginationSizeSelectorDOM {
-        return this._dom
     }
 }

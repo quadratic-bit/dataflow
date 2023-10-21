@@ -1,5 +1,4 @@
 import { Table } from "../dataflow"
-import { PaginationSizeSelector } from "../pagination"
 import { PaginationLen } from "../types/pagination"
 
 export class PagintaionDOM {
@@ -8,13 +7,14 @@ export class PagintaionDOM {
     private _activePageIndex: number
     private _owner: Table
 
-    constructor(mount: HTMLDivElement, table: Table) {
+    constructor(table: Table, options: PaginationLen[]) {
         this._container = document.createElement("div")
-        mount.appendChild(this._container)
+        table.dom.footer.appendChild(this._container)
         this._buttonsAmount = 0
         this._activePageIndex = 0
         this._owner = table
         this.repopulateButtons(1)
+        new PaginationSizeSelectorDOM(table.dom.header, options, table)
     }
 
     private repopulateButtons(amount: number): void {
@@ -61,11 +61,11 @@ export class PagintaionDOM {
     }
 }
 
-export class PaginationSizeSelectorDOM {
+class PaginationSizeSelectorDOM {
     private _container: HTMLSelectElement
-    private _owner: PaginationSizeSelector
+    private _owner: Table
 
-    constructor(mount: HTMLDivElement, options: PaginationLen[], sizeSelector: PaginationSizeSelector) {
+    constructor(mount: HTMLDivElement, options: PaginationLen[], sizeSelector: Table) {
         this._owner = sizeSelector
         this._container = document.createElement("select")
         mount.appendChild(this._container)
@@ -86,7 +86,17 @@ export class PaginationSizeSelectorDOM {
 
         this._container.addEventListener("change", (_: Event) => {
             const value: number = Number.parseInt(this._container.value)
-            this._owner.setPageSize(value)
+            switch (value) {
+                case NaN:
+                    throw Error("Page size cannot be zero")
+                case 0:
+                    this._owner.pagination.setPageSize({ kind: "all" })
+                    this._owner.refresh()
+                    break
+                default:
+                    this._owner.pagination.setPageSize({ kind: "some", amount: value })
+                    this._owner.refresh()
+            }
         })
     }
 }
