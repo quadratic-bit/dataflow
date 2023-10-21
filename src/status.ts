@@ -20,6 +20,6 @@ export class Status {
 
     set content(text: string) {
         this.__content = text
-        this._dom.setText(text)
+        this._dom.set(text)
     }
 }

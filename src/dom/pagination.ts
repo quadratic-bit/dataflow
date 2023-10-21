@@ -32,7 +32,7 @@ export class PagintaionDOM {
                     const targetBtn = e.target as HTMLButtonElement
                     // TODO: Stop hiding the problem
                     const pageIndex = targetBtn.dataset.index!
-                    this._owner.setActivePage(Number.parseInt(pageIndex))
+                    this._owner.activePage = Number.parseInt(pageIndex)
                     this._owner.refresh()
                 })
                 newButtons[i - previousAmount] = button
@@ -90,11 +90,11 @@ class PaginationSizeSelectorDOM {
                 case NaN:
                     throw Error("Page size cannot be zero")
                 case 0:
-                    this._owner.pagination.setPageLength({ kind: "all" })
+                    this._owner.pagination.pageLength = { kind: "all" }
                     this._owner.refresh()
                     break
                 default:
-                    this._owner.pagination.setPageLength({ kind: "some", amount: value })
+                    this._owner.pagination.pageLength = { kind: "some", amount: value }
                     this._owner.refresh()
             }
         })

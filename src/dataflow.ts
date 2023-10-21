@@ -90,11 +90,6 @@ export class Table {
         this._pagination = new Pagination(this, this._config.pageSizes)
     }
 
-    setActivePage(pageIndex: number): void {
-        this._pagination.setActivePage(pageIndex)
-        this.refresh()
-    }
-
     add(rows: TableCell[][]): void {
         this._data = this._data.concat(rows)
         this.refresh()
@@ -102,7 +97,7 @@ export class Table {
 
     refresh(): void {
         // TODO: Address performance
-        const [pageStart, pageEnd] = this._pagination.getDisplayRange(this._data.length)
+        const [pageStart, pageEnd] = this._pagination.calculateDisplayRange(this._data.length)
         this._dom.clear()
         this._dom.add(this._data.slice(pageStart, pageEnd))
         this._pagination.updatePagination(this._data.length)
@@ -122,5 +117,10 @@ export class Table {
 
     get pagination(): Pagination {
         return this._pagination
+    }
+
+    set activePage(pageIndex: number) {
+        this._pagination.activePage = pageIndex
+        this.refresh()
     }
 }

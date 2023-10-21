@@ -12,17 +12,7 @@ export class Pagination {
         this._dom = new PagintaionDOM(table, options)
     }
 
-    setActivePage(pageIndex: number): void {
-        this._dom.activePage = pageIndex
-    }
-
-    setPageLength(length: PageLength): void {
-        this._length = length
-        this.setActivePage(0)
-        this.updatePagination(this._lastDataSize)
-    }
-
-    getDisplayRange(dataSize: number): [number, number] {
+    calculateDisplayRange(dataSize: number): [number, number] {
         const activePage = this._dom.activePage
         switch (this._length.kind) {
             case "some":
@@ -42,5 +32,15 @@ export class Pagination {
             case "all":
                 this._dom.updatePagination(1)
         }
+    }
+
+    set activePage(pageIndex: number) {
+        this._dom.activePage = pageIndex
+    }
+
+    set pageLength(length: PageLength) {
+        this._length = length
+        this.activePage = 0
+        this.updatePagination(this._lastDataSize)
     }
 }

@@ -7,7 +7,7 @@ export class StatusDOM {
         this._container = span
     }
 
-    setText(text: string) {
+    set(text: string) {
         this._container.textContent = text
     }
 }
