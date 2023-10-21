@@ -1,6 +1,7 @@
 import { TableDOM } from "./dom/table"
 import type { TableCell, TableColumn } from "./types/columns"
 import { Pagination } from "./pagination"
+import { Status } from "./status"
 
 export class TableCollection {
     mount: Element
@@ -68,10 +69,13 @@ export class Table {
     private _dom: TableDOM
     private _data: TableCell[][] = []
     private _pagination: Pagination
+    private _status: Status
 
     constructor(config: TableConfig) {
         this._config = config
         this._dom = new TableDOM(config.outer.mount, config.columns)
+        this._status = new Status(this._dom.footer)
+        this._status.setIdle()
         this._pagination = new Pagination(this._dom.footer, { kind: "some", amount: 10 }, this)
     }
 
