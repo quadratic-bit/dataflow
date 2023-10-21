@@ -2,18 +2,60 @@
 
 Dependency-free TypeScript library making your HMTL tables interactive
 
-:warning: Note that this project is under active development, meaning most features are still unavailable and API **will** change rapidly until first release
-
 ## Table of contents
 
-- [Usage](#usage)
+- [Roadmap](#roadmap)
+- [Getting started](#getting-started)
+    - [Installation](#installation)
+        - [Building from source](#building-from-source)
+        - [NPM package](#npm-package)
+    - [Usage](#usage)
 - [Contributing](#contributing)
 - [Versioning](#versioning)
 - [License](#license)
 
-## Usage
+## Roadmap
+
+- [ ] Procedural HTML table creation
+- [ ] Row selection
+- [ ] Pagination
+- [ ] Search bar
+- [ ] Highly customizable action buttons
+
+## Getting started
+
+### Installation
+
+#### Building from source
+
+To build the package from source, first clone the repository:
+
+```console
+$ git clone git@github.com:quadratic-bit/dataflow.git
+$ cd ./dataflow
+```
+
+... then build it with your favourite package manager:
+
+```console
+$ yarn build # npm run build
+```
+
+You can now reference it in package.json of your project like this:
+
+```json
+"dependencies": {
+    "dataflow": "link:<path_to_dataflow>"
+}
+```
+
+#### NPM package
 
 Coming soon!
+
+### Usage
+
+:warning: This project is under active development, meaning most features are still unavailable and API **will** change rapidly until first release. That implies no usage guidelines will stay for a long time so no docs until release.
 
 ## Contributing
 
