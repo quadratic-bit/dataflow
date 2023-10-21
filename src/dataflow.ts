@@ -83,8 +83,8 @@ export class Table {
         this._dom = new TableDOM(config.outer.mount, config.columns)
         this._status = new Status(this._dom.footer)
         this._status.setIdle()
-        this._pagination = new Pagination(this._dom.footer, { kind: "some", amount: 10 }, this)
-        new PaginationSizeSelector(this._dom.header, this._config.pageSizes)
+        this._pagination = new Pagination(this._dom.footer, this._config.pageSizes.at(0) ?? { kind: "some", amount: 20 }, this)
+        new PaginationSizeSelector(this._dom.header, this._config.pageSizes, this)
     }
 
     setActivePage(pageIndex: number): void {
@@ -115,5 +115,9 @@ export class Table {
 
     get dom(): TableDOM {
         return this._dom
+    }
+
+    get pagination(): Pagination {
+        return this._pagination
     }
 }

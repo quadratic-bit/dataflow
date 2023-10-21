@@ -1,4 +1,5 @@
 import { Table } from "../dataflow"
+import { PaginationSizeSelector } from "../pagination"
 import { PaginationLen } from "../types/pagination"
 
 export class PagintaionDOM {
@@ -62,8 +63,10 @@ export class PagintaionDOM {
 
 export class PaginationSizeSelectorDOM {
     private _container: HTMLSelectElement
+    private _owner: PaginationSizeSelector
 
-    constructor(mount: HTMLDivElement, options: PaginationLen[]) {
+    constructor(mount: HTMLDivElement, options: PaginationLen[], sizeSelector: PaginationSizeSelector) {
+        this._owner = sizeSelector
         this._container = document.createElement("select")
         mount.appendChild(this._container)
 
@@ -80,5 +83,10 @@ export class PaginationSizeSelectorDOM {
             }
             this._container.appendChild(optionDOM)
         }
+
+        this._container.addEventListener("change", (_: Event) => {
+            const value: number = Number.parseInt(this._container.value)
+            this._owner.setPageSize(value)
+        })
     }
 }
