@@ -1,4 +1,5 @@
 import { Table } from "../dataflow"
+import { PaginationLen } from "../types/pagination"
 
 export class PagintaionDOM {
     private _container: HTMLDivElement
@@ -56,5 +57,28 @@ export class PagintaionDOM {
 
     set activePage(pageIndex: number) {
         this._activePageIndex = pageIndex
+    }
+}
+
+export class PaginationSizeSelectorDOM {
+    private _container: HTMLSelectElement
+
+    constructor(mount: HTMLDivElement, options: PaginationLen[]) {
+        this._container = document.createElement("select")
+        mount.appendChild(this._container)
+
+        for (const option of options) {
+            const optionDOM = document.createElement("option")
+            switch (option.kind) {
+                case "some":
+                    optionDOM.textContent = option.amount + ""
+                    optionDOM.value = option.amount + ""
+                    break
+                case "all":
+                    optionDOM.textContent = "All"
+                    optionDOM.value = "0"
+            }
+            this._container.appendChild(optionDOM)
+        }
     }
 }

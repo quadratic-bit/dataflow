@@ -5,6 +5,10 @@
     "sass": "src/scss/style.scss",
     "style": "dist/css/dataflow.css",
     "typings": "./dist/dataflow.d.ts",
+    "exports": {
+        ".": "./dist/dataflow.js",
+        "./pagination": "./dist/types/pagination.js"
+    },
     "files": [
         "dist/css/*.css"
     ],

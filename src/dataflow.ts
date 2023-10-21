@@ -1,7 +1,8 @@
 import { TableDOM } from "./dom/table"
 import type { TableCell, TableColumn } from "./types/columns"
-import { Pagination } from "./pagination"
+import { Pagination, PaginationSizeSelector } from "./pagination"
 import { Status } from "./status"
+import { PaginationLen } from "./types/pagination"
 
 export class TableCollection {
     mount: Element
@@ -45,17 +46,23 @@ interface TableConfig {
     init: string
     columns: TableColumn[]
     outer: TableCollection
+    pageSizes: PaginationLen[]
 }
 
 class _TableFactory {
     private _data: TableConfig
 
     constructor(id: string, title: string, init: string, outer: TableCollection) {
-        this._data = { id, title, init, outer, columns: [] }
+        this._data = { id, title, init, outer, columns: [], pageSizes: [] }
     }
 
     column(definition: TableColumn): _TableFactory {
         this._data.columns.push(definition)
+        return this
+    }
+
+    pageSizes(sizes: PaginationLen[]): _TableFactory {
+        this._data.pageSizes = sizes
         return this
     }
 
@@ -77,6 +84,7 @@ export class Table {
         this._status = new Status(this._dom.footer)
         this._status.setIdle()
         this._pagination = new Pagination(this._dom.footer, { kind: "some", amount: 10 }, this)
+        new PaginationSizeSelector(this._dom.header, this._config.pageSizes)
     }
 
     setActivePage(pageIndex: number): void {

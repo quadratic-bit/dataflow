@@ -1,16 +1,6 @@
 import { Table } from "./dataflow"
-import { PagintaionDOM } from "./dom/pagination"
-
-interface PaginationSome {
-    kind: "some"
-    amount: number
-}
-
-interface PaginationAll {
-    kind: "all"
-}
-
-type PaginationLen = PaginationSome | PaginationAll
+import { PaginationSizeSelectorDOM, PagintaionDOM } from "./dom/pagination"
+import { PaginationLen } from "./types/pagination"
 
 export class Pagination {
     private _length: PaginationLen
@@ -44,5 +34,11 @@ export class Pagination {
             case "all":
                 this._dom.updatePagination(1)
         }
+    }
+}
+
+export class PaginationSizeSelector {
+    constructor(mount: HTMLDivElement, options: PaginationLen[]) {
+        new PaginationSizeSelectorDOM(mount, options)
     }
 }
