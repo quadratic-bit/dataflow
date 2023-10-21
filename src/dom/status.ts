@@ -1,13 +1,13 @@
 export class StatusDOM {
-    private _span: HTMLSpanElement
+    private _container: HTMLSpanElement
 
-    constructor(container: HTMLDivElement) {
+    constructor(mount: HTMLDivElement) {
         const span = document.createElement("span")
-        container.appendChild(span)
-        this._span = span
+        mount.appendChild(span)
+        this._container = span
     }
 
     setText(text: string) {
-        this._span.textContent = text
+        this._container.textContent = text
     }
 }

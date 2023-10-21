@@ -2,16 +2,13 @@ import { Table } from "../dataflow"
 
 export class PagintaionDOM {
     private _container: HTMLDivElement
-    private _wrapper: HTMLDivElement
     private _buttonsAmount: number
     private _activePageIndex: number
     private _owner: Table
 
-    constructor(container: HTMLDivElement, table: Table) {
-        this._container = container
-        const wrapper: HTMLDivElement = document.createElement("div")
-        this._container.appendChild(wrapper)
-        this._wrapper = wrapper
+    constructor(mount: HTMLDivElement, table: Table) {
+        this._container = document.createElement("div")
+        mount.appendChild(this._container)
         this._buttonsAmount = 0
         this._activePageIndex = 0
         this._owner = table
@@ -38,23 +35,19 @@ export class PagintaionDOM {
                 })
                 newButtons[i - previousAmount] = button
             }
-            this._wrapper.append(...newButtons)
+            this._container.append(...newButtons)
             return
         }
         // previousAmount > amount
         for (let i = 0; i < previousAmount - amount; ++i) {
-            const lastChild = this._wrapper.lastChild
+            const lastChild = this._container.lastChild
             if (lastChild == null) break;
-            this._wrapper.removeChild(lastChild)
+            this._container.removeChild(lastChild)
         }
     }
 
     updatePagination(pagesNum: number): void {
         this.repopulateButtons(pagesNum)
-    }
-
-    get container(): Element {
-        return this._container
     }
 
     get activePage(): number {
