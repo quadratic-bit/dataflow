@@ -9,9 +9,10 @@ $table-border: 1px solid #b6afa8;
 
 .dataflow-table-footer {
   display: flex;
+  flex-grow: 1;
   flex-direction: row;
   justify-content: flex-end;
-  align-items: center;
+  align-items: flex-end;
   padding: .5rem 1rem;
   width: calc(100% - 2rem);
 }
