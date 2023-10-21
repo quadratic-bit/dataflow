@@ -7,7 +7,7 @@ interface PaginationAll {
     kind: "all"
 }
 
-export type PaginationLen = PaginationSome | PaginationAll
+export type PageLength = PaginationSome | PaginationAll
 
 export function PagesSome(amount: number): PaginationSome {
     return { kind: "some", amount }

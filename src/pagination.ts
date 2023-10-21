@@ -1,14 +1,14 @@
 import { Table } from "./dataflow"
 import { PagintaionDOM } from "./dom/pagination"
-import { PaginationLen } from "./types/pagination"
+import { PageLength } from "./types/pagination"
 
 export class Pagination {
-    private _length: PaginationLen
+    private _length: PageLength
     private _dom: PagintaionDOM
     private _lastDataSize: number = 1
 
-    constructor(table: Table, pageLength: PaginationLen, options: PaginationLen[]) {
-        this._length = pageLength
+    constructor(table: Table, options: PageLength[]) {
+        this._length = options[0]
         this._dom = new PagintaionDOM(table, options)
     }
 
@@ -16,8 +16,8 @@ export class Pagination {
         this._dom.activePage = pageIndex
     }
 
-    setPageSize(size: PaginationLen): void {
-        this._length = size
+    setPageLength(length: PageLength): void {
+        this._length = length
         this.setActivePage(0)
         this.updatePagination(this._lastDataSize)
     }

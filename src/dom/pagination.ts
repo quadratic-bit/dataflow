@@ -1,5 +1,5 @@
 import { Table } from "../dataflow"
-import { PaginationLen } from "../types/pagination"
+import { PageLength } from "../types/pagination"
 
 export class PagintaionDOM {
     private _container: HTMLDivElement
@@ -7,7 +7,7 @@ export class PagintaionDOM {
     private _activePageIndex: number
     private _owner: Table
 
-    constructor(table: Table, options: PaginationLen[]) {
+    constructor(table: Table, options: PageLength[]) {
         this._container = document.createElement("div")
         table.dom.footer.appendChild(this._container)
         this._buttonsAmount = 0
@@ -65,7 +65,7 @@ class PaginationSizeSelectorDOM {
     private _container: HTMLSelectElement
     private _owner: Table
 
-    constructor(mount: HTMLDivElement, options: PaginationLen[], sizeSelector: Table) {
+    constructor(mount: HTMLDivElement, options: PageLength[], sizeSelector: Table) {
         this._owner = sizeSelector
         this._container = document.createElement("select")
         mount.appendChild(this._container)
@@ -90,11 +90,11 @@ class PaginationSizeSelectorDOM {
                 case NaN:
                     throw Error("Page size cannot be zero")
                 case 0:
-                    this._owner.pagination.setPageSize({ kind: "all" })
+                    this._owner.pagination.setPageLength({ kind: "all" })
                     this._owner.refresh()
                     break
                 default:
-                    this._owner.pagination.setPageSize({ kind: "some", amount: value })
+                    this._owner.pagination.setPageLength({ kind: "some", amount: value })
                     this._owner.refresh()
             }
         })

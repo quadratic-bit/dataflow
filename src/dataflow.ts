@@ -2,7 +2,7 @@ import { TableDOM } from "./dom/table"
 import type { TableCell, TableColumn } from "./types/columns"
 import { Pagination } from "./pagination"
 import { Status } from "./status"
-import { PaginationLen } from "./types/pagination"
+import { PageLength, PagesAll, PagesSome } from "./types/pagination"
 
 export class TableCollection {
     mount: Element
@@ -46,7 +46,7 @@ interface TableConfig {
     init: string
     columns: TableColumn[]
     outer: TableCollection
-    pageSizes: PaginationLen[]
+    pageSizes: PageLength[]
 }
 
 class _TableFactory {
@@ -61,12 +61,16 @@ class _TableFactory {
         return this
     }
 
-    pageSizes(sizes: PaginationLen[]): _TableFactory {
+    pageSizes(sizes: PageLength[]): _TableFactory {
         this._data.pageSizes = sizes
         return this
     }
 
     init(): Table {
+        // TODO: Extract defaults to another file
+        if (this._data.pageSizes.length == 0) {
+            this._data.pageSizes = [PagesSome(20), PagesSome(10), PagesAll]
+        }
         return new Table(this._data)
     }
 }
@@ -83,7 +87,7 @@ export class Table {
         this._dom = new TableDOM(config.outer.mount, config.columns)
         this._status = new Status(this._dom.footer)
         this._status.setIdle()
-        this._pagination = new Pagination(this, this._config.pageSizes.at(0) ?? { kind: "some", amount: 20 }, this._config.pageSizes)
+        this._pagination = new Pagination(this, this._config.pageSizes)
     }
 
     setActivePage(pageIndex: number): void {
