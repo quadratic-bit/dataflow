@@ -9,6 +9,14 @@ export class PagintaionDOM {
 
     constructor(table: Table, options: PageLength[]) {
         this._container = document.createElement("div")
+        this._container.addEventListener("click", (e: MouseEvent) => {
+            if ((e.target as Element).tagName != "BUTTON") return;
+            const targetBtn = e.target as HTMLButtonElement
+            // TODO: Stop hiding the problem
+            const pageIndex = targetBtn.dataset.index!
+            this._owner.activePage = Number.parseInt(pageIndex)
+            this._owner.refresh()
+        })
         table.dom.footer.appendChild(this._container)
         this._buttonsAmount = 0
         this._activePageIndex = 0
@@ -29,13 +37,6 @@ export class PagintaionDOM {
                 let button = document.createElement("button")
                 button.textContent = (i + 1) + ""
                 button.dataset.index = i + ""
-                button.addEventListener("click", (e: MouseEvent) => {
-                    const targetBtn = e.target as HTMLButtonElement
-                    // TODO: Stop hiding the problem
-                    const pageIndex = targetBtn.dataset.index!
-                    this._owner.activePage = Number.parseInt(pageIndex)
-                    this._owner.refresh()
-                })
                 newButtons[i - previousAmount] = button
             }
             this._container.append(...newButtons)
