@@ -69,12 +69,17 @@ export class PagintaionDOM {
 }
 
 class PaginationSizeSelectorDOM {
-    private _container: HTMLSelectElement
+    private _container: HTMLSpanElement
+    private _chooser: HTMLSelectElement
     private _owner: Table
 
     constructor(mount: HTMLDivElement, options: PageLength[], sizeSelector: Table) {
         this._owner = sizeSelector
-        this._container = document.createElement("select")
+        this._container = document.createElement("span")
+        this._container.appendChild(document.createTextNode("Show "))
+        this._chooser = document.createElement("select")
+        this._container.appendChild(this._chooser)
+        this._container.appendChild(document.createTextNode(" entries"))
         mount.appendChild(this._container)
 
         for (const option of options) {
@@ -88,11 +93,11 @@ class PaginationSizeSelectorDOM {
                     optionDOM.textContent = "All"
                     optionDOM.value = "0"
             }
-            this._container.appendChild(optionDOM)
+            this._chooser.appendChild(optionDOM)
         }
 
-        this._container.addEventListener("change", (_: Event) => {
-            const value: number = Number.parseInt(this._container.value)
+        this._chooser.addEventListener("change", (_: Event) => {
+            const value: number = Number.parseInt(this._chooser.value)
             switch (value) {
                 case NaN:
                     throw Error("Page size cannot be zero")
