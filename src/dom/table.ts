@@ -10,19 +10,19 @@ export class TableDOM {
     constructor(container: Element, headers: TableColumn[]) {
         this._container = container
         this._headers = headers
-        this.initCover()
-        this.initTable()
-        this.initFooter()
+        this._initCover()
+        this._initTable()
+        this._initFooter()
     }
 
-    initCover(): void {
+    private _initCover(): void {
         const coverDOM: HTMLDivElement = document.createElement("div")
         coverDOM.classList.add("dataflow-table-header")
         this._container.appendChild(coverDOM)
         this._cover = coverDOM
     }
 
-    initTable(): void {
+    private _initTable(): void {
         const tbl: HTMLTableElement = document.createElement("table")
         const tblHead: HTMLTableSectionElement = document.createElement("thead")
         const tblBody: HTMLTableSectionElement = document.createElement("tbody")
@@ -41,7 +41,7 @@ export class TableDOM {
         this._container.appendChild(tbl)
     }
 
-    initFooter(): void {
+    private _initFooter(): void {
         const footerDOM: HTMLDivElement = document.createElement("div")
         footerDOM.classList.add("dataflow-table-footer")
         this._container.appendChild(footerDOM)

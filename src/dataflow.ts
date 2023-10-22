@@ -87,10 +87,10 @@ export class Table {
         this._dom = new TableDOM(config.outer.mount, config.columns)
         this._status = new Status(this._dom.footer)
         this._pagination = new Pagination(this, this._config.pageSizes)
-        this.updateStatus()
+        this._updateStatus()
     }
 
-    private updateStatus(): void {
+    private _updateStatus(): void {
         const [start, end] = this._pagination.retrieveDisplayRange(this._data.length)
         this._status.setRange(start + 1, Math.min(end, this._data.length), this._data.length)
     }
@@ -106,7 +106,7 @@ export class Table {
         this._dom.clear()
         this._dom.add(this._data.slice(pageStart, pageEnd))
         this._pagination.updatePagination(this._data.length)
-        this.updateStatus()
+        this._updateStatus()
     }
 
     get rows(): TableCell[][] {

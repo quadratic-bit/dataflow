@@ -14,7 +14,7 @@ export class Status {
         this.content = "Click on a row to select it"
     }
 
-    setRange(start: number, end: number, total: number) {
+    setRange(start: number, end: number, total: number): void {
         this.content = `Showing ${start} to ${end} of ${total} entries`
     }
 
