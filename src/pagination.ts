@@ -19,7 +19,7 @@ export class Pagination {
                 const offset = activePage * this._length.amount
                 return [offset, offset + this._length.amount]
             case "all":
-                return [0, dataSize - 1]
+                return [0, dataSize]
         }
     }
 
