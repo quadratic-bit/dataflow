@@ -15,6 +15,7 @@ export class PagintaionDOM {
         this._owner = table
         this.repopulateButtons(1)
         new PaginationSizeSelectorDOM(table.dom.header, options, table)
+        this.activePage = 0
     }
 
     private repopulateButtons(amount: number): void {
@@ -57,6 +58,11 @@ export class PagintaionDOM {
     }
 
     set activePage(pageIndex: number) {
+        // TODO: Resolve null or non-button case
+        const prevBtn = this._container.children.item(this._activePageIndex) as HTMLButtonElement
+        const nextBtn = this._container.children.item(pageIndex) as HTMLButtonElement
+        prevBtn.disabled = false
+        nextBtn.disabled = true
         this._activePageIndex = pageIndex
     }
 }
