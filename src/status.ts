@@ -14,6 +14,10 @@ export class Status {
         this.content = "Click on a row to select it"
     }
 
+    setRange(start: number, end: number, total: number) {
+        this.content = `Showing ${start} to ${end} of ${total} entries`
+    }
+
     get content(): string {
         return this.__content
     }

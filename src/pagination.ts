@@ -12,7 +12,7 @@ export class Pagination {
         this._dom = new PagintaionDOM(table, options)
     }
 
-    calculateDisplayRange(dataSize: number): [number, number] {
+    retrieveDisplayRange(dataSize: number): [number, number] {
         const activePage = this._dom.activePage
         switch (this._length.kind) {
             case "some":
