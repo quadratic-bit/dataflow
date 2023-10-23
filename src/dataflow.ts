@@ -81,10 +81,11 @@ export class Table {
     private _data: TableCell[][] = []
     private _pagination: Pagination
     private _status: Status
+    private _selectedRowIndex: number | null = null
 
     constructor(config: TableConfig) {
         this._config = config
-        this._dom = new TableDOM(config.outer.mount, config.columns)
+        this._dom = new TableDOM(config.outer.mount, config.columns, this)
         this._status = new Status(this._dom.footer)
         this._pagination = new Pagination(this, this._config.pageSizes)
         this._updateStatus()
@@ -107,6 +108,29 @@ export class Table {
         this._dom.add(this._data.slice(pageStart, pageEnd))
         this._pagination.updatePagination(this._data.length)
         this._updateStatus()
+        if (this._selectedRowIndex != null &&
+            this._selectedRowIndex >= pageStart &&
+                this._selectedRowIndex < pageEnd) {
+            this._dom.highlight(this._selectedRowIndex - pageStart)
+        }
+    }
+
+    toggleRow(relativeRowIndex: number): void {
+        // TODO: Address performance
+        const [pageStart, pageEnd] = this._pagination.retrieveDisplayRange(this._data.length)
+        const absoluteRowIndex = relativeRowIndex + pageStart
+        if (absoluteRowIndex == this._selectedRowIndex) {
+            this._selectedRowIndex = null
+            this._dom.clearHighlight(relativeRowIndex)
+        } else {
+            if (this._selectedRowIndex != null &&
+                this._selectedRowIndex >= pageStart &&
+                this._selectedRowIndex < pageEnd) {
+                this._dom.clearHighlight(this._selectedRowIndex - pageStart)
+            }
+            this._dom.highlight(relativeRowIndex)
+            this._selectedRowIndex = absoluteRowIndex
+        }
     }
 
     get rows(): TableCell[][] {
@@ -123,6 +147,10 @@ export class Table {
 
     get pagination(): Pagination {
         return this._pagination
+    }
+
+    get selectedRow(): number | null {
+        return this._selectedRowIndex
     }
 
     set activePage(pageIndex: number) {

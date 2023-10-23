@@ -1,3 +1,4 @@
+import { Table } from "../dataflow"
 import { TableCell, TableColumn } from "../types/columns"
 
 export class TableDOM {
@@ -6,13 +7,15 @@ export class TableDOM {
     private _footer!: HTMLDivElement
     private _tableBody!: HTMLTableSectionElement
     private _headers: TableColumn[]
+    private _owner: Table
 
-    constructor(container: Element, headers: TableColumn[]) {
+    constructor(container: Element, headers: TableColumn[], table: Table) {
         this._container = container
         this._headers = headers
         this._initCover()
         this._initTable()
         this._initFooter()
+        this._owner = table
     }
 
     private _initCover(): void {
@@ -26,6 +29,12 @@ export class TableDOM {
         const tbl: HTMLTableElement = document.createElement("table")
         const tblHead: HTMLTableSectionElement = document.createElement("thead")
         const tblBody: HTMLTableSectionElement = document.createElement("tbody")
+        tblBody.addEventListener("click", (e: MouseEvent) => {
+            console.log(e)
+            if ((e.target as Element).tagName != "TD") return;
+            const row = (e.target as HTMLTableCellElement).closest("tr")!
+            this._owner.toggleRow(Array.from(this._tableBody.children).indexOf(row))
+        })
         this._tableBody = tblBody
 
         const trHead: HTMLTableRowElement = document.createElement("tr")
@@ -65,6 +74,20 @@ export class TableDOM {
             }
             this._tableBody.appendChild(tr)
         }
+    }
+
+    highlight(rowIndex: number): void {
+        // TODO: Check edge cases
+        this._tableBody.children[rowIndex].classList.add("selected")
+    }
+
+    clearHighlight(rowIndex: number): void {
+        // TODO: Check edge cases
+        this._tableBody.children[rowIndex].classList.remove("selected")
+    }
+
+    get body(): HTMLTableSectionElement {
+        return this._tableBody
     }
 
     get container(): Element {

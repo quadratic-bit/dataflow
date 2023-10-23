@@ -47,9 +47,20 @@ $table-border: 1px solid #b6afa8;
 
   & tbody tr:hover {
     background-color: rgba(0, 0, 0, 0.075);
+
+    &.selected {
+      background-color: blue;
+      color: white;
+    }
   }
 
   & tr {
     background-color: white;
+    cursor: pointer;
+
+    &.selected {
+      background-color: blue;
+      color: white;
+    }
   }
 }
