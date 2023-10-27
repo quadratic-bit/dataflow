@@ -99,13 +99,14 @@ export class Table {
     add(rows: TableCell[][]): void {
         this._data = this._data.concat(rows)
         this.refresh()
+        // TODO: Add status update
     }
 
-    refresh(): void {
+    replace(chunk: TableCell[][]): void {
         // TODO: Address performance
         const [pageStart, pageEnd] = this._pagination.retrieveDisplayRange(this._data.length)
         this._dom.clear()
-        this._dom.add(this._data.slice(pageStart, pageEnd))
+        this._dom.add(chunk)
         this._pagination.updatePagination(this._data.length)
         this._updateStatus()
         if (this._selectedRowIndex != null &&
@@ -113,6 +114,12 @@ export class Table {
                 this._selectedRowIndex < pageEnd) {
             this._dom.highlight(this._selectedRowIndex - pageStart)
         }
+    }
+
+    refresh(): void {
+        // TODO: Address performance
+        const [pageStart, pageEnd] = this._pagination.retrieveDisplayRange(this._data.length)
+        this.replace(this._data.slice(pageStart, pageEnd))
     }
 
     toggleRow(relativeRowIndex: number): void {
