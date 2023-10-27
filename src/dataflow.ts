@@ -3,6 +3,7 @@ import type { TableCell, TableColumn } from "./types/columns"
 import { Pagination } from "./pagination"
 import { Status } from "./status"
 import { PageLength, PagesAll, PagesSome } from "./types/pagination"
+import { SearchBar } from "./search"
 
 export class TableCollection {
     mount: Element
@@ -87,7 +88,9 @@ export class Table {
         this._config = config
         this._dom = new TableDOM(config.outer.mount, config.columns, this)
         this._status = new Status(this._dom.footer)
+        // TODO: Refactor to extract element addition to this funtion body
         this._pagination = new Pagination(this, this._config.pageSizes)
+        new SearchBar(this._dom.header, this)
         this._updateStatus()
     }
 
