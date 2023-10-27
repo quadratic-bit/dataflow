@@ -18,6 +18,10 @@ export class Status {
         this.content = `Showing ${start} to ${end} of ${total} entries`
     }
 
+    get dom(): StatusDOM {
+        return this._dom
+    }
+
     get content(): string {
         return this.__content
     }
@@ -26,4 +30,5 @@ export class Status {
         this.__content = text
         this._dom.set(text)
     }
+
 }

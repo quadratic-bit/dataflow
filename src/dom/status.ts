@@ -10,4 +10,8 @@ export class StatusDOM {
     set(text: string): void {
         this._container.textContent = text
     }
+
+    get container(): HTMLSpanElement {
+        return this._container
+    }
 }
