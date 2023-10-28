@@ -1,11 +1,11 @@
 import { Table } from "./dataflow"
 import { SearchBarDOM } from "./dom/searchbar"
 
-export class SearchBar {
+export class SearchBar<Row> {
     private _dom: SearchBarDOM
-    private _owner: Table
+    private _owner: Table<Row>
 
-    constructor(mount: HTMLDivElement, table: Table) {
+    constructor(mount: HTMLDivElement, table: Table<Row>) {
         this._dom = new SearchBarDOM(mount, this)
         this._owner = table
     }
@@ -21,8 +21,8 @@ export class SearchBar {
         let mask: number[] = []
         for (let i = 0; i < this._owner.data.length; ++i) {
             const row = this._owner.data[i]
-            for (const field of row) {
-                if ((field + "").toLowerCase().includes(token)) {
+            for (const key in row) {
+                if ((row[key] + "").toLowerCase().includes(token)) {
                     mask.push(i)
                     break
                 }

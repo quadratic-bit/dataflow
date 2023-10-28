@@ -1,5 +1,5 @@
 import { TableDOM } from "./dom/table"
-import type { TableCell, TableColumn } from "./types/columns"
+import type { TableColumn } from "./types/columns"
 import { Pagination } from "./pagination"
 import { Status } from "./status"
 import { PageLength, PagesAll, PagesSome } from "./types/pagination"
@@ -9,7 +9,7 @@ export class TableCollection {
     mount: Element
     handler: () => void
     getter: () => void
-    private static tables: Table[]
+    private static tables: Table<any>[]
 
     constructor(mount: string, handler: () => void, getter: () => void) {
         const mountDOM = document.querySelector(mount)
@@ -23,11 +23,11 @@ export class TableCollection {
         TableCollection.tables = []
     }
 
-    public get tables(): Table[] {
+    public get tables(): Table<any>[] {
         return this.tables
     }
 
-    find(id: string): Table | null {
+    find(id: string): Table<any> | null {
         for (const tbl of TableCollection.tables) {
             if (tbl.config.id === id) {
                 return tbl
@@ -36,7 +36,7 @@ export class TableCollection {
         return null
     }
 
-    new(id: string, init: string): _TableFactory {
+    new<Row>(id: string, init: string): _TableFactory<Row> {
         return new _TableFactory(id, id, init, this)
     }
 }
@@ -50,24 +50,24 @@ interface TableConfig {
     pageSizes: PageLength[]
 }
 
-class _TableFactory {
+class _TableFactory<Row> {
     private _data: TableConfig
 
     constructor(id: string, title: string, init: string, outer: TableCollection) {
         this._data = { id, title, init, outer, columns: [], pageSizes: [] }
     }
 
-    column(definition: TableColumn): _TableFactory {
+    describe(definition: TableColumn): _TableFactory<Row> {
         this._data.columns.push(definition)
         return this
     }
 
-    pageSizes(sizes: PageLength[]): _TableFactory {
+    pageSizes(sizes: PageLength[]): _TableFactory<Row> {
         this._data.pageSizes = sizes
         return this
     }
 
-    init(): Table {
+    init(): Table<Row> {
         // TODO: Extract defaults to another file
         if (this._data.pageSizes.length == 0) {
             this._data.pageSizes = [PagesSome(20), PagesSome(10), PagesAll]
@@ -76,14 +76,14 @@ class _TableFactory {
     }
 }
 
-export class Table {
+export class Table<Row> {
     private _config: TableConfig
-    private _dom: TableDOM
+    private _dom: TableDOM<Row>
     private _pagination: Pagination
     private _status: Status
-    private _data: TableCell[][] = []
+    private _data: Row[] = []
     private _mask: number[] | null = null
-    private _listedRows: TableCell[][] = []
+    private _listedRows: Row[] = []
     private _selectedRowIndex: number | null = null
 
     constructor(config: TableConfig) {
@@ -105,7 +105,7 @@ export class Table {
         this._status.setRange(start + 1, Math.min(end, this.rows.length), this.rows.length)
     }
 
-    add(rows: TableCell[][]): void {
+    add(rows: Row[]): void {
         this._data = this._data.concat(rows)
         // TODO: add possible optimization
         this.mask = this.mask
@@ -113,7 +113,7 @@ export class Table {
         // TODO: Add status update
     }
 
-    replace(chunk: TableCell[][]): void {
+    replace(chunk: Row[]): void {
         // TODO: Address performance
         const [pageStart, pageEnd] = this._pagination.retrieveDisplayRange(this.rows.length)
         this._dom.clear()
@@ -152,11 +152,11 @@ export class Table {
         }
     }
 
-    get data(): TableCell[][] {
+    get data(): Row[] {
         return this._data
     }
 
-    get rows(): TableCell[][] {
+    get rows(): Row[] {
         return this._listedRows
     }
 
@@ -164,7 +164,7 @@ export class Table {
         return this._config
     }
 
-    get dom(): TableDOM {
+    get dom(): TableDOM<Row> {
         return this._dom
     }
 
@@ -172,7 +172,11 @@ export class Table {
         return this._pagination
     }
 
-    get selectedRow(): number | null {
+    get selectedRow(): Row | null {
+        return this.selectedRowIndex == null ? null : this.rows[this.selectedRowIndex]
+    }
+
+    get selectedRowIndex(): number | null {
         return this._selectedRowIndex
     }
 

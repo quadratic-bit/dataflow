@@ -5,9 +5,9 @@ export class PagintaionDOM {
     private _container: HTMLDivElement
     private _buttonsAmount: number
     private _activePageIndex: number
-    private _owner: Table
+    private _owner: Table<any>
 
-    constructor(table: Table, options: PageLength[]) {
+    constructor(table: Table<any>, options: PageLength[]) {
         this._container = document.createElement("div")
         this._container.addEventListener("click", (e: MouseEvent) => {
             if ((e.target as Element).tagName != "BUTTON") return;
@@ -71,9 +71,9 @@ export class PagintaionDOM {
 class PaginationSizeSelectorDOM {
     private _container: HTMLSpanElement
     private _chooser: HTMLSelectElement
-    private _owner: Table
+    private _owner: Table<any>
 
-    constructor(mount: HTMLDivElement, options: PageLength[], sizeSelector: Table) {
+    constructor(mount: HTMLDivElement, options: PageLength[], sizeSelector: Table<any>) {
         this._owner = sizeSelector
         this._container = document.createElement("span")
         this._container.appendChild(document.createTextNode("Show "))

@@ -7,7 +7,7 @@ export class Pagination {
     private _dom: PagintaionDOM
     private _lastDataSize: number = 1
 
-    constructor(table: Table, options: PageLength[]) {
+    constructor(table: Table<any>, options: PageLength[]) {
         this._length = options[0]
         this._dom = new PagintaionDOM(table, options)
     }

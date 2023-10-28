@@ -1,15 +1,15 @@
 import { Table } from "../dataflow"
-import { TableCell, TableColumn } from "../types/columns"
+import { TableColumn } from "../types/columns"
 
-export class TableDOM {
+export class TableDOM<Row> {
     private _container: Element
     private _cover!: HTMLDivElement
     private _footer!: HTMLDivElement
     private _tableBody!: HTMLTableSectionElement
     private _headers: TableColumn[]
-    private _owner: Table
+    private _owner: Table<Row>
 
-    constructor(container: Element, headers: TableColumn[], table: Table) {
+    constructor(container: Element, headers: TableColumn[], table: Table<Row>) {
         this._container = container
         this._headers = headers
         this._initCover()
@@ -39,7 +39,7 @@ export class TableDOM {
         const trHead: HTMLTableRowElement = document.createElement("tr")
         for (const col of this._headers) {
             const th = document.createElement("th")
-            th.textContent = col.title ?? col.name
+            th.textContent = col.title ?? col.column.charAt(0).toUpperCase() + col.column.slice(1)
             trHead.appendChild(th)
         }
         tblHead.appendChild(trHead)
@@ -63,12 +63,14 @@ export class TableDOM {
         }
     }
 
-    add(rows: TableCell[][]): void {
+    add(rows: Row[]): void {
         for (const row of rows) {
             const tr: HTMLTableRowElement = document.createElement("tr")
-            for (const cell of row) {
+            for (const header of this._headers) {
                 const td: HTMLTableCellElement = document.createElement("td")
-                td.textContent = cell + ""
+                // TODO: I've successfully stole this code but some checks should be here I feel
+                const value: any = row[header.column as keyof Row]
+                td.textContent = value + ""
                 tr.appendChild(td)
             }
             this._tableBody.appendChild(tr)

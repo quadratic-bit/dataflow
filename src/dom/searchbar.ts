@@ -3,7 +3,7 @@ import { SearchBar } from "../search"
 export class SearchBarDOM {
     private _container: HTMLInputElement
 
-    constructor(mount: HTMLDivElement, owner: SearchBar) {
+    constructor(mount: HTMLDivElement, owner: SearchBar<any>) {
         const bar = document.createElement("input")
         bar.type = "text"
         bar.addEventListener("input", (e: Event) => {
