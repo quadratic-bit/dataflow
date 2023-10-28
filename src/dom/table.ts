@@ -30,7 +30,6 @@ export class TableDOM {
         const tblHead: HTMLTableSectionElement = document.createElement("thead")
         const tblBody: HTMLTableSectionElement = document.createElement("tbody")
         tblBody.addEventListener("click", (e: MouseEvent) => {
-            console.log(e)
             if ((e.target as Element).tagName != "TD") return;
             const row = (e.target as HTMLTableCellElement).closest("tr")!
             this._owner.toggleRow(Array.from(this._tableBody.children).indexOf(row))

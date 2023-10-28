@@ -97,6 +97,10 @@ export class Table {
     }
 
     private _updateStatus(): void {
+        if (this.rows.length == 0) {
+            this._status.setEmpty()
+            return;
+        }
         const [start, end] = this._pagination.retrieveDisplayRange(this.rows.length)
         this._status.setRange(start + 1, Math.min(end, this.rows.length), this.rows.length)
     }
