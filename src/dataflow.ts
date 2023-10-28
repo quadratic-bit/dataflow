@@ -97,8 +97,8 @@ export class Table {
     }
 
     private _updateStatus(): void {
-        const [start, end] = this._pagination.retrieveDisplayRange(this._data.length)
-        this._status.setRange(start + 1, Math.min(end, this._data.length), this._data.length)
+        const [start, end] = this._pagination.retrieveDisplayRange(this.rows.length)
+        this._status.setRange(start + 1, Math.min(end, this.rows.length), this.rows.length)
     }
 
     add(rows: TableCell[][]): void {
@@ -114,7 +114,7 @@ export class Table {
         const [pageStart, pageEnd] = this._pagination.retrieveDisplayRange(this.rows.length)
         this._dom.clear()
         this._dom.add(chunk)
-        this._pagination.updatePagination(this._data.length)
+        this._pagination.updatePagination(this.rows.length)
         this._updateStatus()
         if (this._selectedRowIndex != null &&
             this._selectedRowIndex >= pageStart &&
