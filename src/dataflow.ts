@@ -79,9 +79,11 @@ class _TableFactory {
 export class Table {
     private _config: TableConfig
     private _dom: TableDOM
-    private _data: TableCell[][] = []
     private _pagination: Pagination
     private _status: Status
+    private _data: TableCell[][] = []
+    private _mask: number[] | null = null
+    private _listedRows: TableCell[][] = []
     private _selectedRowIndex: number | null = null
 
     constructor(config: TableConfig) {
@@ -101,13 +103,15 @@ export class Table {
 
     add(rows: TableCell[][]): void {
         this._data = this._data.concat(rows)
+        // TODO: add possible optimization
+        this.mask = this.mask
         this.refresh()
         // TODO: Add status update
     }
 
     replace(chunk: TableCell[][]): void {
         // TODO: Address performance
-        const [pageStart, pageEnd] = this._pagination.retrieveDisplayRange(this._data.length)
+        const [pageStart, pageEnd] = this._pagination.retrieveDisplayRange(this.rows.length)
         this._dom.clear()
         this._dom.add(chunk)
         this._pagination.updatePagination(this._data.length)
@@ -117,17 +121,18 @@ export class Table {
                 this._selectedRowIndex < pageEnd) {
             this._dom.highlight(this._selectedRowIndex - pageStart)
         }
+        this._mask = null
     }
 
     refresh(): void {
         // TODO: Address performance
-        const [pageStart, pageEnd] = this._pagination.retrieveDisplayRange(this._data.length)
-        this.replace(this._data.slice(pageStart, pageEnd))
+        const [pageStart, pageEnd] = this._pagination.retrieveDisplayRange(this.rows.length)
+        this.replace(this.rows.slice(pageStart, pageEnd))
     }
 
     toggleRow(relativeRowIndex: number): void {
         // TODO: Address performance
-        const [pageStart, pageEnd] = this._pagination.retrieveDisplayRange(this._data.length)
+        const [pageStart, pageEnd] = this._pagination.retrieveDisplayRange(this.rows.length)
         const absoluteRowIndex = relativeRowIndex + pageStart
         if (absoluteRowIndex == this._selectedRowIndex) {
             this._selectedRowIndex = null
@@ -143,8 +148,12 @@ export class Table {
         }
     }
 
-    get rows(): TableCell[][] {
+    get data(): TableCell[][] {
         return this._data
+    }
+
+    get rows(): TableCell[][] {
+        return this._listedRows
     }
 
     get config(): TableConfig {
@@ -161,6 +170,19 @@ export class Table {
 
     get selectedRow(): number | null {
         return this._selectedRowIndex
+    }
+
+    get mask(): number[] | null {
+        return this._mask
+    }
+
+    set mask(newMask: number[] | null) {
+        if (newMask == null) {
+            this._listedRows = this._data
+        } else {
+            this._listedRows = newMask.map((e: number) => this._data[e])
+        }
+        this._mask = newMask
     }
 
     set activePage(pageIndex: number) {
