@@ -183,6 +183,8 @@ export class Table {
             this._listedRows = newMask.map((e: number) => this._data[e])
         }
         this._mask = newMask
+        this._pagination.activePage = 0
+        this._selectedRowIndex = null
     }
 
     set activePage(pageIndex: number) {

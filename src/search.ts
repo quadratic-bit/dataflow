@@ -11,8 +11,25 @@ export class SearchBar {
     }
 
     updateSearchResults(token: string): void {
-        console.log(token)
-        console.log(this._owner)
+        // TODO: It works, but limited and pretty slowly
+        if (token.length == 0) {
+            this._owner.mask = null
+            this._owner.refresh()
+            return;
+        }
+        token = token.toLowerCase()
+        let mask: number[] = []
+        for (let i = 0; i < this._owner.data.length; ++i) {
+            const row = this._owner.data[i]
+            for (const field of row) {
+                if ((field + "").toLowerCase().includes(token)) {
+                    mask.push(i)
+                    break
+                }
+            }
+        }
+        this._owner.mask = mask
+        this._owner.refresh()
     }
 
     get dom(): SearchBarDOM {
