@@ -16,10 +16,10 @@ Dependency-free TypeScript library making your HMTL tables interactive
 
 ## Roadmap
 
-- [ ] Procedural HTML table creation
-- [ ] Row selection
-- [ ] Pagination
-- [ ] Search bar
+- [x] Procedural HTML table creation
+- [x] Row selection
+- [x] Pagination
+- [x] Search bar
 - [ ] Highly customizable action buttons
 
 ## Getting started
