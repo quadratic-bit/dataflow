@@ -27,7 +27,8 @@ export class Pagination {
         this._lastDataSize = dataSize
         switch (this._length.kind) {
             case "some":
-                this._dom.updatePagination(Math.ceil(dataSize / this._length.amount))
+                const pagesN = Math.ceil(dataSize / this._length.amount)
+                this._dom.updatePagination(pagesN == 0 ? 1 : pagesN)
                 break
             case "all":
                 this._dom.updatePagination(1)

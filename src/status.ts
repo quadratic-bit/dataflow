@@ -18,6 +18,10 @@ export class Status {
         this.content = `Showing ${start} to ${end} of ${total} entries`
     }
 
+    setEmpty(): void {
+        this.content = "No entries available"
+    }
+
     get dom(): StatusDOM {
         return this._dom
     }
