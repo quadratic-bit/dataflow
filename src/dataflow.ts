@@ -150,7 +150,7 @@ export class Table<Row> {
         const [pageStart, pageEnd] = this._pagination.retrieveDisplayRange(this.rows.length)
         const absoluteRowIndex = relativeRowIndex + pageStart
         if (absoluteRowIndex == this._selectedRowIndex) {
-            this._selectedRowIndex = null
+            this.selectedRowIndex = null
             this._dom.clearHighlight(relativeRowIndex)
         } else {
             if (this._selectedRowIndex != null &&
@@ -159,7 +159,7 @@ export class Table<Row> {
                 this._dom.clearHighlight(this._selectedRowIndex - pageStart)
             }
             this._dom.highlight(relativeRowIndex)
-            this._selectedRowIndex = absoluteRowIndex
+            this.selectedRowIndex = absoluteRowIndex
         }
     }
 
@@ -211,11 +211,25 @@ export class Table<Row> {
         }
         this._mask = newMask
         this._pagination.activePage = 0
-        this._selectedRowIndex = null
+        this.selectedRowIndex = null
     }
 
     set activePage(pageIndex: number) {
         this._pagination.activePage = pageIndex
         this.refresh()
+    }
+
+    set selectedRowIndex(value: number | null) {
+        if (value == null) {
+            if (this._selectedRowIndex != null) {
+                this.actionTray.triggerRowDeselect()
+            }
+            this._selectedRowIndex = null
+        } else {
+            if (this._selectedRowIndex == null) {
+                this.actionTray.triggerRowSelect()
+            }
+            this._selectedRowIndex = value
+        }
     }
 }

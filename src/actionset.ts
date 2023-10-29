@@ -11,6 +11,14 @@ export class ActionTray<Row> {
         this._owner = table
     }
 
+    triggerRowSelect(): void {
+        this._dom.enableConditionalButtons()
+    }
+
+    triggerRowDeselect(): void {
+        this._dom.disableConditionalButtons()
+    }
+
     dispatch(action: Action<Row>): void {
         console.log(action)
         action.callback(this._owner)
