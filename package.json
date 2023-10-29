@@ -7,7 +7,8 @@
     "typings": "./dist/dataflow.d.ts",
     "exports": {
         ".": "./dist/dataflow.js",
-        "./pagination": "./dist/types/pagination.js"
+        "./pagination": "./dist/types/pagination.js",
+        "./actions": "./dist/types/actions.js"
     },
     "files": [
         "dist/css/*.css"

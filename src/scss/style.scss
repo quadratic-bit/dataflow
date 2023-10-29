@@ -1,4 +1,11 @@
+// TODO: make table color-scheme: dark friendly
+
 $table-border: 1px solid #b6afa8;
+
+.dataflow-table-actiontray {
+  display: flex;
+  flex-direction: row;
+}
 
 .dataflow-table-wrapper {
   display: flex;

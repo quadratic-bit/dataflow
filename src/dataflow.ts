@@ -4,6 +4,8 @@ import { Pagination } from "./pagination"
 import { Status } from "./status"
 import { PageLength, PagesAll, PagesSome } from "./types/pagination"
 import { SearchBar } from "./search"
+import { Action } from "./types/actions"
+import { ActionTray } from "./actionset"
 
 export class TableCollection {
     mount: Element
@@ -41,24 +43,30 @@ export class TableCollection {
     }
 }
 
-interface TableConfig {
+interface TableConfig<Row> {
     id: string
     title: string
     init: string
     columns: TableColumn[]
     outer: TableCollection
     pageSizes: PageLength[]
+    actions: Action<Row>[]
 }
 
 class _TableFactory<Row> {
-    private _data: TableConfig
+    private _data: TableConfig<Row>
 
     constructor(id: string, title: string, init: string, outer: TableCollection) {
-        this._data = { id, title, init, outer, columns: [], pageSizes: [] }
+        this._data = { id, title, init, outer, columns: [], pageSizes: [], actions: [] }
     }
 
     describe(definition: TableColumn): _TableFactory<Row> {
         this._data.columns.push(definition)
+        return this
+    }
+
+    action(action: Action<Row>): _TableFactory<Row> {
+        this._data.actions.push(action)
         return this
     }
 
@@ -77,22 +85,25 @@ class _TableFactory<Row> {
 }
 
 export class Table<Row> {
-    private _config: TableConfig
+    private _config: TableConfig<Row>
     private _dom: TableDOM<Row>
     private _pagination: Pagination
     private _status: Status
+    private _actionTray: ActionTray<Row>
+    private _searchbar: SearchBar<Row>
     private _data: Row[] = []
     private _mask: number[] | null = null
     private _listedRows: Row[] = []
     private _selectedRowIndex: number | null = null
 
-    constructor(config: TableConfig) {
+    constructor(config: TableConfig<Row>) {
         this._config = config
         this._dom = new TableDOM(config.outer.mount, config.columns, this)
         this._status = new Status(this._dom.footer)
         // TODO: Refactor to extract element addition to this funtion body
         this._pagination = new Pagination(this, this._config.pageSizes)
-        new SearchBar(this._dom.header, this)
+        this._actionTray = new ActionTray(this._dom.header, config.actions, this)
+        this._searchbar = new SearchBar(this._dom.header, this)
         this._updateStatus()
     }
 
@@ -160,7 +171,7 @@ export class Table<Row> {
         return this._listedRows
     }
 
-    get config(): TableConfig {
+    get config(): TableConfig<Row> {
         return this._config
     }
 
@@ -170,6 +181,14 @@ export class Table<Row> {
 
     get pagination(): Pagination {
         return this._pagination
+    }
+
+    get searchBar(): SearchBar<Row> {
+        return this._searchbar
+    }
+
+    get actionTray(): ActionTray<Row> {
+        return this._actionTray
     }
 
     get selectedRow(): Row | null {
