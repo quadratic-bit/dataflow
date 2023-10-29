@@ -1,6 +1,6 @@
 # Data:Flow
 
-Dependency-free TypeScript library making your HMTL tables interactive
+Dependency-free TypeScript library making your HTML tables interactive
 
 ## Table of contents
 
