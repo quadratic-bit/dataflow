@@ -4,8 +4,8 @@ export class Status {
     private __content!: string
     private _dom: StatusDOM
 
-    constructor(mount: HTMLDivElement) {
-        this._dom = new StatusDOM(mount)
+    constructor() {
+        this._dom = new StatusDOM()
         this.setIdle()
     }
 

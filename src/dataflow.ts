@@ -99,11 +99,18 @@ export class Table<Row> {
     constructor(config: TableConfig<Row>) {
         this._config = config
         this._dom = new TableDOM(config.outer.mount, config.columns, this)
-        this._status = new Status(this._dom.footer)
+        this._status = new Status()
         // TODO: Refactor to extract element addition to this funtion body
         this._pagination = new Pagination(this, this._config.pageSizes)
-        this._actionTray = new ActionTray(this._dom.header, config.actions, this)
-        this._searchbar = new SearchBar(this._dom.header, this)
+        this._actionTray = new ActionTray(config.actions, this)
+        this._searchbar = new SearchBar(this)
+
+        this._dom.footer.append(this._status.dom.container,
+                                this._pagination.dom.container)
+        this._dom.header.append(this._pagination.dom.sizeSelector.container,
+                                this._actionTray.dom.container,
+                                this._searchbar.dom.container)
+
         this._updateStatus()
     }
 

@@ -6,8 +6,8 @@ export class ActionTray<Row> {
     private _dom: ActionTrayDOM
     private _owner: Table<Row>
 
-    constructor(mount: HTMLDivElement, actions: Action<Row>[], table: Table<Row>) {
-        this._dom = new ActionTrayDOM(mount, actions, this)
+    constructor(actions: Action<Row>[], table: Table<Row>) {
+        this._dom = new ActionTrayDOM(actions, this)
         this._owner = table
     }
 

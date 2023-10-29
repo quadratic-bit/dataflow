@@ -35,6 +35,10 @@ export class Pagination {
         }
     }
 
+    get dom(): PagintaionDOM {
+        return this._dom
+    }
+
     set activePage(pageIndex: number) {
         this._dom.activePage = pageIndex
     }

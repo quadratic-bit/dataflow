@@ -5,7 +5,7 @@ export class ActionTrayDOM {
     private _container: HTMLDivElement
     private _actions: Action<any>[]
 
-    constructor(mount: HTMLDivElement, actions: Action<any>[], owner: ActionTray<any>) {
+    constructor(actions: Action<any>[], owner: ActionTray<any>) {
         const container = document.createElement("div")
         container.classList.add("dataflow-table-actiontray")
         for (const action of actions) {
@@ -15,7 +15,6 @@ export class ActionTrayDOM {
             if (action.activateOnSelect) button.disabled = true;
             container.appendChild(button)
         }
-        mount.appendChild(container)
         this._container = container
         this._actions = actions
     }

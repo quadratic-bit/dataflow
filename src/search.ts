@@ -5,8 +5,8 @@ export class SearchBar<Row> {
     private _dom: SearchBarDOM
     private _owner: Table<Row>
 
-    constructor(mount: HTMLDivElement, table: Table<Row>) {
-        this._dom = new SearchBarDOM(mount, this)
+    constructor(table: Table<Row>) {
+        this._dom = new SearchBarDOM(this)
         this._owner = table
     }
 
