@@ -1,8 +1,7 @@
 import { Table } from "../dataflow"
 import { PageLength } from "../types/pagination"
 
-// TODO: oh that's a typo right here
-export class PagintaionDOM {
+export class PaginationDOM {
     private _container: HTMLDivElement
     private _sizeSelector: PaginationSizeSelectorDOM
     private _buttonsAmount: number
