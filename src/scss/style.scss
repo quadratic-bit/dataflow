@@ -21,7 +21,16 @@ $table-border: 1px solid #b6afa8;
 .dataflow-form-wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+}
+
+.dataflow-form-header {
+  display: flex;
+  column-gap: 1em;
+  padding: .5em;
+}
+
+.dataflow-form-body {
+  flex-grow: 1;
 }
 
 .dataflow-table-header {
