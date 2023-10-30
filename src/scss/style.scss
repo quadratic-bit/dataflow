@@ -1,4 +1,8 @@
-// TODO: make table color-scheme: dark friendly
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
 
 $table-border: 1px solid #b6afa8;
 
@@ -61,13 +65,30 @@ $table-border: 1px solid #b6afa8;
     }
   }
 
+  @media (prefers-color-scheme: dark) {
+    & tbody tr:hover {
+      background-color: rgba(255, 255, 255, 0.075) !important;
+
+      &.selected {
+        background-color: lightsteelblue !important;
+        color: black !important;
+      }
+    }
+  }
+
   & tr {
-    background-color: white;
     cursor: pointer;
 
     &.selected {
       background-color: blue;
       color: white;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      &.selected {
+        background-color: lightsteelblue !important;
+        color: black !important;
+      }
     }
   }
 }
