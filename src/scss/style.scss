@@ -18,6 +18,12 @@ $table-border: 1px solid #b6afa8;
   align-items: center;
 }
 
+.dataflow-form-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .dataflow-table-header {
   display: flex;
   flex-grow: 1;

@@ -6,6 +6,7 @@ import { PageLength, PagesAll, PagesSome } from "./types/pagination"
 import { SearchBar } from "./search"
 import { Action } from "./types/actions"
 import { ActionTray } from "./actionset"
+import { FormManager } from "./dom/form"
 
 export class TableCollection {
     mount: Element
@@ -89,6 +90,7 @@ export class Table<Row> {
     private _dom: TableDOM<Row>
     private _pagination: Pagination
     private _status: Status
+    private _formManager: FormManager<Row>
     private _actionTray: ActionTray<Row>
     private _searchbar: SearchBar<Row>
     private _data: Row[] = []
@@ -100,7 +102,6 @@ export class Table<Row> {
         this._config = config
         this._dom = new TableDOM(config.outer.mount, config.columns, this)
         this._status = new Status()
-        // TODO: Refactor to extract element addition to this funtion body
         this._pagination = new Pagination(this, this._config.pageSizes)
         this._actionTray = new ActionTray(config.actions, this)
         this._searchbar = new SearchBar(this)
@@ -110,7 +111,7 @@ export class Table<Row> {
         this._dom.header.append(this._pagination.dom.sizeSelector.container,
                                 this._actionTray.dom.container,
                                 this._searchbar.dom.container)
-
+        this._formManager = new FormManager(this)
         this._updateStatus()
     }
 
@@ -168,6 +169,12 @@ export class Table<Row> {
             this._dom.highlight(relativeRowIndex)
             this.selectedRowIndex = absoluteRowIndex
         }
+    }
+
+    setContext(action: Action<Row>): void {
+        this._dom.unmount()
+        this._formManager.apply(action)
+        action.callback(this)
     }
 
     get data(): Row[] {
