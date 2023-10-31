@@ -5,6 +5,7 @@ export class TableDOM<Row> {
     private _container: Element
     private _cover!: HTMLDivElement
     private _footer!: HTMLDivElement
+    private _table!: HTMLTableElement
     private _tableBody!: HTMLTableSectionElement
     private _headers: TableColumn[]
     private _owner: Table<Row>
@@ -27,6 +28,7 @@ export class TableDOM<Row> {
 
     private _initTable(): void {
         const tbl: HTMLTableElement = document.createElement("table")
+        this._table = tbl
         const tblHead: HTMLTableSectionElement = document.createElement("thead")
         const tblBody: HTMLTableSectionElement = document.createElement("tbody")
         tblBody.addEventListener("click", (e: MouseEvent) => {
@@ -85,6 +87,18 @@ export class TableDOM<Row> {
     clearHighlight(rowIndex: number): void {
         // TODO: Check edge cases
         this._tableBody.children[rowIndex].classList.remove("selected")
+    }
+
+    unmount(): void {
+        this._container.removeChild(this._cover)
+        this._container.removeChild(this._table)
+        this._container.removeChild(this._footer)
+    }
+
+    mount(): void {
+        this._container.appendChild(this._cover)
+        this._container.appendChild(this._table)
+        this._container.appendChild(this._footer)
     }
 
     get body(): HTMLTableSectionElement {

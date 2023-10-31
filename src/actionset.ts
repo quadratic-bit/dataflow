@@ -20,8 +20,7 @@ export class ActionTray<Row> {
     }
 
     dispatch(action: Action<Row>): void {
-        console.log(action)
-        action.callback(this._owner)
+        this._owner.setContext(action)
     }
 
     get dom(): ActionTrayDOM {
