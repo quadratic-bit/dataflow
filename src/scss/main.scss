@@ -1,0 +1,9 @@
+@use "table.scss";
+@use "actiontray.scss";
+@use "form.scss";
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+    }
+}

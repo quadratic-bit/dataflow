@@ -1,0 +1,83 @@
+@use "const.scss";
+
+.dataflow-table-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.dataflow-table-header {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: .5rem 1rem;
+    width: calc(100% - 2rem);
+}
+
+.dataflow-table-footer {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: .5rem 1rem;
+    width: calc(100% - 2rem);
+}
+
+.dataflow-table {
+    border-collapse: collapse;
+    border: const.$table-border;
+
+    & td, th {
+        border: const.$table-border;
+        padding: .5rem
+    }
+
+    & th {
+        &::after {
+            right: .5rem;
+            content: "▼";
+            float: right;
+            color: #b6afa8;
+        }
+    }
+
+    & tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.075);
+
+        &.selected {
+            background-color: blue;
+            color: white;
+        }
+    }
+
+    @media (prefers-color-scheme: dark) {
+        & tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.075) !important;
+
+            &.selected {
+                background-color: lightsteelblue !important;
+                color: black !important;
+            }
+        }
+    }
+
+    & tr {
+        cursor: pointer;
+
+        &.selected {
+            background-color: blue;
+            color: white;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            &.selected {
+                background-color: lightsteelblue !important;
+                color: black !important;
+            }
+        }
+    }
+}
