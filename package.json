@@ -17,7 +17,7 @@
         "build": "tsc && sass --no-source-map ./src/scss/main.scss:./dist/css/dataflow.css"
     },
     "devDependencies": {
-        "sass": "^1.69.0",
-        "typescript": "^5.0.2"
+        "sass": "^1.69.5",
+        "typescript": "^5.2.2"
     }
 }
