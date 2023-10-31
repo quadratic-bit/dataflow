@@ -2,8 +2,7 @@
     "name": "dataflow",
     "version": "0.0.0",
     "main": "./dist/dataflow.js",
-    "sass": "src/scss/style.scss",
-    "style": "dist/css/dataflow.css",
+    "style": "./dist/css/dataflow.css",
     "typings": "./dist/dataflow.d.ts",
     "exports": {
         ".": "./dist/dataflow.js",
