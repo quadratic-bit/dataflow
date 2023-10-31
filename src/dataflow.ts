@@ -174,7 +174,6 @@ export class Table<Row> {
     setContext(action: Action<Row>): void {
         this._dom.unmount()
         this._formManager.apply(action)
-        action.callback(this)
     }
 
     get data(): Row[] {

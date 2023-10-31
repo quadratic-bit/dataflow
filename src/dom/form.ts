@@ -118,6 +118,13 @@ export class FormManager<Row> {
         }
         const footer = this._createButtons()
         contentContainer.appendChild(footer)
+        contentContainer.addEventListener("submit", (e: SubmitEvent) => {
+            e.preventDefault()
+            const formData = new FormData(contentContainer)
+            const row = Object.fromEntries(formData.entries()) as Row
+            action.callback(row, this._owner)
+            this.hide()
+        })
     }
 
     hide(): void {
