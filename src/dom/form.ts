@@ -38,10 +38,16 @@ export class FormManager<Row> {
         const field = document.createElement("div")
         const label = document.createElement("label")
         label.textContent = column.title ??
-                            column.column.charAt(0).toUpperCase() +
-                            column.column.slice(1)
+                            column.name.charAt(0).toUpperCase() +
+                            column.name.slice(1)
         const input = document.createElement("input")
-        input.name = column.column
+        input.name = column.name
+        input.type = column.type
+        if (column.props != null) {
+            for (const [prop, value] of Object.entries(column.props)) {
+                input.setAttribute(prop, value)
+            }
+        }
         field.appendChild(label)
         field.appendChild(input)
         field.classList.add("dataflow-form-field")
@@ -64,7 +70,7 @@ export class FormManager<Row> {
         ))
         for (const col of this._owner.config.columns) {
             const input = document.createElement("input")
-            input.name = col.column
+            input.name = col.name
             // TODO: handle missing field case
             input.value = row[input.name as keyof Row] + ""
             input.type = "hidden"

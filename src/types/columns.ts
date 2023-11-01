@@ -1,27 +1,35 @@
-interface BaseTableColumn {
-    column: string
-    title?: string
-    required?: boolean
-    readonly?: boolean
-    hidden?: boolean
-}
-
-interface TextTableColumn extends BaseTableColumn {
+interface TextInputProps {
     maxlength?: number
     minlength?: number
-    pattern?: string
-    validation?: "email"
+    pattern?: number
+    placeholder?: string
+    readonly?: boolean
+    size?: string
+    spellcheck?: boolean
 }
 
-interface TextAreaTableColumn extends TextTableColumn {
-    rows?: number
-    cols?: number
-}
-
-interface NumberTableColumn extends BaseTableColumn {
+interface NumberInputProps {
     max?: number
     min?: number
+    placeholder?: string
     step?: number
 }
 
-export type TableColumn = TextTableColumn | TextAreaTableColumn | NumberTableColumn
+interface BaseTableColumn {
+    type: string
+    name: string
+    title?: string
+    required?: boolean
+}
+
+interface TextTableColumn extends BaseTableColumn {
+    type: "text"
+    props?: TextInputProps
+}
+
+interface NumberTableColumn extends BaseTableColumn {
+    type: "number"
+    props?: NumberInputProps
+}
+
+export type TableColumn = TextTableColumn | NumberTableColumn

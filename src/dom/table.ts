@@ -41,7 +41,7 @@ export class TableDOM<Row> {
         const trHead: HTMLTableRowElement = document.createElement("tr")
         for (const col of this._headers) {
             const th = document.createElement("th")
-            th.textContent = col.title ?? col.column.charAt(0).toUpperCase() + col.column.slice(1)
+            th.textContent = col.title ?? col.name.charAt(0).toUpperCase() + col.name.slice(1)
             trHead.appendChild(th)
         }
         tblHead.appendChild(trHead)
@@ -71,7 +71,7 @@ export class TableDOM<Row> {
             for (const header of this._headers) {
                 const td: HTMLTableCellElement = document.createElement("td")
                 // TODO: I've successfully stole this code but some checks should be here I feel
-                const value: any = row[header.column as keyof Row]
+                const value: any = row[header.name as keyof Row]
                 td.textContent = value + ""
                 tr.appendChild(td)
             }
