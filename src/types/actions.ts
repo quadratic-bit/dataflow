@@ -1,7 +1,7 @@
 import { Table } from "../dataflow"
 
 interface _BaseAction<Row> {
-    callback(row: Row, table: Table<Row>): void
+    callback(data: FormData, table: Table<Row>): Promise<void>
     label: string
     showColumns: boolean
     activateOnSelect: boolean
@@ -33,7 +33,7 @@ interface ActionBlank<Row> extends _BaseAction<Row> {
 
 export type Action<Row> = ActionNew<Row> | ActionEdit<Row> | ActionBlank<Row>
 
-export function actionAdd<Row>(callback: (row: Row, table: Table<Row>) => void): Action<Row> {
+export function actionAdd<Row>(callback: (data: FormData, table: Table<Row>) => Promise<void>): Action<Row> {
     return {
         label: "Add",
         showColumns: true,
@@ -43,7 +43,7 @@ export function actionAdd<Row>(callback: (row: Row, table: Table<Row>) => void):
     }
 }
 
-export function actionEdit<Row>(callback: (row: Row, table: Table<Row>) => void): Action<Row> {
+export function actionEdit<Row>(callback: (data: FormData, table: Table<Row>) => Promise<void>): Action<Row> {
     return {
         label: "Edit",
         showColumns: true,
@@ -53,7 +53,7 @@ export function actionEdit<Row>(callback: (row: Row, table: Table<Row>) => void)
     }
 }
 
-export function actionDelete<Row>(callback: (row: Row, table: Table<Row>) => void): Action<Row> {
+export function actionDelete<Row>(callback: (data: FormData, table: Table<Row>) => Promise<void>): Action<Row> {
     return {
         label: "Delete",
         showColumns: false,
