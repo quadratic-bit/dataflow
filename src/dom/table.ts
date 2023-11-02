@@ -5,7 +5,7 @@ export class TableDOM<Row> {
     private _container: Element
     private _cover!: HTMLDivElement
     private _footer!: HTMLDivElement
-    private _table!: HTMLTableElement
+    private _tableWrapper!: HTMLDivElement
     private _tableBody!: HTMLTableSectionElement
     private _headers: TableColumn[]
     private _owner: Table<Row>
@@ -27,8 +27,12 @@ export class TableDOM<Row> {
     }
 
     private _initTable(): void {
+        const tblContentWrapper: HTMLDivElement = document.createElement("div")
+        tblContentWrapper.classList.add("dataflow-table-content")
+        this._tableWrapper = tblContentWrapper
+        const tblScrollableWrapper: HTMLDivElement = document.createElement("div")
+        tblScrollableWrapper.classList.add("dataflow-table-scrollable")
         const tbl: HTMLTableElement = document.createElement("table")
-        this._table = tbl
         const tblHead: HTMLTableSectionElement = document.createElement("thead")
         const tblBody: HTMLTableSectionElement = document.createElement("tbody")
         tblBody.addEventListener("click", (e: MouseEvent) => {
@@ -48,7 +52,9 @@ export class TableDOM<Row> {
         tbl.appendChild(tblHead)
         tbl.appendChild(tblBody)
         tbl.classList.add("dataflow-table")
-        this._container.appendChild(tbl)
+        tblScrollableWrapper.appendChild(tbl)
+        tblContentWrapper.appendChild(tblScrollableWrapper)
+        this._container.appendChild(tblContentWrapper)
     }
 
     private _initFooter(): void {
@@ -91,13 +97,13 @@ export class TableDOM<Row> {
 
     unmount(): void {
         this._container.removeChild(this._cover)
-        this._container.removeChild(this._table)
+        this._container.removeChild(this._tableWrapper)
         this._container.removeChild(this._footer)
     }
 
     mount(): void {
         this._container.appendChild(this._cover)
-        this._container.appendChild(this._table)
+        this._container.appendChild(this._tableWrapper)
         this._container.appendChild(this._footer)
     }
 
