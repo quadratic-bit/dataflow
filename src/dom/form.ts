@@ -43,6 +43,7 @@ export class FormManager<Row> {
         const input = document.createElement("input")
         input.name = column.name
         input.type = column.type
+        input.required = column.required ?? false
         if (column.props != null) {
             for (const [prop, value] of Object.entries(column.props)) {
                 input.setAttribute(prop, value)
