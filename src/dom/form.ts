@@ -1,6 +1,6 @@
 import { Table } from "../dataflow";
 import { Action } from "../types/actions";
-import { TableColumn } from "../types/columns";
+import { TableColumn, isSelectDependency } from "../types/columns";
 
 export class FormManager<Row> {
     private _owner: Table<Row>
@@ -36,15 +36,33 @@ export class FormManager<Row> {
         return content
     }
 
-    private static _newField(column: TableColumn): HTMLDivElement {
+    private _newField(column: TableColumn): HTMLDivElement {
         const field = document.createElement("div")
         const label = document.createElement("label")
         label.textContent = column.title ??
                             column.name.charAt(0).toUpperCase() +
                             column.name.slice(1)
-        const input = document.createElement("input")
+        let input: HTMLInputElement | HTMLSelectElement
+
+        switch (column.type) {
+        case "select":
+            input = document.createElement("select")
+            const choices = isSelectDependency(column.choices) ?
+                            this._owner.resolveDependency(column.choices) :
+                            column.choices
+            for (const entry of choices) {
+                const option = document.createElement("option")
+                option.textContent = entry
+                option.value = entry
+                input.appendChild(option)
+            }
+            break
+        default:
+            input = document.createElement("input")
+            input.type = column.type
+        }
+
         input.name = column.name
-        input.type = column.type
         input.required = column.required ?? false
         if (column.props != null) {
             for (const [prop, value] of Object.entries(column.props)) {
@@ -59,7 +77,7 @@ export class FormManager<Row> {
 
     private _applyFilledInputs(container: HTMLFormElement, row: Row): void {
         for (const col of this._owner.config.columns) {
-            const field = FormManager._newField(col)
+            const field = this._newField(col)
             const input = field.children.item(1) as HTMLInputElement
             // TODO: handle missing field case
             input.value = row[input.name as keyof Row] + ""
@@ -83,7 +101,7 @@ export class FormManager<Row> {
 
     private _applyEmptyInputs(container: HTMLFormElement): void {
         for (const col of this._owner.config.columns) {
-            const field = FormManager._newField(col)
+            const field = this._newField(col)
             container.appendChild(field)
         }
     }

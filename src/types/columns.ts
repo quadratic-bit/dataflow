@@ -15,6 +15,8 @@ interface NumberInputProps {
     step?: number
 }
 
+interface SelectProps {}
+
 interface BaseTableColumn {
     type: string
     name: string
@@ -32,4 +34,23 @@ interface NumberTableColumn extends BaseTableColumn {
     props?: NumberInputProps
 }
 
-export type TableColumn = TextTableColumn | NumberTableColumn
+export function isSelectDependency(obj: any): obj is SelectDependency {
+    return "table" in obj && "column" in obj
+}
+
+export function createDependency(tableID: string, columnName: string): SelectDependency {
+    return { table: tableID, column: columnName }
+}
+
+export interface SelectDependency {
+    table: string
+    column: string
+}
+
+interface SelectTableColumn extends BaseTableColumn {
+    type: "select"
+    choices: string[] | SelectDependency
+    props?: SelectProps
+}
+
+export type TableColumn = TextTableColumn | NumberTableColumn | SelectTableColumn

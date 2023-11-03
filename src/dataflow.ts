@@ -1,5 +1,5 @@
 import { TableDOM } from "./dom/table"
-import type { TableColumn } from "./types/columns"
+import type { TableColumn, SelectDependency } from "./types/columns"
 import { Pagination } from "./pagination"
 import { Status } from "./status"
 import { PageLength, PagesAll, PagesSome } from "./types/pagination"
@@ -210,6 +210,12 @@ export class Table<Row> {
 
     setContext(action: Action<Row>): void {
         this._formManager.apply(action)
+    }
+
+    resolveDependency(dependency: SelectDependency): string[] {
+        const table = this._config.collection.find(dependency.table)
+        if (table == null) throw Error(`Couldn't resolve dependency of ${dependency.table}`);
+        return table.data.map((r: any) => r[dependency.column])
     }
 
     get data(): Row[] {
