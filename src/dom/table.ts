@@ -3,30 +3,24 @@ import { TableColumn } from "../types/columns"
 
 export class TableDOM<Row> {
     private _container: Element
-    private _cover!: HTMLDivElement
-    private _footer!: HTMLDivElement
-    private _tableWrapper!: HTMLDivElement
-    private _tableBody!: HTMLTableSectionElement
+    private _cover: HTMLDivElement
+    private _footer: HTMLDivElement
+    private _tableWrapper: HTMLDivElement
+    private _tableBody: HTMLTableSectionElement
     private _headers: TableColumn[]
     private _owner: Table<Row>
+    private _active: boolean = false
 
     constructor(container: Element, headers: TableColumn[], table: Table<Row>) {
         this._container = container
         this._headers = headers
-        this._initCover()
-        this._initTable()
-        this._initFooter()
-        this._owner = table
-    }
 
-    private _initCover(): void {
+        // ---- Init Cover ----
         const coverDOM: HTMLDivElement = document.createElement("div")
         coverDOM.classList.add("dataflow-table-header")
-        this._container.appendChild(coverDOM)
         this._cover = coverDOM
-    }
 
-    private _initTable(): void {
+        // ---- Init Table ----
         const tblContentWrapper: HTMLDivElement = document.createElement("div")
         tblContentWrapper.classList.add("dataflow-table-content")
         this._tableWrapper = tblContentWrapper
@@ -54,14 +48,13 @@ export class TableDOM<Row> {
         tbl.classList.add("dataflow-table")
         tblScrollableWrapper.appendChild(tbl)
         tblContentWrapper.appendChild(tblScrollableWrapper)
-        this._container.appendChild(tblContentWrapper)
-    }
 
-    private _initFooter(): void {
+        // ---- Init Footer ----
         const footerDOM: HTMLDivElement = document.createElement("div")
         footerDOM.classList.add("dataflow-table-footer")
-        this._container.appendChild(footerDOM)
         this._footer = footerDOM
+
+        this._owner = table
     }
 
     clear(): void {
@@ -99,12 +92,14 @@ export class TableDOM<Row> {
         this._container.removeChild(this._cover)
         this._container.removeChild(this._tableWrapper)
         this._container.removeChild(this._footer)
+        this._active = false
     }
 
     mount(): void {
         this._container.appendChild(this._cover)
         this._container.appendChild(this._tableWrapper)
         this._container.appendChild(this._footer)
+        this._active = true
     }
 
     get body(): HTMLTableSectionElement {
@@ -121,5 +116,9 @@ export class TableDOM<Row> {
 
     get footer(): HTMLDivElement {
         return this._footer
+    }
+
+    get active(): boolean {
+        return this._active
     }
 }

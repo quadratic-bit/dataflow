@@ -10,6 +10,8 @@ export class FormManager<Row> {
     }
 
     private _prepareContainer(title: string): HTMLFormElement {
+        this._owner.dom.unmount()
+
         this._owner.dom.container.classList.remove("dataflow-table-wrapper")
         this._owner.dom.container.classList.add("dataflow-form-wrapper")
 

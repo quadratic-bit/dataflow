@@ -9,10 +9,11 @@ import { ActionTray } from "./actionset"
 import { FormManager } from "./dom/form"
 
 export class TableCollection {
-    mount: Element
+    private _mount: Element
     handler: () => void
     getter: () => void
-    private static tables: Table<any>[]
+    currentTable: string | null = null
+    private _tables: Table<any>[]
 
     constructor(mount: string, handler: () => void, getter: () => void) {
         const mountDOM = document.querySelector(mount)
@@ -20,18 +21,22 @@ export class TableCollection {
             throw Error(`Mount point "${mount}" does not exist in DOM`)
         }
         mountDOM.classList.add("dataflow-table-wrapper")
-        this.mount = mountDOM
+        this._mount = mountDOM
         this.handler = handler
         this.getter = getter
-        TableCollection.tables = []
+        this._tables = []
     }
 
     public get tables(): Table<any>[] {
-        return this.tables
+        return this._tables
+    }
+
+    public get mountDOM(): Element {
+        return this._mount
     }
 
     find(id: string): Table<any> | null {
-        for (const tbl of TableCollection.tables) {
+        for (const tbl of this._tables) {
             if (tbl.config.id === id) {
                 return tbl
             }
@@ -39,8 +44,33 @@ export class TableCollection {
         return null
     }
 
+    mount(id: string): void {
+        if (this.currentTable != null) throw Error(`Cannot mount: ${this.currentTable} is up`);
+        const table = this.find(id)
+        if (table == null) throw Error(`No table found with id ${id}`);
+        if (!table.dom.active) table.dom.mount();
+        this.currentTable = id
+    }
+
+    umount(): void {
+        if (this.currentTable == null) throw Error(`Cannot unmount: no table is up`);
+        const table = this.find(this.currentTable)!
+        if (table.dom.active) table.dom.unmount();
+        this.currentTable = null
+    }
+
+    swap(id: string): void {
+        // TODO: Deal with swaps during actions
+        if (this.currentTable == id) return;
+        this.umount()
+        this.mount(id)
+    }
+
     new<Row>(id: string, init: string): _TableFactory<Row> {
-        return new _TableFactory(id, id, init, this)
+        return new _TableFactory(id, id, init, this, (table: Table<Row>) => {
+            this.currentTable = this.currentTable ?? table.config.id
+            this._tables.push(table)
+        })
     }
 }
 
@@ -49,16 +79,19 @@ interface TableConfig<Row> {
     title: string
     init: string
     columns: TableColumn[]
-    outer: TableCollection
+    collection: TableCollection
     pageSizes: PageLength[]
     actions: Action<Row>[]
 }
 
 class _TableFactory<Row> {
     private _data: TableConfig<Row>
+    private _callback: (table: Table<Row>) => void
 
-    constructor(id: string, title: string, init: string, outer: TableCollection) {
-        this._data = { id, title, init, outer, columns: [], pageSizes: [], actions: [] }
+    constructor(id: string, title: string, init: string, outer: TableCollection,
+                callback: (table: Table<Row>) => void) {
+        this._data = { id, title, init, collection: outer, columns: [], pageSizes: [], actions: [] }
+        this._callback = callback
     }
 
     describe(definition: TableColumn): _TableFactory<Row> {
@@ -81,7 +114,9 @@ class _TableFactory<Row> {
         if (this._data.pageSizes.length == 0) {
             this._data.pageSizes = [PagesSome(20), PagesSome(10), PagesAll]
         }
-        return new Table(this._data)
+        const table = new Table(this._data)
+        this._callback(table)
+        return table
     }
 }
 
@@ -100,7 +135,7 @@ export class Table<Row> {
 
     constructor(config: TableConfig<Row>) {
         this._config = config
-        this._dom = new TableDOM(config.outer.mount, config.columns, this)
+        this._dom = new TableDOM(config.collection.mountDOM, config.columns, this)
         this._status = new Status()
         this._pagination = new Pagination(this, this._config.pageSizes)
         this._actionTray = new ActionTray(config.actions, this)
@@ -113,6 +148,8 @@ export class Table<Row> {
                                 this._searchbar.dom.container)
         this._formManager = new FormManager(this)
         this._updateStatus()
+
+        if (this.config.collection.tables.length === 0) this.dom.mount();
     }
 
     private _updateStatus(): void {
@@ -172,7 +209,6 @@ export class Table<Row> {
     }
 
     setContext(action: Action<Row>): void {
-        this._dom.unmount()
         this._formManager.apply(action)
     }
 
