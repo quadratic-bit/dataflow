@@ -8,12 +8,32 @@ interface TextInputProps {
     spellcheck?: boolean
 }
 
+interface EmailInputProps {
+    maxlength?: number
+    minlength?: number
+    multiple?: boolean
+    pattern?: number
+    placeholder?: string
+    readonly?: boolean
+    size?: string
+}
+
+interface TelInputProps extends TextInputProps {}
+
 interface NumberInputProps {
     max?: number
     min?: number
     placeholder?: string
     step?: number
 }
+
+interface DateInputProps {
+    max?: string
+    min?: string
+    step?: number
+}
+
+interface DateTimeInputProps extends DateInputProps {}
 
 interface SelectProps {}
 
@@ -29,9 +49,29 @@ interface TextTableColumn extends BaseTableColumn {
     props?: TextInputProps
 }
 
+interface EmailTableColumn extends BaseTableColumn {
+    type: "email"
+    props?: EmailInputProps
+}
+
+interface TelTableColumn extends BaseTableColumn {
+    type: "tel"
+    props?: TelInputProps
+}
+
 interface NumberTableColumn extends BaseTableColumn {
     type: "number"
     props?: NumberInputProps
+}
+
+interface DateTableColumn extends BaseTableColumn {
+    type: "date"
+    props?: DateInputProps
+}
+
+interface DateTimeTableColumn extends BaseTableColumn {
+    type: "datetime-local"
+    props?: DateTimeInputProps
 }
 
 export function isSelectDependency(obj: any): obj is SelectDependency {
@@ -53,4 +93,10 @@ interface SelectTableColumn extends BaseTableColumn {
     props?: SelectProps
 }
 
-export type TableColumn = TextTableColumn | NumberTableColumn | SelectTableColumn
+export type TableColumn = TextTableColumn |
+                          EmailTableColumn |
+                          TelTableColumn |
+                          NumberTableColumn |
+                          DateTableColumn |
+                          DateTimeTableColumn |
+                          SelectTableColumn
