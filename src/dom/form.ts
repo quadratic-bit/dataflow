@@ -4,9 +4,14 @@ import { TableColumn, isSelectDependency } from "../types/columns";
 
 export class FormManager<Row> {
     private _owner: Table<Row>
+    private _container: HTMLDivElement
+    private _visible: boolean = false
+    private _active: boolean = false
 
     constructor(owner: Table<Row>) {
         this._owner = owner
+        // Intended to hold DOM content while unmounted
+        this._container = document.createElement("div")
     }
 
     private _prepareContainer(title: string): HTMLFormElement {
@@ -20,7 +25,7 @@ export class FormManager<Row> {
         const exitButton = document.createElement("a")
         exitButton.textContent = "Go back"
         exitButton.href = "javascript:void(0)"
-        exitButton.addEventListener("click", () => { this.hide() })
+        exitButton.addEventListener("click", () => { this.finish() })
         header.appendChild(document.createTextNode(`${this._owner.config.title} / ${title}`))
         header.appendChild(exitButton)
 
@@ -113,7 +118,7 @@ export class FormManager<Row> {
         const buttonCancel = document.createElement("button")
         buttonCancel.textContent = "Cancel"
         buttonCancel.type = "button"
-        buttonCancel.addEventListener("click", () => { this.hide() })
+        buttonCancel.addEventListener("click", () => { this.finish() })
 
         const buttonSubmit = document.createElement("button")
         buttonSubmit.textContent = "Submit"
@@ -148,16 +153,43 @@ export class FormManager<Row> {
         contentContainer.addEventListener("submit", async (e: SubmitEvent) => {
             e.preventDefault()
             await action.callback(new FormData(contentContainer), this._owner)
-            this.hide()
+            this.finish()
         })
+        this._active = true
+        this._visible = true
     }
 
-    hide(): void {
+    finish(): void {
         while (this._owner.dom.container.lastElementChild) {
             this._owner.dom.container.removeChild(this._owner.dom.container.lastElementChild)
         }
         this._owner.dom.container.classList.remove("dataflow-form-wrapper")
         this._owner.dom.container.classList.add("dataflow-table-wrapper")
         this._owner.dom.mount()
+        this._active = false
+        this._visible = false
+    }
+
+    unmount(): void {
+        this._container.append(...this._owner.dom.container.children)
+        this._owner.dom.container.classList.remove("dataflow-form-wrapper")
+        this._owner.dom.container.classList.add("dataflow-table-wrapper")
+        this._visible = false
+    }
+
+    mount(): void {
+        if (!this._active) throw Error("Cannot mount non-existing form. Apply action first");
+        this._owner.dom.container.append(...this._container.children)
+        this._owner.dom.container.classList.remove("dataflow-table-wrapper")
+        this._owner.dom.container.classList.add("dataflow-form-wrapper")
+        this._visible = true
+    }
+
+    get active(): boolean {
+        return this._active
+    }
+
+    get visible(): boolean {
+        return this._visible
     }
 }

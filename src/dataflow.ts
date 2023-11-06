@@ -48,14 +48,14 @@ export class TableCollection {
         if (this.currentTable != null) throw Error(`Cannot mount: ${this.currentTable} is up`);
         const table = this.find(id)
         if (table == null) throw Error(`No table found with id ${id}`);
-        if (!table.dom.active) table.dom.mount();
+        table.mount();
         this.currentTable = id
     }
 
     umount(): void {
         if (this.currentTable == null) throw Error(`Cannot unmount: no table is up`);
         const table = this.find(this.currentTable)!
-        if (table.dom.active) table.dom.unmount();
+        table.unmount();
         this.currentTable = null
     }
 
@@ -216,6 +216,22 @@ export class Table<Row> {
         const table = this._config.collection.find(dependency.table)
         if (table == null) throw Error(`Couldn't resolve dependency of ${dependency.table}`);
         return table.data.map((r: any) => r[dependency.column])
+    }
+
+    mount(): void {
+        if (this._formManager.active && !this._formManager.visible) {
+            this._formManager.mount()
+        } else if (!this._formManager.active && !this.dom.active) {
+            this.dom.mount()
+        }
+    }
+
+    unmount(): void {
+        if (this._formManager.active && this._formManager.visible) {
+            this._formManager.unmount()
+        } else if (!this._formManager.active && this.dom.active) {
+            this.dom.unmount()
+        }
     }
 
     get data(): Row[] {
