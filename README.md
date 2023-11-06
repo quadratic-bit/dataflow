@@ -67,4 +67,4 @@ We use [Semantic Versioning](https://semver.org/spec/v2.0.0.html), version 2.0, 
 
 ## License
 
-This project is published under MIT license.
+This project is released under the GPLv3 license, which you can find in the file [LICENSE](LICENSE).
