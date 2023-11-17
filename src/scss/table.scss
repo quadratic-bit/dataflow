@@ -63,18 +63,10 @@
         }
     }
 
-    @media (prefers-color-scheme: dark) {
-        & th {
-            box-shadow: inset 10em 10em #1c1b22;
-        }
-
-        & tbody tr:hover {
-            background-color: rgba(255, 255, 255, 0.075) !important;
-
-            &.selected {
-                background-color: lightsteelblue !important;
-                color: black !important;
-            }
+    & tbody tr:hover {
+        &.selected {
+            background-color: lightskyblue;
+            color: black;
         }
     }
 
@@ -86,11 +78,9 @@
             color: white;
         }
 
-        @media (prefers-color-scheme: dark) {
-            &.selected {
-                background-color: lightsteelblue !important;
-                color: black !important;
-            }
+        &.selected {
+            background-color: lightskyblue;
+            color: black;
         }
     }
 }
