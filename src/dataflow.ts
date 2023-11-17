@@ -12,12 +12,17 @@ import { Localization, PartialLocale } from "./locale"
 export class TableCollection {
     private _mount: Element
     handler: () => void
-    getter: () => void
+    getter: (query: any) => Promise<any>
     currentTable: string | null = null
     private _tables: Table<any>[]
     private _localization: Localization
 
-    constructor(mount: string, handler: () => void, getter: () => void, locale?: Partial<PartialLocale>) {
+    constructor(
+        mount: string,
+        handler: () => void,
+        getter: (query: any) => Promise<any>,
+        locale?: Partial<PartialLocale>)
+    {
         const mountDOM = document.querySelector(mount)
         if (mountDOM == null) {
             throw Error(`Mount point "${mount}" does not exist in DOM`)
@@ -84,7 +89,7 @@ export class TableCollection {
 interface TableConfig<Row> {
     id: string
     title: string
-    init: string
+    init: any
     columns: TableColumn[]
     collection: TableCollection
     pageSizes: PageLength[]
@@ -95,7 +100,7 @@ class _TableFactory<Row> {
     private _data: TableConfig<Row>
     private _callback: (table: Table<Row>) => void
 
-    constructor(id: string, title: string, init: string, outer: TableCollection,
+    constructor(id: string, title: string, init: any, outer: TableCollection,
                 callback: (table: Table<Row>) => void) {
         this._data = { id, title, init, collection: outer, columns: [], pageSizes: [], actions: [] }
         this._callback = callback
@@ -191,7 +196,15 @@ export class Table<Row> {
         this._formManager = new FormManager(this)
         this._updateStatus()
 
+        this._init()
+
         if (this.config.collection.tables.length === 0) this.dom.mount();
+    }
+
+    private async _init(): Promise<void> {
+        const data = await this._config.collection.getter(this._config.init) as Row[]
+        console.log(data)
+        this.add(data)
     }
 
     private _updateStatus(): void {
@@ -208,7 +221,6 @@ export class Table<Row> {
         // TODO: add possible optimization
         this.mask = this.mask
         this.refresh()
-        // TODO: Add status update
     }
 
     replace(chunk: Row[]): void {
