@@ -1,25 +1,30 @@
 import { StatusDOM } from "./dom/status"
+import { LocaleStatus } from "./locale"
 
 export class Status {
     private __content!: string
     private _dom: StatusDOM
+    private _locale: LocaleStatus
 
-    constructor() {
+    constructor(locale: LocaleStatus) {
         this._dom = new StatusDOM()
+        this._locale = locale
         this.setIdle()
     }
 
     setIdle(): void {
-        // TODO: Deal with localization
-        this.content = "Click on a row to select it"
+        this.content = this._locale.idle
     }
 
     setRange(start: number, end: number, total: number): void {
-        this.content = `Showing ${start} to ${end} of ${total} entries`
+        this.content = this._locale.showRange
+            .replaceAll("_START_", start + "")
+            .replaceAll("_END_", end + "")
+            .replaceAll("_TOTAL_", total + "")
     }
 
     setEmpty(): void {
-        this.content = "No entries available"
+        this.content = this._locale.showEmpty
     }
 
     get dom(): StatusDOM {

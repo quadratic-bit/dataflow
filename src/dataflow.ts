@@ -7,6 +7,7 @@ import { SearchBar } from "./search"
 import { Action } from "./types/actions"
 import { ActionTray } from "./actionset"
 import { FormManager } from "./dom/form"
+import { Localization, PartialLocale } from "./locale"
 
 export class TableCollection {
     private _mount: Element
@@ -14,8 +15,9 @@ export class TableCollection {
     getter: () => void
     currentTable: string | null = null
     private _tables: Table<any>[]
+    private _localization: Localization
 
-    constructor(mount: string, handler: () => void, getter: () => void) {
+    constructor(mount: string, handler: () => void, getter: () => void, locale?: Partial<PartialLocale>) {
         const mountDOM = document.querySelector(mount)
         if (mountDOM == null) {
             throw Error(`Mount point "${mount}" does not exist in DOM`)
@@ -25,6 +27,7 @@ export class TableCollection {
         this.handler = handler
         this.getter = getter
         this._tables = []
+        this._localization = new Localization(locale)
     }
 
     public get tables(): Table<any>[] {
@@ -72,6 +75,10 @@ export class TableCollection {
             this._tables.push(table)
         })
     }
+
+    get locale(): Localization {
+        return this._localization
+    }
 }
 
 interface TableConfig<Row> {
@@ -101,6 +108,38 @@ class _TableFactory<Row> {
 
     action(action: Action<Row>): _TableFactory<Row> {
         this._data.actions.push(action)
+        return this
+    }
+
+    actionAdd(callback: (data: FormData, table: Table<Row>) => Promise<void>): _TableFactory<Row> {
+        this._data.actions.push({
+            label: this._data.collection.locale.actions.add,
+            showColumns: true,
+            fillColumns: false,
+            activateOnSelect: false,
+            callback
+        })
+        return this
+    }
+
+    actionEdit(callback: (data: FormData, table: Table<Row>) => Promise<void>): _TableFactory<Row> {
+        this._data.actions.push({
+            label: this._data.collection.locale.actions.edit,
+            showColumns: true,
+            fillColumns: true,
+            activateOnSelect: true,
+            callback
+        })
+        return this
+    }
+
+    actionDelete(callback: (data: FormData, table: Table<Row>) => Promise<void>): _TableFactory<Row> {
+        this._data.actions.push({
+            label: this._data.collection.locale.actions.delete,
+            showColumns: false,
+            activateOnSelect: true,
+            callback
+        })
         return this
     }
 
@@ -136,8 +175,11 @@ export class Table<Row> {
     constructor(config: TableConfig<Row>) {
         this._config = config
         this._dom = new TableDOM(config.collection.mountDOM, config.columns, this)
-        this._status = new Status()
-        this._pagination = new Pagination(this, this._config.pageSizes)
+        this._status = new Status(config.collection.locale.status)
+        this._pagination = new Pagination(
+            this,
+            this._config.pageSizes,
+            config.collection.locale.pagination)
         this._actionTray = new ActionTray(config.actions, this)
         this._searchbar = new SearchBar(this)
 

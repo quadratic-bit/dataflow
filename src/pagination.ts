@@ -1,5 +1,6 @@
 import { Table } from "./dataflow"
 import { PaginationDOM } from "./dom/pagination"
+import { LocalePagination } from "./locale"
 import { PageLength } from "./types/pagination"
 
 export class Pagination {
@@ -7,9 +8,9 @@ export class Pagination {
     private _dom: PaginationDOM
     private _lastDataSize: number = 1
 
-    constructor(table: Table<any>, options: PageLength[]) {
+    constructor(table: Table<any>, options: PageLength[], locale: LocalePagination) {
         this._length = options[0]
-        this._dom = new PaginationDOM(table, options)
+        this._dom = new PaginationDOM(table, options, locale)
     }
 
     retrieveDisplayRange(dataSize: number): [number, number] {

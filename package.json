@@ -7,7 +7,6 @@
     "exports": {
         ".": "./dist/dataflow.js",
         "./pagination": "./dist/types/pagination.js",
-        "./actions": "./dist/types/actions.js",
         "./columns": "./dist/types/columns.js"
     },
     "files": [

@@ -1,4 +1,5 @@
 import { Table } from "../dataflow"
+import { LocalePagination } from "../locale"
 import { PageLength } from "../types/pagination"
 
 export class PaginationDOM {
@@ -8,7 +9,7 @@ export class PaginationDOM {
     private _activePageIndex: number
     private _owner: Table<any>
 
-    constructor(table: Table<any>, options: PageLength[]) {
+    constructor(table: Table<any>, options: PageLength[], locale: LocalePagination) {
         this._container = document.createElement("div")
         this._container.addEventListener("click", (e: MouseEvent) => {
             if ((e.target as Element).tagName != "BUTTON") return;
@@ -22,7 +23,7 @@ export class PaginationDOM {
         this._activePageIndex = 0
         this._owner = table
         this.repopulateButtons(1)
-        this._sizeSelector = new PaginationSizeSelectorDOM(options, table)
+        this._sizeSelector = new PaginationSizeSelectorDOM(options, table, locale)
         this.activePage = 0
     }
 
@@ -81,13 +82,33 @@ class PaginationSizeSelectorDOM {
     private _chooser: HTMLSelectElement
     private _owner: Table<any>
 
-    constructor(options: PageLength[], sizeSelector: Table<any>) {
+    constructor(options: PageLength[], sizeSelector: Table<any>, locale: LocalePagination) {
         this._owner = sizeSelector
         this._container = document.createElement("span")
-        this._container.appendChild(document.createTextNode("Show "))
         this._chooser = document.createElement("select")
-        this._container.appendChild(this._chooser)
-        this._container.appendChild(document.createTextNode(" entries"))
+
+        const split = locale.size.split("_TOTAL_")
+        switch (split.length) {
+        case 1:
+            if (!locale.size.includes("_TOTAL_") && locale.size.trim().length > 0) {
+                throw Error("No _TOTAL_ indicator found in pagination size")
+            }
+            if (locale.size.trim().startsWith("_TOTAL_")) {
+                this._container.appendChild(this._chooser)
+                this._container.appendChild(document.createTextNode(split[0]))
+            } else {
+                this._container.appendChild(document.createTextNode(split[0]))
+                this._container.appendChild(this._chooser)
+            }
+            break
+        case 2:
+            this._container.appendChild(document.createTextNode(split[0]))
+            this._container.appendChild(this._chooser)
+            this._container.appendChild(document.createTextNode(split[1]))
+            break
+        default:
+            throw Error("Too many _TOTAL_ indicators found in pagination size")
+        }
 
         for (const option of options) {
             const optionDOM = document.createElement("option")
@@ -97,7 +118,7 @@ class PaginationSizeSelectorDOM {
                     optionDOM.value = option.amount + ""
                     break
                 case "all":
-                    optionDOM.textContent = "All"
+                    optionDOM.textContent = locale.all
                     optionDOM.value = "0"
             }
             this._chooser.appendChild(optionDOM)

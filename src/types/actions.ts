@@ -32,32 +32,3 @@ interface ActionBlank<Row> extends _BaseAction<Row> {
 }
 
 export type Action<Row> = ActionNew<Row> | ActionEdit<Row> | ActionBlank<Row>
-
-export function actionAdd<Row>(callback: (data: FormData, table: Table<Row>) => Promise<void>): Action<Row> {
-    return {
-        label: "Add",
-        showColumns: true,
-        fillColumns: false,
-        activateOnSelect: false,
-        callback
-    }
-}
-
-export function actionEdit<Row>(callback: (data: FormData, table: Table<Row>) => Promise<void>): Action<Row> {
-    return {
-        label: "Edit",
-        showColumns: true,
-        fillColumns: true,
-        activateOnSelect: true,
-        callback
-    }
-}
-
-export function actionDelete<Row>(callback: (data: FormData, table: Table<Row>) => Promise<void>): Action<Row> {
-    return {
-        label: "Delete",
-        showColumns: false,
-        activateOnSelect: true,
-        callback
-    }
-}
