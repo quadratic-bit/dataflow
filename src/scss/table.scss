@@ -46,6 +46,10 @@
         padding: .5rem
     }
 
+    & tr {
+        z-index: 999;
+    }
+
     & tr > td > div {
         max-height: 1.3em;
         overflow: hidden;
@@ -62,12 +66,16 @@
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;
-            z-index: -1;
+            z-index: 0;
         }
     }
 
     & th {
         box-shadow: inset 10em 10em white;
+    }
+
+    & tbody {
+        background-color: white;
     }
 
     & thead tr {
@@ -86,7 +94,7 @@
 
     & tbody tr:hover {
         &.selected {
-            background-color: rgba(lightskyblue, 0.4);
+            background-color: rgba(lightskyblue, 0.5);
             color: black;
         }
     }
@@ -95,7 +103,7 @@
         cursor: pointer;
 
         &.selected {
-            background-color: rgba(lightskyblue, 0.4);
+            background-color: rgba(lightskyblue, 0.5);
             color: black;
         }
     }
