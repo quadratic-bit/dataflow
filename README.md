@@ -2,7 +2,7 @@
 
 Dependency-free TypeScript library making your HTML tables interactive
 
-> **Warning**
+> [!WARNING]
 > This project is under active development, meaning most features are still unavailable and API **will** change rapidly until first release. That implies no usage guidelines will stay for a long time so no docs until release.
 
 ## Table of contents
