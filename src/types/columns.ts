@@ -1,3 +1,5 @@
+interface HiddenInputProps {}
+
 interface TextInputProps {
     maxlength?: number
     minlength?: number
@@ -7,6 +9,20 @@ interface TextInputProps {
     size?: string
     spellcheck?: boolean
 }
+
+interface TextAreaProps {
+    autocomplete?: boolean
+    autocorrect?: boolean
+    cols?: number
+    maxlength?: number
+    minlength?: number
+    placeholder?: string
+    readonly?: boolean
+    rows?: number
+    spellcheck?: boolean
+    wrap?: "hard" | "soft" | "off"
+}
+
 
 interface EmailInputProps {
     maxlength?: number
@@ -44,9 +60,19 @@ interface BaseTableColumn {
     required?: boolean
 }
 
+interface HiddenTableColumn extends BaseTableColumn {
+    type: "hidden"
+    props?: HiddenInputProps
+}
+
 interface TextTableColumn extends BaseTableColumn {
     type: "text"
     props?: TextInputProps
+}
+
+interface TextAreaTableColumn extends BaseTableColumn {
+    type: "textarea"
+    props?: TextAreaProps
 }
 
 interface EmailTableColumn extends BaseTableColumn {
@@ -93,7 +119,9 @@ interface SelectTableColumn extends BaseTableColumn {
     props?: SelectProps
 }
 
-export type TableColumn = TextTableColumn |
+export type TableColumn = HiddenTableColumn |
+                          TextTableColumn |
+                          TextAreaTableColumn |
                           EmailTableColumn |
                           TelTableColumn |
                           NumberTableColumn |

@@ -47,7 +47,8 @@ export class FormManager<Row> {
         label.textContent = column.title ??
                             column.name.charAt(0).toUpperCase() +
                             column.name.slice(1)
-        let input: HTMLInputElement | HTMLSelectElement
+        if (column.type === "hidden") field.style.display = "none";
+        let input: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
 
         switch (column.type) {
         case "select":
@@ -61,6 +62,9 @@ export class FormManager<Row> {
                 option.value = entry
                 input.appendChild(option)
             }
+            break
+        case "textarea":
+            input = document.createElement("textarea")
             break
         default:
             input = document.createElement("input")
