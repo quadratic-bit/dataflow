@@ -30,8 +30,9 @@ export class TableDOM<Row> {
         const tblHead: HTMLTableSectionElement = document.createElement("thead")
         const tblBody: HTMLTableSectionElement = document.createElement("tbody")
         tblBody.addEventListener("click", (e: MouseEvent) => {
-            if ((e.target as Element).tagName != "TD") return;
-            const row = (e.target as HTMLTableCellElement).closest("tr")!
+            const el = e.target as Element
+            if (el.tagName != "TD" && el.tagName != "DIV") return;
+            const row = el.closest("tr")!
             this._owner.toggleRow(Array.from(this._tableBody.children).indexOf(row))
         })
         this._tableBody = tblBody
@@ -69,9 +70,14 @@ export class TableDOM<Row> {
             const tr: HTMLTableRowElement = document.createElement("tr")
             for (const header of this._headers) {
                 const td: HTMLTableCellElement = document.createElement("td")
-                // TODO: I've successfully stole this code but some checks should be here I feel
+                const divcell: HTMLDivElement = document.createElement("div")
+
+                // TODO: I've successfully stolen this line but some checks should be here I feel
                 const value: any = row[header.name as keyof Row]
-                td.textContent = value + ""
+
+                divcell.textContent = value + ""
+                divcell.title = value + ""
+                td.appendChild(divcell)
                 tr.appendChild(td)
             }
             this._tableBody.appendChild(tr)

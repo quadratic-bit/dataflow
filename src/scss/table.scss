@@ -17,6 +17,7 @@
 }
 
 .dataflow-table-content {
+    margin: 0 10%;
     display: flex;
     align-items: center;
     height: calc(100% - 10em);
@@ -45,6 +46,26 @@
         padding: .5rem
     }
 
+    & tr > td > div {
+        max-height: 1.3em;
+        overflow: hidden;
+        position: relative;
+        color: transparent;
+
+        &::after {
+            content: attr(title);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            color: black;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            z-index: -1;
+        }
+    }
+
     & th {
         box-shadow: inset 10em 10em white;
     }
@@ -65,7 +86,7 @@
 
     & tbody tr:hover {
         &.selected {
-            background-color: lightskyblue;
+            background-color: rgba(lightskyblue, 0.4);
             color: black;
         }
     }
@@ -74,12 +95,7 @@
         cursor: pointer;
 
         &.selected {
-            background-color: blue;
-            color: white;
-        }
-
-        &.selected {
-            background-color: lightskyblue;
+            background-color: rgba(lightskyblue, 0.4);
             color: black;
         }
     }
