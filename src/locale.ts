@@ -15,16 +15,22 @@ export interface LocaleActions {
     delete: string
 }
 
+export interface LocaleForm {
+    goBack: string
+}
+
 export interface PartialLocale {
     status: Partial<LocaleStatus>
     pagination: Partial<LocalePagination>
     actions: Partial<LocaleActions>
+    form: Partial<LocaleForm>
 }
 
 export interface Locale {
     status: LocaleStatus
     pagination: LocalePagination
     actions: LocaleActions
+    form: LocaleForm
 }
 
 export const LOCALE_DEFAULT: Locale = {
@@ -41,6 +47,9 @@ export const LOCALE_DEFAULT: Locale = {
         add: "Add",
         edit: "Edit",
         delete: "Delete"
+    },
+    form: {
+        goBack: "Go back"
     }
 }
 
@@ -62,6 +71,9 @@ export class Localization {
                 add: locale?.actions?.add ?? LOCALE_DEFAULT.actions.add,
                 edit: locale?.actions?.edit ?? LOCALE_DEFAULT.actions.edit,
                 delete: locale?.actions?.delete ?? LOCALE_DEFAULT.actions.delete,
+            },
+            form: {
+                goBack: locale?.form?.goBack ?? LOCALE_DEFAULT.form.goBack
             }
         }
     }
@@ -76,5 +88,9 @@ export class Localization {
 
     get actions(): LocaleActions {
         return this._locale.actions
+    }
+
+    get form(): LocaleForm {
+        return this._locale.form
     }
 }

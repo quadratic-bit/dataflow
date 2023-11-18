@@ -2,15 +2,18 @@ import { Table } from "common/dataflow";
 import { Action } from "types/actions";
 import type { TableColumn } from "types/columns";
 import { isSelectDependency } from "common/subscription";
+import { LocaleForm } from "common/locale";
 
 export class FormManager<Row> {
     private _owner: Table<Row>
     private _container: HTMLDivElement
     private _visible: boolean = false
     private _active: boolean = false
+    private _locale: LocaleForm
 
-    constructor(owner: Table<Row>) {
+    constructor(owner: Table<Row>, locale: LocaleForm) {
         this._owner = owner
+        this._locale = locale
         // Intended to hold DOM content while unmounted
         this._container = document.createElement("div")
     }
@@ -24,7 +27,7 @@ export class FormManager<Row> {
         const header = document.createElement("div")
         header.classList.add("dataflow-form-header")
         const exitButton = document.createElement("a")
-        exitButton.textContent = "Go back"
+        exitButton.textContent = this._locale.goBack
         exitButton.href = "javascript:void(0)"
         exitButton.addEventListener("click", () => { this.finish() })
         header.appendChild(document.createTextNode(`${this._owner.config.title} / ${title}`))

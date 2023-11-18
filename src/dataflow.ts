@@ -75,8 +75,8 @@ export class TableCollection {
         this.mount(id)
     }
 
-    new<Row>(id: string, init: string): _TableFactory<Row> {
-        return new _TableFactory(id, id, init, this, (table: Table<Row>) => {
+    new<Row>(id: string, init: string, title?: string): _TableFactory<Row> {
+        return new _TableFactory(id, title ?? id, init, this, (table: Table<Row>) => {
             this.currentTable = this.currentTable ?? table.config.id
             this._tables.push(table)
         })
@@ -195,7 +195,7 @@ export class Table<Row> {
         this._dom.header.append(this._pagination.dom.sizeSelector.container,
                                 this._actionTray.dom.container,
                                 this._searchbar.dom.container)
-        this._formManager = new FormManager(this)
+        this._formManager = new FormManager(this, config.collection.locale.form)
         this._updateStatus()
 
         this._init()
