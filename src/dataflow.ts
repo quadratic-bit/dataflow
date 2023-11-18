@@ -1,5 +1,6 @@
 import { TableDOM } from "dom/table"
-import type { TableColumn, SelectDependency } from "types/columns"
+import type { TableColumn } from "types/columns"
+import type { SelectDependency } from "./subscription"
 import { Pagination } from "components/pagination"
 import { Status } from "components/status"
 import { PageLength, PagesAll, PagesSome } from "types/pagination"

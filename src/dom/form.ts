@@ -1,6 +1,7 @@
 import { Table } from "/dataflow";
 import { Action } from "types/actions";
-import { TableColumn, isSelectDependency } from "types/columns";
+import type { TableColumn } from "types/columns";
+import { isSelectDependency } from "/subscription";
 
 export class FormManager<Row> {
     private _owner: Table<Row>
