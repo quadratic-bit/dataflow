@@ -203,7 +203,6 @@ export class Table<Row> {
 
     private async _init(): Promise<void> {
         const data = await this._config.collection.getter(this._config.init) as Row[]
-        console.log(data)
         this.add(data)
     }
 
@@ -266,7 +265,19 @@ export class Table<Row> {
         this._formManager.apply(action)
     }
 
-    resolveDependency(dependency: SelectDependency): string[] {
+    resolveDependency(dependency: SelectDependency, query: any): string | null {
+        const table = this._config.collection.find(dependency.table)
+        if (table == null) throw Error(`Couldn't resolve dependency of ${dependency.table}`);
+        // TODO: deal with lazy referencing
+        for (const row of table._data) {
+            if (row[dependency.reference] === query) {
+                return row[dependency.column]
+            }
+        }
+        return null
+    }
+
+    resolveSelectDependency(dependency: SelectDependency): string[] {
         const table = this._config.collection.find(dependency.table)
         if (table == null) throw Error(`Couldn't resolve dependency of ${dependency.table}`);
         return table.data.map((r: any) => r[dependency.column])

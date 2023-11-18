@@ -54,7 +54,7 @@ export class FormManager<Row> {
         case "select":
             input = document.createElement("select")
             const choices = isSelectDependency(column.choices) ?
-                            this._owner.resolveDependency(column.choices) :
+                            this._owner.resolveSelectDependency(column.choices) :
                             column.choices
             for (const entry of choices) {
                 const option = document.createElement("option")

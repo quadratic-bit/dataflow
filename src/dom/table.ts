@@ -1,5 +1,5 @@
 import { Table } from "../dataflow"
-import { TableColumn } from "../types/columns"
+import { TableColumn, isSelectDependency } from "../types/columns"
 
 export class TableDOM<Row> {
     private _container: Element
@@ -74,6 +74,11 @@ export class TableDOM<Row> {
 
                 // TODO: I've successfully stolen this line but some checks should be here I feel
                 let value: any = row[header.name as keyof Row]
+
+                if (header.type === "select" && isSelectDependency(header.choices)) {
+                    value = this._owner.resolveDependency(header.choices, value)
+                }
+
                 if (header.render != null) {
                     value = header.render(value)
                 }
