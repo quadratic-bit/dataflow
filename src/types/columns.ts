@@ -58,6 +58,7 @@ interface BaseTableColumn {
     name: string
     title?: string
     required?: boolean
+    overflow?: boolean
 }
 
 interface HiddenTableColumn extends BaseTableColumn {

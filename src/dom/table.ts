@@ -77,6 +77,9 @@ export class TableDOM<Row> {
 
                 divcell.textContent = value + ""
                 divcell.title = value + ""
+                if (header.overflow === false) {
+                    divcell.style.whiteSpace = "nowrap"
+                }
                 td.appendChild(divcell)
                 tr.appendChild(td)
             }
