@@ -177,6 +177,7 @@ export class Table<Row> {
     private _mask: number[] | null = null
     private _listedRows: Row[] = []
     private _selectedRowIndex: number | null = null
+    private _subscribers: Set<string> = new Set()
 
     constructor(config: TableConfig<Row>) {
         this._config = config
@@ -221,6 +222,7 @@ export class Table<Row> {
         // TODO: add possible optimization
         this.mask = this.mask
         this.refresh()
+        this.serveUpdates()
     }
 
     replace(chunk: Row[]): void {
@@ -266,10 +268,22 @@ export class Table<Row> {
         this._formManager.apply(action)
     }
 
+    subscribe(subscriberID: string): void {
+        this._subscribers.add(subscriberID)
+    }
+
+    serveUpdates(): void {
+        for (const subID of this._subscribers) {
+            const subscriber = this._config.collection.find(subID)
+            if (subscriber == null) throw Error(`Couldn't resolve subscription of ${subID}`);
+            subscriber.refresh()
+        }
+    }
+
     resolveDependency(dependency: SelectDependency, query: any): string | null {
         const table = this._config.collection.find(dependency.table)
         if (table == null) throw Error(`Couldn't resolve dependency of ${dependency.table}`);
-        // TODO: deal with lazy referencing
+        table.subscribe(this._config.id)
         for (const row of table._data) {
             if (row[dependency.reference] === query) {
                 return row[dependency.column]
