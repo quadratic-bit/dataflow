@@ -246,6 +246,12 @@ export class Table<Row> {
         this.replace(this.rows.slice(pageStart, pageEnd))
     }
 
+    reinit(): void {
+        this._data = []
+        this._init()
+        this.refresh()
+    }
+
     toggleRow(relativeRowIndex: number): void {
         // TODO: Address performance
         const [pageStart, pageEnd] = this._pagination.retrieveDisplayRange(this.rows.length)
