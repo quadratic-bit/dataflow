@@ -1,3 +1,5 @@
+@use "const.scss";
+
 .dataflow-form-wrapper {
     display: flex;
     flex-direction: column;
@@ -6,7 +8,7 @@
 .dataflow-form-header {
     display: flex;
     column-gap: 1em;
-    padding: .5em;
+    padding: .5rem 1rem;
 }
 
 .dataflow-form-body {
@@ -22,6 +24,10 @@
     row-gap: 1em;
     width: fit-content;
     height: fit-content;
+    background-color: white;
+    padding: 1em;
+    border-radius: 10px;
+    border: const.$table-border;
 }
 
 .dataflow-form-field {
