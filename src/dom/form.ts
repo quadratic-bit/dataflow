@@ -45,7 +45,7 @@ export class FormManager<Row> {
         return content
     }
 
-    private _newField(column: TableColumn): HTMLDivElement {
+    private _newField(column: TableColumn, rowValue?: Row): HTMLDivElement {
         const field = document.createElement("div")
         const label = document.createElement("label")
         label.textContent = column.title ??
@@ -60,10 +60,22 @@ export class FormManager<Row> {
             const choices = isSelectDependency(column.choices) ?
                             this._owner.resolveSelectDependency(column.choices) :
                             column.choices
+            let chosen: string | null = null
+            if (rowValue != null) {
+                const chosenRaw = rowValue[column.name as keyof Row]
+                if (isSelectDependency(column.choices)) {
+                    chosen = this._owner.resolveDependency(column.choices, chosenRaw)
+                } else {
+                    chosen = chosenRaw + ""
+                }
+            }
             for (const entry of choices) {
                 const option = document.createElement("option")
-                option.textContent = entry
-                option.value = entry
+                option.textContent = typeof entry === "string" ? entry : entry.label
+                option.value = typeof entry === "string" ? entry : entry.value + ""
+                if (typeof entry === "string" ? chosen == entry : chosen == entry.label) {
+                    option.selected = true
+                }
                 input.appendChild(option)
             }
             break
@@ -82,6 +94,18 @@ export class FormManager<Row> {
                 input.setAttribute(prop, value)
             }
         }
+
+        if (rowValue != null && column.type !== "select") {
+            let data: string
+            if (column.preprocess != null) {
+                // TODO: handle missing field case
+                data = column.preprocess(rowValue[column.name as keyof Row])
+            } else (
+                data = rowValue[column.name as keyof Row] + ""
+            )
+            input.value = data
+        }
+
         field.appendChild(label)
         field.appendChild(input)
         field.classList.add("dataflow-form-field")
@@ -90,16 +114,7 @@ export class FormManager<Row> {
 
     private _applyFilledInputs(container: HTMLFormElement, row: Row): void {
         for (const col of this._owner.config.columns) {
-            const field = this._newField(col)
-            const input = field.children.item(1) as HTMLInputElement
-            // TODO: handle missing field case
-            let data: string
-            if (col.preprocess != null) {
-                data = col.preprocess(row[input.name as keyof Row])
-            } else (
-                data = row[input.name as keyof Row] + ""
-            )
-            input.value = data
+            const field = this._newField(col, row)
             container.appendChild(field)
         }
     }

@@ -292,10 +292,12 @@ export class Table<Row> {
         return null
     }
 
-    resolveSelectDependency(dependency: SelectDependency): string[] {
+    resolveSelectDependency(dependency: SelectDependency): { value: unknown, label: string }[] {
         const table = this._config.collection.find(dependency.table)
         if (table == null) throw Error(`Couldn't resolve dependency of ${dependency.table}`);
-        return table.data.map((r: any) => r[dependency.column])
+        return table.data.map((r: any) => {
+            return { value: r[dependency.reference], label: r[dependency.column] }
+        })
     }
 
     mount(): void {
