@@ -58,6 +58,8 @@ interface BaseTableColumn {
     name: string
     title?: string
     required?: boolean
+    render?(value: unknown): string
+    preprocess?(value: unknown): string
     overflow?: boolean
 }
 

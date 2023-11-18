@@ -89,7 +89,13 @@ export class FormManager<Row> {
             const field = this._newField(col)
             const input = field.children.item(1) as HTMLInputElement
             // TODO: handle missing field case
-            input.value = row[input.name as keyof Row] + ""
+            let data: string
+            if (col.preprocess != null) {
+                data = col.preprocess(row[input.name as keyof Row])
+            } else (
+                data = row[input.name as keyof Row] + ""
+            )
+            input.value = data
             container.appendChild(field)
         }
     }

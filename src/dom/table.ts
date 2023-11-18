@@ -73,7 +73,10 @@ export class TableDOM<Row> {
                 const divcell: HTMLDivElement = document.createElement("div")
 
                 // TODO: I've successfully stolen this line but some checks should be here I feel
-                const value: any = row[header.name as keyof Row]
+                let value: any = row[header.name as keyof Row]
+                if (header.render != null) {
+                    value = header.render(value)
+                }
 
                 divcell.textContent = value + ""
                 divcell.title = value + ""
