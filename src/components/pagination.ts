@@ -1,7 +1,7 @@
-import { Table } from "./dataflow"
-import { PaginationDOM } from "./dom/pagination"
-import { LocalePagination } from "./locale"
-import { PageLength } from "./types/pagination"
+import { Table } from "/dataflow"
+import { PaginationDOM } from "dom/pagination"
+import { LocalePagination } from "/locale"
+import { PageLength } from "types/pagination"
 
 export class Pagination {
     private _length: PageLength

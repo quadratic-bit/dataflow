@@ -1,5 +1,5 @@
-import { ActionTray } from "../actionset"
-import { Action } from "../types/actions"
+import { ActionTray } from "components/actionset"
+import { Action } from "types/actions"
 
 export class ActionTrayDOM {
     private _container: HTMLDivElement

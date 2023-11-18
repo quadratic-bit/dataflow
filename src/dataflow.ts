@@ -1,13 +1,13 @@
-import { TableDOM } from "./dom/table"
-import type { TableColumn, SelectDependency } from "./types/columns"
-import { Pagination } from "./pagination"
-import { Status } from "./status"
-import { PageLength, PagesAll, PagesSome } from "./types/pagination"
-import { SearchBar } from "./search"
-import { Action } from "./types/actions"
-import { ActionTray } from "./actionset"
-import { FormManager } from "./dom/form"
-import { Localization, PartialLocale } from "./locale"
+import { TableDOM } from "dom/table"
+import type { TableColumn, SelectDependency } from "types/columns"
+import { Pagination } from "components/pagination"
+import { Status } from "components/status"
+import { PageLength, PagesAll, PagesSome } from "types/pagination"
+import { SearchBar } from "components/search"
+import { Action } from "types/actions"
+import { ActionTray } from "components/actionset"
+import { FormManager } from "dom/form"
+import { Localization, PartialLocale } from "/locale"
 
 export class TableCollection {
     private _mount: Element

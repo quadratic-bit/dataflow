@@ -1,4 +1,4 @@
-import { SearchBar } from "../search"
+import { SearchBar } from "components/search"
 
 export class SearchBarDOM {
     private _container: HTMLInputElement

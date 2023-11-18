@@ -1,5 +1,5 @@
-import { Table } from "./dataflow"
-import { SearchBarDOM } from "./dom/searchbar"
+import { Table } from "/dataflow"
+import { SearchBarDOM } from "dom/searchbar"
 
 export class SearchBar<Row> {
     private _dom: SearchBarDOM

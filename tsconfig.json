@@ -8,6 +8,14 @@
     "skipLibCheck": true,
     "outDir": "dist",
 
+    "baseUrl": ".",
+    "paths": {
+        "dom/*": ["./src/dom/*"],
+        "components/*": ["./src/components/*"],
+        "types/*": ["./src/types/*"],
+        "/*": ["./src/*"]
+    },
+
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -15,7 +23,6 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
 
-    /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

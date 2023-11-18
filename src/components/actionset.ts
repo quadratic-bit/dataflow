@@ -1,6 +1,6 @@
-import { Table } from "./dataflow"
-import { ActionTrayDOM } from "./dom/buttons"
-import { Action } from "./types/actions"
+import { Table } from "/dataflow"
+import { ActionTrayDOM } from "dom/buttons"
+import { Action } from "types/actions"
 
 export class ActionTray<Row> {
     private _dom: ActionTrayDOM

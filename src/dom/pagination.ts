@@ -1,6 +1,6 @@
-import { Table } from "../dataflow"
-import { LocalePagination } from "../locale"
-import { PageLength } from "../types/pagination"
+import { Table } from "/dataflow"
+import { LocalePagination } from "/locale"
+import { PageLength } from "types/pagination"
 
 export class PaginationDOM {
     private _container: HTMLDivElement
