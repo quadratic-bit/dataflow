@@ -1,5 +1,5 @@
 import { StatusDOM } from "dom/status"
-import { LocaleStatus } from "/locale"
+import { LocaleStatus } from "common/locale"
 
 export class Status {
     private __content!: string

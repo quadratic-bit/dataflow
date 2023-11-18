@@ -8,12 +8,12 @@
     "skipLibCheck": true,
     "outDir": "dist",
 
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
-        "dom/*": ["./src/dom/*"],
-        "components/*": ["./src/components/*"],
-        "types/*": ["./src/types/*"],
-        "/*": ["./src/*"]
+        "dom/*": ["./dom/*"],
+        "components/*": ["./components/*"],
+        "types/*": ["./types/*"],
+        "common/*": ["./*"]
     },
 
     "moduleResolution": "node",
@@ -28,5 +28,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": ["./src/**/*"]
 }

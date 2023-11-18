@@ -1,6 +1,6 @@
-import { Table } from "/dataflow"
+import { Table } from "common/dataflow"
 import type { TableColumn } from "types/columns"
-import { isSelectDependency } from "/subscription"
+import { isSelectDependency } from "common/subscription"
 
 export class TableDOM<Row> {
     private _container: Element

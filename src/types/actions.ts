@@ -1,4 +1,4 @@
-import { Table } from "/dataflow"
+import { Table } from "common/dataflow"
 
 interface _BaseAction<Row> {
     callback(data: FormData, table: Table<Row>): Promise<void>

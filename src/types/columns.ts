@@ -1,4 +1,4 @@
-import { SelectDependency } from "/subscription"
+import { SelectDependency } from "common/subscription"
 
 interface HiddenInputProps {}
 

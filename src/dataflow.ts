@@ -8,7 +8,7 @@ import { SearchBar } from "components/search"
 import { Action } from "types/actions"
 import { ActionTray } from "components/actionset"
 import { FormManager } from "dom/form"
-import { Localization, PartialLocale } from "/locale"
+import { Localization, PartialLocale } from "common/locale"
 
 export class TableCollection {
     private _mount: Element

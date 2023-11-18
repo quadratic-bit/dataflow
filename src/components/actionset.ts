@@ -1,4 +1,4 @@
-import { Table } from "/dataflow"
+import { Table } from "common/dataflow"
 import { ActionTrayDOM } from "dom/buttons"
 import { Action } from "types/actions"
 
