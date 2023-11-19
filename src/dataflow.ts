@@ -57,21 +57,25 @@ export class TableCollection {
         if (this.currentTable != null) throw Error(`Cannot mount: ${this.currentTable} is up`);
         const table = this.find(id)
         if (table == null) throw Error(`No table found with id ${id}`);
+        this.mountDOM.textContent = ""
+        this.mountDOM.classList.remove("dataflow-table-filler")
         table.mount();
         this.currentTable = id
     }
 
-    umount(): void {
+    unmount(): void {
         if (this.currentTable == null) throw Error(`Cannot unmount: no table is up`);
         const table = this.find(this.currentTable)!
         table.unmount();
         this.currentTable = null
+        this.mountDOM.textContent = this._localization.frame.empty
+        this.mountDOM.classList.add("dataflow-table-filler")
     }
 
     swap(id: string): void {
         // TODO: Deal with swaps during actions
         if (this.currentTable == id) return;
-        this.umount()
+        this.unmount()
         this.mount(id)
     }
 

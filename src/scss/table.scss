@@ -1,5 +1,10 @@
 @use "const.scss";
 
+.dataflow-table-filler {
+    justify-content: center !important;
+    font-size: x-large;
+}
+
 .dataflow-table-wrapper {
     display: flex;
     flex-direction: column;
@@ -17,27 +22,33 @@
 }
 
 .dataflow-table-content {
-    margin: 0 10%;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 10%;
     display: flex;
     align-items: center;
+    justify-content: center;
     height: calc(100% - 10em);
 }
 
 .dataflow-table-scrollable {
     max-height: 100%;
+    max-width: 100%;
     overflow-y: auto;
 }
 
 .dataflow-table-footer {
+    box-sizing: border-box;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-end;
     padding: .5rem 1rem;
-    width: calc(100% - 2rem);
+    width: 100%;
 }
 
 .dataflow-table {
+    max-width: 100%;
     border-collapse: collapse;
     border: const.$table-border;
 
