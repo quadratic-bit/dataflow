@@ -17,6 +17,13 @@ export interface LocaleActions {
 
 export interface LocaleForm {
     goBack: string
+    confirmation: string
+    buttonSubmit: string
+    buttonCancel: string
+}
+
+export interface LocaleFrame {
+    empty: string
 }
 
 export interface PartialLocale {
@@ -24,6 +31,7 @@ export interface PartialLocale {
     pagination: Partial<LocalePagination>
     actions: Partial<LocaleActions>
     form: Partial<LocaleForm>
+    frame: Partial<LocaleFrame>
 }
 
 export interface Locale {
@@ -31,6 +39,7 @@ export interface Locale {
     pagination: LocalePagination
     actions: LocaleActions
     form: LocaleForm
+    frame: LocaleFrame
 }
 
 export const LOCALE_DEFAULT: Locale = {
@@ -49,7 +58,13 @@ export const LOCALE_DEFAULT: Locale = {
         delete: "Delete"
     },
     form: {
-        goBack: "Go back"
+        goBack: "Go back",
+        confirmation: "Are you sure you want to perform this action?",
+        buttonSubmit: "Submit",
+        buttonCancel: "Cancel"
+    },
+    frame: {
+        empty: "Похоже, здесь ничего нет"
     }
 }
 
@@ -70,10 +85,16 @@ export class Localization {
             actions: {
                 add: locale?.actions?.add ?? LOCALE_DEFAULT.actions.add,
                 edit: locale?.actions?.edit ?? LOCALE_DEFAULT.actions.edit,
-                delete: locale?.actions?.delete ?? LOCALE_DEFAULT.actions.delete,
+                delete: locale?.actions?.delete ?? LOCALE_DEFAULT.actions.delete
             },
             form: {
-                goBack: locale?.form?.goBack ?? LOCALE_DEFAULT.form.goBack
+                goBack: locale?.form?.goBack ?? LOCALE_DEFAULT.form.goBack,
+                confirmation: locale?.form?.confirmation ?? LOCALE_DEFAULT.form.confirmation,
+                buttonCancel: locale?.form?.buttonCancel ?? LOCALE_DEFAULT.form.buttonCancel,
+                buttonSubmit: locale?.form?.buttonSubmit ?? LOCALE_DEFAULT.form.buttonSubmit
+            },
+            frame: {
+                empty: locale?.frame?.empty ?? LOCALE_DEFAULT.frame.empty
             }
         }
     }
@@ -92,5 +113,9 @@ export class Localization {
 
     get form(): LocaleForm {
         return this._locale.form
+    }
+
+    get frame(): LocaleFrame {
+        return this._locale.frame
     }
 }

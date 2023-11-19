@@ -120,9 +120,7 @@ export class FormManager<Row> {
     }
 
     private _applyFilledHiddenInputs(container: HTMLFormElement, row: Row): void {
-        container.appendChild(document.createTextNode(
-            "Are you sure you want to perform this action?"
-        ))
+        container.appendChild(document.createTextNode(this._locale.confirmation))
         for (const col of this._owner.config.columns) {
             const input = document.createElement("input")
             input.name = col.name
@@ -145,12 +143,12 @@ export class FormManager<Row> {
         footer.classList.add("dataflow-form-footer")
 
         const buttonCancel = document.createElement("button")
-        buttonCancel.textContent = "Cancel"
+        buttonCancel.textContent = this._locale.buttonCancel
         buttonCancel.type = "button"
         buttonCancel.addEventListener("click", () => { this.finish() })
 
         const buttonSubmit = document.createElement("button")
-        buttonSubmit.textContent = "Submit"
+        buttonSubmit.textContent = this._locale.buttonSubmit
         buttonSubmit.type = "submit"
 
         footer.appendChild(buttonCancel)
