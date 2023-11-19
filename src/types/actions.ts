@@ -1,7 +1,7 @@
 import { Table } from "common/dataflow"
 
 interface _BaseAction<Row> {
-    callback(data: FormData, table: Table<Row>): Promise<void>
+    callback(data: FormData, table: Table<Row>): Promise<void | boolean>
     label: string
     showColumns: boolean
     activateOnSelect: boolean

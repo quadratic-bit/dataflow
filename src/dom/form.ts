@@ -179,8 +179,10 @@ export class FormManager<Row> {
         contentContainer.appendChild(footer)
         contentContainer.addEventListener("submit", async (e: SubmitEvent) => {
             e.preventDefault()
-            await action.callback(new FormData(contentContainer), this._owner)
-            this.finish()
+            const response = await action.callback(new FormData(contentContainer), this._owner)
+            if (response !== false) {
+                this.finish()
+            }
         })
         this._active = true
         this._visible = true

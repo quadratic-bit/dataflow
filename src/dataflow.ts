@@ -121,7 +121,7 @@ class _TableFactory<Row> {
         return this
     }
 
-    actionAdd(callback: (data: FormData, table: Table<Row>) => Promise<void>): _TableFactory<Row> {
+    actionAdd(callback: (data: FormData, table: Table<Row>) => Promise<void | boolean>): _TableFactory<Row> {
         this._data.actions.push({
             label: this._data.collection.locale.actions.add,
             showColumns: true,
@@ -132,7 +132,7 @@ class _TableFactory<Row> {
         return this
     }
 
-    actionEdit(callback: (data: FormData, table: Table<Row>) => Promise<void>): _TableFactory<Row> {
+    actionEdit(callback: (data: FormData, table: Table<Row>) => Promise<void | boolean>): _TableFactory<Row> {
         this._data.actions.push({
             label: this._data.collection.locale.actions.edit,
             showColumns: true,
@@ -143,7 +143,7 @@ class _TableFactory<Row> {
         return this
     }
 
-    actionDelete(callback: (data: FormData, table: Table<Row>) => Promise<void>): _TableFactory<Row> {
+    actionDelete(callback: (data: FormData, table: Table<Row>) => Promise<void | boolean>): _TableFactory<Row> {
         this._data.actions.push({
             label: this._data.collection.locale.actions.delete,
             showColumns: false,
