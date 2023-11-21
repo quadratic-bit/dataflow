@@ -28,6 +28,10 @@
     padding: 1em;
     border-radius: 10px;
     border: const.$table-border;
+
+    & select {
+        width: 10em;
+    }
 }
 
 .dataflow-form-field {
