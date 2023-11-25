@@ -57,6 +57,7 @@ export class FormManager<Row> {
         switch (column.type) {
         case "select":
             input = document.createElement("select")
+            // TODO: isSelectDependency was a bad idea
             const choices = isSelectDependency(column.choices) ?
                             this._owner.resolveSelectDependency(column.choices) :
                             column.choices

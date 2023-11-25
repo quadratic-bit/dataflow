@@ -9,6 +9,7 @@ import { Action } from "types/actions"
 import { ActionTray } from "components/actionset"
 import { FormManager } from "dom/form"
 import { Localization, PartialLocale } from "common/locale"
+import { Filter } from "components/filter"
 
 export class TableCollection {
     private _mount: Element
@@ -103,6 +104,7 @@ interface TableConfig<Row> {
 
 class _TableFactory<Row> {
     private _data: TableConfig<Row>
+    private _subscribers: Set<string> = new Set()
     private _callback: (table: Table<Row>) => void
 
     constructor(id: string, title: string, init: any, outer: TableCollection,
@@ -113,6 +115,11 @@ class _TableFactory<Row> {
 
     describe(definition: TableColumn): _TableFactory<Row> {
         this._data.columns.push(definition)
+        return this
+    }
+
+    subscribe(table: string): _TableFactory<Row> {
+        this._subscribers.add(table)
         return this
     }
 
@@ -163,7 +170,7 @@ class _TableFactory<Row> {
         if (this._data.pageSizes.length == 0) {
             this._data.pageSizes = [PagesSome(20), PagesSome(10), PagesAll]
         }
-        const table = new Table(this._data)
+        const table = new Table(this._data, this._subscribers)
         this._callback(table)
         return table
     }
@@ -177,14 +184,16 @@ export class Table<Row> {
     private _formManager: FormManager<Row>
     private _actionTray: ActionTray<Row>
     private _searchbar: SearchBar<Row>
+    private _filterTray: Filter<Row>
     private _data: Row[] = []
     private _mask: number[] | null = null
     private _listedRows: Row[] = []
     private _selectedRowIndex: number | null = null
-    private _subscribers: Set<string> = new Set()
+    private _subscribers: Set<string>
 
-    constructor(config: TableConfig<Row>) {
+    constructor(config: TableConfig<Row>, early_subs?: Set<string>) {
         this._config = config
+        this._subscribers = early_subs ?? new Set()
         this._dom = new TableDOM(config.collection.mountDOM, config.columns, this)
         this._status = new Status(config.collection.locale.status)
         this._pagination = new Pagination(
@@ -193,12 +202,14 @@ export class Table<Row> {
             config.collection.locale.pagination)
         this._actionTray = new ActionTray(config.actions, this)
         this._searchbar = new SearchBar(this)
+        this._filterTray = new Filter(this)
 
         this._dom.footer.append(this._status.dom.container,
                                 this._pagination.dom.container)
         this._dom.header.append(this._pagination.dom.sizeSelector.container,
                                 this._actionTray.dom.container,
-                                this._searchbar.dom.container)
+                                this._searchbar.dom.container,
+                                this._filterTray.dom.container)
         this._formManager = new FormManager(this, config.collection.locale.form)
         this._updateStatus()
 
@@ -285,8 +296,12 @@ export class Table<Row> {
     serveUpdates(): void {
         for (const subID of this._subscribers) {
             const subscriber = this._config.collection.find(subID)
-            if (subscriber == null) throw Error(`Couldn't resolve subscription of ${subID}`);
+            if (subscriber == null) {
+                console.warn(`Couldn't resolve subscription of ${subID}`)
+                return
+            }
             subscriber.refresh()
+            subscriber.filterTray.dom.refresh()
         }
     }
 
@@ -354,6 +369,10 @@ export class Table<Row> {
         return this._actionTray
     }
 
+    get filterTray(): Filter<Row> {
+        return this._filterTray
+    }
+
     get selectedRow(): Row | null {
         return this.selectedRowIndex == null ? null : this.rows[this.selectedRowIndex]
     }
@@ -389,10 +408,8 @@ export class Table<Row> {
             }
             this._selectedRowIndex = null
         } else {
-            if (this._selectedRowIndex == null) {
-                this.actionTray.triggerRowSelect()
-            }
             this._selectedRowIndex = value
+            this.actionTray.triggerRowSelect()
         }
     }
 }

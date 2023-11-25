@@ -1,19 +1,22 @@
 import { SearchBar } from "components/search"
 
 export class SearchBarDOM {
-    private _container: HTMLInputElement
+    private _container: HTMLDivElement
 
     constructor(owner: SearchBar<any>) {
-        const bar = document.createElement("input")
+        const bar: HTMLInputElement = document.createElement("input")
         bar.type = "text"
         bar.addEventListener("input", (e: Event) => {
             const target = e.target as HTMLInputElement
             owner.updateSearchResults(target.value)
         })
-        this._container = bar
+        const wrapper = document.createElement("div")
+        wrapper.classList.add("dataflow-table-searchbar")
+        wrapper.appendChild(bar)
+        this._container = wrapper
     }
 
-    get container(): HTMLInputElement {
+    get container(): HTMLDivElement {
         return this._container
     }
 }

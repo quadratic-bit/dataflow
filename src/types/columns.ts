@@ -117,6 +117,7 @@ interface DateTimeTableColumn extends BaseTableColumn {
 interface SelectTableColumn extends BaseTableColumn {
     type: "select"
     choices: string[] | SelectDependency
+    filterable?: boolean
     props?: SelectProps
 }
 

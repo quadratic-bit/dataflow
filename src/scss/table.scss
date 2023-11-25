@@ -1,5 +1,19 @@
 @use "const.scss";
 
+// TODO: move to a separate file
+.dataflow-table-filtertray {
+    & select {
+        width: 15em;
+    }
+    display: flex;
+    column-gap: 1em;
+}
+
+.dataflow-table-searchbar {
+    display: flex;
+    justify-content: flex-end;
+}
+
 .dataflow-table-filler {
     justify-content: center !important;
     font-size: x-large;
@@ -19,6 +33,13 @@
     align-items: flex-start;
     padding: .5rem 1rem;
     width: calc(100% - 2rem);
+
+    flex-wrap: wrap;
+    row-gap: 1em;
+
+    & > span, & > div, & > input {
+        flex: 1 0 26%;
+    }
 }
 
 .dataflow-table-content {
