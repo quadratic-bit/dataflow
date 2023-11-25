@@ -64,6 +64,10 @@ interface BaseTableColumn {
     name: string
     title?: string
     required?: boolean
+    relies?: {
+        callback(value: unknown): Promise<string>,
+        source: string,
+    }
     render?(value: unknown): string
     preprocess?(value: unknown): string
     overflow?: boolean
