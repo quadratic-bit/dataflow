@@ -107,8 +107,9 @@ export class FormManager<Row> {
             input.value = data
         } else if (column.type === "datetime-local" && column.now) {
             if (column.now === true) {
-                const now: Date = new Date(Date.now())
-                input.value = now.toISOString()
+                let now: Date = new Date(Date.now())
+                now = new Date(Date.now() - now.getTimezoneOffset() * 60000)
+                input.value = now.toISOString().split(".")[0]
             }
         }
 
