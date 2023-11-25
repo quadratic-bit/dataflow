@@ -5,6 +5,7 @@ interface _BaseAction<Row> {
     label: string
     showColumns: boolean
     activateOnSelect: boolean
+    predicate?(table: Table<Row>): boolean
 }
 
 interface _ActionShowColumns<Row> extends _BaseAction<Row> {

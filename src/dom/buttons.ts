@@ -1,3 +1,4 @@
+import { Table } from "common/dataflow"
 import { ActionTray } from "components/actionset"
 import { Action } from "types/actions"
 
@@ -19,9 +20,13 @@ export class ActionTrayDOM {
         this._actions = actions
     }
 
-    enableConditionalButtons(): void {
+    enableConditionalButtons(table: Table<any>): void {
         for (let i = 0; i < this._actions.length; ++i) {
             if (this._actions[i].activateOnSelect) {
+                if (this._actions[i].predicate != null && this._actions[i].predicate!(table)) {
+                    (this._container.children.item(i) as HTMLButtonElement).disabled = true
+                    continue
+                }
                 (this._container.children.item(i) as HTMLButtonElement).disabled = false
             }
         }

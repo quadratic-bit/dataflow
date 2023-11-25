@@ -12,7 +12,7 @@ export class ActionTray<Row> {
     }
 
     triggerRowSelect(): void {
-        this._dom.enableConditionalButtons()
+        this._dom.enableConditionalButtons(this._owner)
     }
 
     triggerRowDeselect(): void {
