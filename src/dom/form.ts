@@ -104,6 +104,11 @@ export class FormManager<Row> {
                 data = rowValue[column.name as keyof Row] + ""
             )
             input.value = data
+        } else if (column.type === "datetime-local" && column.now) {
+            if (column.now === true) {
+                const now: Date = new Date(Date.now())
+                input.value = now.toISOString()
+            }
         }
 
         field.appendChild(label)

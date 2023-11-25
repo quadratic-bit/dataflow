@@ -106,6 +106,7 @@ interface DateTableColumn extends BaseTableColumn {
 
 interface DateTimeTableColumn extends BaseTableColumn {
     type: "datetime-local"
+    now?: boolean
     props?: DateTimeInputProps
 }
 
