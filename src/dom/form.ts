@@ -117,7 +117,7 @@ export class FormManager<Row> {
         return field
     }
 
-    private async _spreadRelations(container: HTMLFormElement): Promise<void> {
+    private async _spreadRelations(container: HTMLFormElement, apply: boolean = true): Promise<void> {
         for (const col of this._owner.config.columns) {
             if (col.relies == null) continue;
             const source = container.querySelector(`[name="${col.relies.source}"]`) as HTMLInputElement
@@ -125,7 +125,7 @@ export class FormManager<Row> {
             source.addEventListener("change", async _ => {
                 dest.value = await col.relies?.callback(source.value) as string
             })
-            dest.value = await col.relies?.callback(source.value) as string
+            if (apply) dest.value = await col.relies?.callback(source.value) as string;
         }
     }
 
@@ -134,7 +134,7 @@ export class FormManager<Row> {
             const field = this._newField(col, row)
             container.appendChild(field)
         }
-        this._spreadRelations(container)
+        this._spreadRelations(container, false)
     }
 
     private _applyFilledHiddenInputs(container: HTMLFormElement, row: Row): void {
