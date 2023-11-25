@@ -1,8 +1,12 @@
 import { SelectDependency } from "common/subscription"
 
-interface HiddenInputProps {}
+interface BaseInputProps {
+    readonly?: boolean
+}
 
-interface TextInputProps {
+interface HiddenInputProps extends BaseInputProps {}
+
+interface TextInputProps extends BaseInputProps {
     maxlength?: number
     minlength?: number
     pattern?: number
@@ -12,7 +16,7 @@ interface TextInputProps {
     spellcheck?: boolean
 }
 
-interface TextAreaProps {
+interface TextAreaProps extends BaseInputProps {
     autocomplete?: boolean
     autocorrect?: boolean
     cols?: number
@@ -26,7 +30,7 @@ interface TextAreaProps {
 }
 
 
-interface EmailInputProps {
+interface EmailInputProps extends BaseInputProps {
     maxlength?: number
     minlength?: number
     multiple?: boolean
@@ -38,14 +42,14 @@ interface EmailInputProps {
 
 interface TelInputProps extends TextInputProps {}
 
-interface NumberInputProps {
+interface NumberInputProps extends BaseInputProps {
     max?: number
     min?: number
     placeholder?: string
     step?: number
 }
 
-interface DateInputProps {
+interface DateInputProps extends BaseInputProps {
     max?: string
     min?: string
     step?: number
@@ -53,7 +57,7 @@ interface DateInputProps {
 
 interface DateTimeInputProps extends DateInputProps {}
 
-interface SelectProps {}
+interface SelectProps extends BaseInputProps {}
 
 interface BaseTableColumn {
     type: string
