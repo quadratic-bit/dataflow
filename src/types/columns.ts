@@ -63,6 +63,7 @@ interface BaseTableColumn {
     type: string
     name: string
     title?: string
+    hide?: boolean
     required?: boolean
     relies?: {
         callback(value: unknown): Promise<string>,

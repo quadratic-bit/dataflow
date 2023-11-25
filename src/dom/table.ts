@@ -40,6 +40,7 @@ export class TableDOM<Row> {
 
         const trHead: HTMLTableRowElement = document.createElement("tr")
         for (const col of this._headers) {
+            if (col.hide === true) continue;
             const th = document.createElement("th")
             th.textContent = col.title ?? col.name.charAt(0).toUpperCase() + col.name.slice(1)
             trHead.appendChild(th)
@@ -70,6 +71,7 @@ export class TableDOM<Row> {
         for (const row of rows) {
             const tr: HTMLTableRowElement = document.createElement("tr")
             for (const header of this._headers) {
+                if (header.hide === true) continue;
                 const td: HTMLTableCellElement = document.createElement("td")
                 const divcell: HTMLDivElement = document.createElement("div")
 
