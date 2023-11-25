@@ -11,12 +11,15 @@ export class Filter<Row> {
     }
 
     updateFilterResults(column: string, value: any): void {
-        // TODO: It works, but limited and pretty slowly
+        const searchBar = this._owner.searchBar.dom.container.children[0] as HTMLInputElement
         if (value == "-1") {
+            searchBar.disabled = false
             this._owner.mask = null
             this._owner.refresh()
             return;
         }
+        searchBar.value = ""
+        searchBar.disabled = true
         let mask: number[] = []
         for (let i = 0; i < this._owner.data.length; ++i) {
             const row = this._owner.data[i]
