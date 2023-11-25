@@ -78,6 +78,15 @@ export class TableDOM<Row> {
                 // TODO: I've successfully stolen this line but some checks should be here I feel
                 let value: any = row[header.name as keyof Row]
 
+                if (this._owner.config.colors.has(header.name)) {
+                    const specs: [any, string][] = this._owner.config.colors.get(header.name)!
+                    for (const [spec, color] of specs) {
+                        if (value === spec) {
+                            td.style.backgroundColor = color
+                        }
+                    }
+                }
+
                 if (header.type === "select" && isSelectDependency(header.choices)) {
                     value = this._owner.resolveDependency(header.choices, value)
                 }

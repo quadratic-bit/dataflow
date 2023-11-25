@@ -100,6 +100,8 @@ interface TableConfig<Row> {
     collection: TableCollection
     pageSizes: PageLength[]
     actions: Action<Row>[]
+    // TODO: remove or remake after the 5th task
+    colors: Map<string, [any, string][]>
 }
 
 class _TableFactory<Row> {
@@ -109,7 +111,7 @@ class _TableFactory<Row> {
 
     constructor(id: string, title: string, init: any, outer: TableCollection,
                 callback: (table: Table<Row>) => void) {
-        this._data = { id, title, init, collection: outer, columns: [], pageSizes: [], actions: [] }
+        this._data = { id, title, init, collection: outer, columns: [], pageSizes: [], actions: [], colors: new Map()}
         this._callback = callback
     }
 
@@ -120,6 +122,15 @@ class _TableFactory<Row> {
 
     subscribe(table: string): _TableFactory<Row> {
         this._subscribers.add(table)
+        return this
+    }
+
+    color(column: string, value: any, color: string): _TableFactory<Row> {
+        if (this._data.colors.has(column)) {
+            this._data.colors.get(column)!.push([value, color])
+        } else {
+            this._data.colors.set(column, [[value, color]])
+        }
         return this
     }
 
