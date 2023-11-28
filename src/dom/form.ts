@@ -97,14 +97,18 @@ export class FormManager<Row> {
         }
 
         if (rowValue != null && column.type !== "select") {
-            let data: string
+            let data: any
             if (column.preprocess != null) {
                 // TODO: handle missing field case
                 data = column.preprocess(rowValue[column.name as keyof Row])
             } else (
-                data = rowValue[column.name as keyof Row] + ""
+                data = rowValue[column.name as keyof Row]
             )
-            input.value = data
+            if (column.type === "checkbox") {
+                (input as HTMLInputElement).checked = !!data
+            } else {
+                input.value = data
+            }
         } else if (column.type === "datetime-local" && column.now) {
             if (column.now === true) {
                 let now: Date = new Date(Date.now())

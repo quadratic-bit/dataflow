@@ -49,6 +49,8 @@ interface NumberInputProps extends BaseInputProps {
     step?: number
 }
 
+interface CheckboxInputProps extends BaseInputProps {}
+
 interface DateInputProps extends BaseInputProps {
     max?: string
     min?: string
@@ -104,6 +106,11 @@ interface NumberTableColumn extends BaseTableColumn {
     props?: NumberInputProps
 }
 
+interface CheckboxTableColumns extends BaseTableColumn {
+    type: "checkbox"
+    props?: CheckboxInputProps
+}
+
 interface DateTableColumn extends BaseTableColumn {
     type: "date"
     props?: DateInputProps
@@ -128,6 +135,7 @@ export type TableColumn = HiddenTableColumn |
                           EmailTableColumn |
                           TelTableColumn |
                           NumberTableColumn |
+                          CheckboxTableColumns |
                           DateTableColumn |
                           DateTimeTableColumn |
                           SelectTableColumn
