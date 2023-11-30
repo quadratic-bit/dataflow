@@ -1,7 +1,7 @@
 import { Table } from "common/dataflow";
 import { Action } from "types/actions";
 import type { TableColumn } from "types/columns";
-import { isSelectDependency } from "common/subscription";
+import { FormSelector, populateSelect } from "common/subscription";
 import { LocaleForm } from "common/locale";
 
 export class FormManager<Row> {
@@ -57,28 +57,7 @@ export class FormManager<Row> {
         switch (column.type) {
         case "select":
             input = document.createElement("select")
-            // TODO: isSelectDependency was a bad idea
-            const choices = isSelectDependency(column.choices) ?
-                            this._owner.resolveSelectDependency(column.choices) :
-                            column.choices
-            let chosen: string | null = null
-            if (rowValue != null) {
-                const chosenRaw = rowValue[column.name as keyof Row]
-                if (isSelectDependency(column.choices)) {
-                    chosen = this._owner.resolveDependency(column.choices, chosenRaw)
-                } else {
-                    chosen = chosenRaw + ""
-                }
-            }
-            for (const entry of choices) {
-                const option = document.createElement("option")
-                option.textContent = typeof entry === "string" ? entry : entry.label
-                option.value = typeof entry === "string" ? entry : entry.value + ""
-                if (typeof entry === "string" ? chosen == entry : chosen == entry.label) {
-                    option.selected = true
-                }
-                input.appendChild(option)
-            }
+            populateSelect(input, column, this._owner, rowValue)
             break
         case "textarea":
             input = document.createElement("textarea")
