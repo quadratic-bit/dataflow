@@ -1,3 +1,6 @@
+import { TableColumn } from "types/columns"
+import { Table } from "./dataflow"
+
 export interface SelectDependency {
     table: string
     column: string
@@ -43,4 +46,29 @@ export function populateSelect<Row>(element: HTMLSelectElement,
 }
 
 export class FormSelector {
+    dom: HTMLFormElement
+    private _owner: Table<any>
+
+    constructor(form: HTMLFormElement, table: Table<any>) {
+        this.dom = form
+        this._owner = table
+    }
+
+    select(name: string): HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement {
+        let result = this.dom.querySelector(`[name="${name}"]`)
+        if (result == null) throw Error(`No field named ${name}`);
+        return result as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    }
+
+    repopulate(name: string): void {
+        const col: TableColumn | undefined = this._owner.config.columns.find(
+            (col: TableColumn) => col.name == name)
+        if (col == null) throw Error("Cannot find column with such name");
+        if (col.type !== "select") throw Error("Cannot repopulate non-select field");
+        const select = this.select(name) as HTMLSelectElement
+        while (select.lastElementChild) {
+            select.removeChild(select.lastElementChild)
+        }
+        populateSelect(select, col, this._owner)
+    }
 }

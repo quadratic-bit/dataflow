@@ -1,6 +1,6 @@
 import { TableDOM } from "dom/table"
 import type { TableColumn } from "types/columns"
-import type { SelectDependency } from "./subscription"
+import type { FormSelector, SelectDependency } from "./subscription"
 import { Pagination } from "components/pagination"
 import { Status } from "components/status"
 import { PageLength, PagesAll, PagesSome } from "types/pagination"
@@ -139,34 +139,37 @@ class _TableFactory<Row> {
         return this
     }
 
-    actionAdd(callback: (data: FormData, table: Table<Row>) => Promise<void | boolean>): _TableFactory<Row> {
+    actionAdd(callback: (data: FormData, table: Table<Row>) => Promise<void | boolean>, preprocess?: (selector: FormSelector) => Promise<void>): _TableFactory<Row> {
         this._data.actions.push({
             label: this._data.collection.locale.actions.add,
             showColumns: true,
             fillColumns: false,
             activateOnSelect: false,
-            callback
+            callback,
+            preprocess
         })
         return this
     }
 
-    actionEdit(callback: (data: FormData, table: Table<Row>) => Promise<void | boolean>): _TableFactory<Row> {
+    actionEdit(callback: (data: FormData, table: Table<Row>) => Promise<void | boolean>, preprocess?: (selector: FormSelector) => Promise<void>): _TableFactory<Row> {
         this._data.actions.push({
             label: this._data.collection.locale.actions.edit,
             showColumns: true,
             fillColumns: true,
             activateOnSelect: true,
-            callback
+            callback,
+            preprocess
         })
         return this
     }
 
-    actionDelete(callback: (data: FormData, table: Table<Row>) => Promise<void | boolean>): _TableFactory<Row> {
+    actionDelete(callback: (data: FormData, table: Table<Row>) => Promise<void | boolean>, preprocess?: (selector: FormSelector) => Promise<void>): _TableFactory<Row> {
         this._data.actions.push({
             label: this._data.collection.locale.actions.delete,
             showColumns: false,
             activateOnSelect: true,
-            callback
+            callback,
+            preprocess
         })
         return this
     }

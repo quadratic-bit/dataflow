@@ -114,12 +114,15 @@ export class FormManager<Row> {
         }
     }
 
-    private _applyFilledInputs(container: HTMLFormElement, row: Row): void {
+    private async _applyFilledInputs(container: HTMLFormElement, row: Row, action: Action<Row>): Promise<void> {
         for (const col of this._owner.config.columns) {
             const field = this._newField(col, row)
             container.appendChild(field)
         }
-        this._spreadRelations(container, false)
+        await this._spreadRelations(container, false)
+        if (action.preprocess) {
+            await action.preprocess(new FormSelector(container, this._owner))
+        }
     }
 
     private _applyFilledHiddenInputs(container: HTMLFormElement, row: Row): void {
@@ -134,12 +137,15 @@ export class FormManager<Row> {
         }
     }
 
-    private _applyEmptyInputs(container: HTMLFormElement): void {
+    private async _applyEmptyInputs(container: HTMLFormElement, action: Action<Row>): Promise<void> {
         for (const col of this._owner.config.columns) {
             const field = this._newField(col)
             container.appendChild(field)
         }
-        this._spreadRelations(container)
+        await this._spreadRelations(container)
+        if (action.preprocess) {
+            await action.preprocess(new FormSelector(container, this._owner))
+        }
     }
 
     private _createButtons(): HTMLDivElement {
@@ -168,9 +174,9 @@ export class FormManager<Row> {
                 if (row == null) {
                     throw Error(`Cannot perform action "${action.label}" with no column selected`)
                 }
-                this._applyFilledInputs(contentContainer, row)
+                this._applyFilledInputs(contentContainer, row, action)
             } else {
-                this._applyEmptyInputs(contentContainer)
+                this._applyEmptyInputs(contentContainer, action)
             }
         } else {
             const row: Row | null = this._owner.selectedRow

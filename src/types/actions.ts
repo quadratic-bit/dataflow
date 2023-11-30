@@ -1,10 +1,13 @@
 import { Table } from "common/dataflow"
+import { FormSelector } from "common/subscription"
 
 interface _BaseAction<Row> {
     callback(data: FormData, table: Table<Row>): Promise<void | boolean>
     label: string
     showColumns: boolean
     activateOnSelect: boolean
+    // TODO: come up with a more clever name
+    preprocess?(selector: FormSelector): Promise<void>
     predicate?(table: Table<Row>): boolean
 }
 
