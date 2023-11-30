@@ -179,7 +179,7 @@ class _TableFactory<Row> {
     init(): Table<Row> {
         // TODO: Extract defaults to another file
         if (this._data.pageSizes.length == 0) {
-            this._data.pageSizes = [PagesSome(20), PagesSome(10), PagesAll]
+            this._data.pageSizes = [PagesSome(15), PagesSome(25), PagesAll]
         }
         const table = new Table(this._data, this._subscribers)
         this._callback(table)
