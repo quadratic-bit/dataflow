@@ -48,10 +48,23 @@ export function populateSelect<Row>(element: HTMLSelectElement,
 export class FormSelector {
     dom: HTMLFormElement
     private _owner: Table<any>
+    private _messageBox: HTMLDivElement | null = null
 
     constructor(form: HTMLFormElement, table: Table<any>) {
         this.dom = form
         this._owner = table
+    }
+
+    private _createMessageBox(): HTMLDivElement {
+        const box: HTMLDivElement = document.createElement("div")
+        box.classList.add("dataflow-form-messagebox")
+        this.dom.parentElement!.appendChild(box)
+        return box
+    }
+
+    private _removeMessageBox() {
+        if (this._messageBox != null) this.dom.parentElement!.removeChild(this._messageBox);
+        this._messageBox = null
     }
 
     select(name: string): HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement {
@@ -70,5 +83,27 @@ export class FormSelector {
             select.removeChild(select.lastElementChild)
         }
         populateSelect(select, col, this._owner)
+    }
+
+    setMessage(...lines: string[]) {
+        if (this._messageBox == null) {
+            this._messageBox = this._createMessageBox()
+        }
+        while (this._messageBox.lastChild) {
+            this._messageBox.removeChild(this._messageBox.lastChild)
+        }
+        for (const line of lines) {
+            const paragraph = document.createElement("p")
+            paragraph.textContent = line
+            this._messageBox.appendChild(paragraph)
+        }
+    }
+
+    clearMessage() {
+        if (this._messageBox == null) return;
+        while (this._messageBox.lastChild) {
+            this._messageBox.removeChild(this._messageBox.lastChild)
+        }
+        this._removeMessageBox()
     }
 }

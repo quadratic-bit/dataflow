@@ -1,5 +1,17 @@
 @use "const.scss";
 
+.dataflow-form-messagebox {
+    max-width: 30%;
+    background-color: white;
+    border: const.$table-border;
+    border-radius: 10px;
+    padding: .5rem;
+
+    & > p {
+        margin: 0 0 .5rem 0;
+    }
+}
+
 .dataflow-form-wrapper {
     display: flex;
     flex-direction: column;
@@ -9,6 +21,13 @@
     display: flex;
     column-gap: 1em;
     padding: .5rem 1rem;
+}
+
+.dataflow-form-msg-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    column-gap: .5rem;
 }
 
 .dataflow-form-body {

@@ -33,11 +33,14 @@ export class FormManager<Row> {
         header.appendChild(document.createTextNode(`${this._owner.config.title} / ${title}`))
         header.appendChild(exitButton)
 
+        const wrapper = document.createElement("div")
+        wrapper.classList.add("dataflow-form-msg-wrapper")
         const body = document.createElement("div")
         body.classList.add("dataflow-form-body")
         const content = document.createElement("form")
         content.classList.add("dataflow-form-content")
-        body.appendChild(content)
+        body.appendChild(wrapper)
+        wrapper.appendChild(content)
 
         this._owner.dom.container.appendChild(header)
         this._owner.dom.container.appendChild(body)
