@@ -1,8 +1,8 @@
 import { Table } from "common/dataflow";
 import { Action } from "types/actions";
-import type { TableColumn } from "types/columns";
-import { FormSelector, populateSelect } from "common/subscription";
+import { FormSelector } from "common/subscription";
 import { LocaleForm } from "common/locale";
+import { createField } from "./fields";
 
 export class FormManager<Row> {
     private _owner: Table<Row>
@@ -48,63 +48,6 @@ export class FormManager<Row> {
         return content
     }
 
-    private _newField(column: TableColumn, rowValue?: Row): HTMLDivElement {
-        const field = document.createElement("div")
-        const label = document.createElement("label")
-        label.textContent = column.title ??
-                            column.name.charAt(0).toUpperCase() +
-                            column.name.slice(1)
-        if (column.type === "hidden") field.style.display = "none";
-        let input: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-
-        switch (column.type) {
-        case "select":
-            input = document.createElement("select")
-            populateSelect(input, column, this._owner, rowValue)
-            break
-        case "textarea":
-            input = document.createElement("textarea")
-            break
-        default:
-            input = document.createElement("input")
-            input.type = column.type
-        }
-
-        input.name = column.name
-        input.required = column.required ?? false
-        if (column.props != null) {
-            for (const [prop, value] of Object.entries(column.props)) {
-                input.setAttribute(prop, value)
-            }
-        }
-
-        if (rowValue != null && column.type !== "select") {
-            let data: any
-            if (column.preprocess != null) {
-                // TODO: handle missing field case
-                data = column.preprocess(rowValue[column.name as keyof Row])
-            } else (
-                data = rowValue[column.name as keyof Row]
-            )
-            if (column.type === "checkbox") {
-                (input as HTMLInputElement).checked = !!data
-            } else {
-                input.value = data
-            }
-        } else if (column.type === "datetime-local" && column.now) {
-            if (column.now === true) {
-                let now: Date = new Date(Date.now())
-                now = new Date(Date.now() - now.getTimezoneOffset() * 60000)
-                input.value = now.toISOString().split(".")[0]
-            }
-        }
-
-        field.appendChild(label)
-        field.appendChild(input)
-        field.classList.add("dataflow-form-field")
-        return field
-    }
-
     private async _spreadRelations(container: HTMLFormElement, apply: boolean = true): Promise<void> {
         for (const col of this._owner.config.columns) {
             if (col.relies == null) continue;
@@ -119,7 +62,7 @@ export class FormManager<Row> {
 
     private async _applyFilledInputs(container: HTMLFormElement, row: Row, action: Action<Row>): Promise<void> {
         for (const col of this._owner.config.columns) {
-            const field = this._newField(col, row)
+            const field = createField(this._owner, col, row)
             container.appendChild(field)
         }
         await this._spreadRelations(container, false)
@@ -142,7 +85,7 @@ export class FormManager<Row> {
 
     private async _applyEmptyInputs(container: HTMLFormElement, action: Action<Row>): Promise<void> {
         for (const col of this._owner.config.columns) {
-            const field = this._newField(col)
+            const field = createField(this._owner, col)
             container.appendChild(field)
         }
         await this._spreadRelations(container)
