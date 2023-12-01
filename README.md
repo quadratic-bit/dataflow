@@ -7,7 +7,6 @@ Dependency-free TypeScript library making your HTML tables interactive
 
 ## Table of contents
 
-- [Roadmap](#roadmap)
 - [Getting started](#getting-started)
     - [Installation](#installation)
         - [Building from source](#building-from-source)
@@ -16,14 +15,6 @@ Dependency-free TypeScript library making your HTML tables interactive
 - [Contributing](#contributing)
 - [Versioning](#versioning)
 - [License](#license)
-
-## Roadmap
-
-- [x] Procedural HTML table creation
-- [x] Row selection
-- [x] Pagination
-- [x] Search bar
-- [ ] Highly customizable action buttons
 
 ## Getting started
 

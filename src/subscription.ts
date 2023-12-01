@@ -1,5 +1,6 @@
 import { TableColumn } from "types/columns"
 import { Table } from "./dataflow"
+import { createField } from "dom/fields"
 
 export interface SelectDependency {
     table: string
@@ -71,6 +72,29 @@ export class FormSelector {
         let result = this.dom.querySelector(`[name="${name}"]`)
         if (result == null) throw Error(`No field named ${name}`);
         return result as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    }
+
+    insert(name: string, column: TableColumn, value?: any): void {
+        let field: HTMLDivElement;
+        if (value == null) {
+            field = createField(this._owner, column)
+        } else {
+            let row: any = {}
+            row[column.name] = value
+            field = createField(this._owner, column, row)
+        }
+        const target = this.select(name).parentElement!
+        target.after(field)
+    }
+
+    remove(name: string): void {
+        const target = this.select(name)
+        target.parentElement!.parentElement!.removeChild(target.parentElement!)
+    }
+
+    has(name: string): boolean {
+        let result = this.dom.querySelector(`[name="${name}"]`)
+        return result != null
     }
 
     repopulate(name: string): void {
