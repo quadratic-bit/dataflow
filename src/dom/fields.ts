@@ -19,6 +19,13 @@ export function createField<Row>(table: Table<Row>, column: TableColumn, rowValu
     case "textarea":
         input = document.createElement("textarea")
         break
+    case "checkbox":
+        input = document.createElement("input")
+        input.type = "checkbox"
+        if (column.props != null && column.props.readonly) {
+            input.setAttribute("onclick", "return false;")
+        }
+        break
     default:
         input = document.createElement("input")
         input.type = column.type
