@@ -1,29 +1,34 @@
 import { Table } from "common/dataflow"
 import { ActionTray } from "components/actionset"
-import { Action } from "types/actions"
+import { Action, ButtonLink } from "types/actions"
 
 export class ActionTrayDOM {
     private _container: HTMLDivElement
-    private _actions: Action<any>[]
+    private _buttons: (Action<any> | ButtonLink<any>)[]
 
-    constructor(actions: Action<any>[], owner: ActionTray<any>) {
+    constructor(actions: (Action<any> | ButtonLink<any>)[], owner: ActionTray<any>) {
         const container = document.createElement("div")
         container.classList.add("dataflow-table-actiontray")
         for (const action of actions) {
             const button: HTMLButtonElement = document.createElement("button")
             button.textContent = action.label
-            button.addEventListener("click", (_: MouseEvent) => owner.dispatch(action))
-            if (action.activateOnSelect) button.disabled = true;
+            if (!("showColumns" in action)) {
+                button.addEventListener("click", (_: MouseEvent) => owner.link(action))
+                button.disabled = true;
+            } else {
+                button.addEventListener("click", (_: MouseEvent) => owner.dispatch(action))
+                if (action.activateOnSelect) button.disabled = true;
+            }
             container.appendChild(button)
         }
         this._container = container
-        this._actions = actions
+        this._buttons = actions
     }
 
     enableConditionalButtons(table: Table<any>): void {
-        for (let i = 0; i < this._actions.length; ++i) {
-            if (this._actions[i].activateOnSelect) {
-                if (this._actions[i].predicate != null && this._actions[i].predicate!(table)) {
+        for (let i = 0; i < this._buttons.length; ++i) {
+            if (this._buttons[i].activateOnSelect) {
+                if (this._buttons[i].predicate != null && this._buttons[i].predicate!(table)) {
                     (this._container.children.item(i) as HTMLButtonElement).disabled = true
                     continue
                 }
@@ -33,8 +38,8 @@ export class ActionTrayDOM {
     }
 
     disableConditionalButtons(): void {
-        for (let i = 0; i < this._actions.length; ++i) {
-            if (this._actions[i].activateOnSelect) {
+        for (let i = 0; i < this._buttons.length; ++i) {
+            if (this._buttons[i].activateOnSelect) {
                 (this._container.children.item(i) as HTMLButtonElement).disabled = true
             }
         }

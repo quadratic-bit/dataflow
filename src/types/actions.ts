@@ -35,4 +35,14 @@ interface ActionBlank<Row> extends _BaseAction<Row> {
     showColumns: false
 }
 
+export interface ButtonLink<Row> {
+    label: string
+    target: string
+    action: string
+    dataMap: any
+    activateOnSelect: true
+    callback?(): void
+    predicate?(table: Table<Row>): boolean
+}
+
 export type Action<Row> = ActionNew<Row> | ActionEdit<Row> | ActionBlank<Row>

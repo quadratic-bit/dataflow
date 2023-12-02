@@ -40,17 +40,17 @@ export function createField<Row>(table: Table<Row>, column: TableColumn, rowValu
     }
 
     if (rowValue != null && column.type !== "select") {
-        let data: any
+        let data = null
         if (column.preprocess != null) {
             // TODO: handle missing field case
             data = column.preprocess(rowValue[column.name as keyof Row])
-        } else (
+        } else if (column.name in (rowValue as object)) {
             data = rowValue[column.name as keyof Row]
-        )
-        if (column.type === "checkbox") {
+        }
+        if (column.type === "checkbox" && data != null) {
             (input as HTMLInputElement).checked = !!data
-        } else {
-            input.value = data
+        } else if (data != null) {
+            input.value = data + ""
         }
     } else if (column.type === "datetime-local" && column.now) {
         if (column.now === true) {

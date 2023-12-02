@@ -5,7 +5,7 @@ import { Pagination } from "components/pagination"
 import { Status } from "components/status"
 import { PageLength, PagesAll, PagesSome } from "types/pagination"
 import { SearchBar } from "components/search"
-import { Action } from "types/actions"
+import { Action, ButtonLink } from "types/actions"
 import { ActionTray } from "components/actionset"
 import { FormManager } from "dom/form"
 import { Localization, PartialLocale } from "common/locale"
@@ -99,7 +99,7 @@ interface TableConfig<Row> {
     columns: TableColumn[]
     collection: TableCollection
     pageSizes: PageLength[]
-    actions: Action<Row>[]
+    actions: (Action<Row> | ButtonLink<Row>)[]
     // TODO: remove or remake after the 5th task
     colors: Map<string, [any, string][]>
 }
@@ -170,6 +170,24 @@ class _TableFactory<Row> {
             activateOnSelect: true,
             callback,
             preprocess
+        })
+        return this
+    }
+
+    actionLink(label: string,
+               target: string,
+               action: string,
+               dataMap: any,
+               callback?: () => void,
+               predicate?: (table: Table<Row>) => boolean): _TableFactory<Row> {
+        this._data.actions.push({
+            label,
+            target,
+            action,
+            dataMap,
+            activateOnSelect: true,
+            callback,
+            predicate
         })
         return this
     }
@@ -299,8 +317,8 @@ export class Table<Row> {
         }
     }
 
-    setContext(action: Action<Row>): void {
-        this._formManager.apply(action)
+    setContext(action: Action<Row>, rowValue?: Partial<Row>): void {
+        this._formManager.apply(action, rowValue)
     }
 
     subscribe(subscriberID: string): void {

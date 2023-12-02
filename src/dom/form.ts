@@ -83,9 +83,9 @@ export class FormManager<Row> {
         }
     }
 
-    private async _applyEmptyInputs(container: HTMLFormElement, action: Action<Row>): Promise<void> {
+    private async _applyEmptyInputs(container: HTMLFormElement, action: Action<Row>, rowValue?: Partial<Row>): Promise<void> {
         for (const col of this._owner.config.columns) {
-            const field = createField(this._owner, col)
+            const field = createField(this._owner, col, rowValue)
             container.appendChild(field)
         }
         await this._spreadRelations(container)
@@ -112,7 +112,7 @@ export class FormManager<Row> {
         return footer
     }
 
-    apply(action: Action<Row>): void {
+    apply(action: Action<Row>, rowValue?: Partial<Row>): void {
         const contentContainer = this._prepareContainer(action.label)
         if (action.showColumns) {
             if (action.fillColumns) {
@@ -122,7 +122,7 @@ export class FormManager<Row> {
                 }
                 this._applyFilledInputs(contentContainer, row, action)
             } else {
-                this._applyEmptyInputs(contentContainer, action)
+                this._applyEmptyInputs(contentContainer, action, rowValue)
             }
         } else {
             const row: Row | null = this._owner.selectedRow
