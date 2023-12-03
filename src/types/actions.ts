@@ -6,6 +6,7 @@ interface _BaseAction<Row> {
     label: string
     showColumns: boolean
     activateOnSelect: boolean
+    columns?: string[]
     // TODO: come up with a more clever name
     preprocess?(selector: FormSelector): Promise<void>
     predicate?(table: Table<Row>): boolean

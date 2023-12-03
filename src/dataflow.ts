@@ -151,12 +151,13 @@ class _TableFactory<Row> {
         return this
     }
 
-    actionEdit(callback: (data: FormData, table: Table<Row>) => Promise<void | boolean>, preprocess?: (selector: FormSelector) => Promise<void>): _TableFactory<Row> {
+    actionEdit(callback: (data: FormData, table: Table<Row>) => Promise<void | boolean>, preprocess?: (selector: FormSelector) => Promise<void>, columns?: string[]): _TableFactory<Row> {
         this._data.actions.push({
             label: this._data.collection.locale.actions.edit,
             showColumns: true,
             fillColumns: true,
             activateOnSelect: true,
+            columns,
             callback,
             preprocess
         })

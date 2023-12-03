@@ -62,6 +62,7 @@ export class FormManager<Row> {
 
     private async _applyFilledInputs(container: HTMLFormElement, row: Row, action: Action<Row>): Promise<void> {
         for (const col of this._owner.config.columns) {
+            if (action.columns != null && action.columns.includes(col.name)) continue;
             const field = createField(this._owner, col, row)
             container.appendChild(field)
         }
