@@ -35,7 +35,7 @@ export class ActionTray<Row> {
         const rowValue: any = {}
         const selectedRow = this._owner.selectedRow!
         for (const [name, field] of Object.entries(anchor.dataMap)) {
-            rowValue[name] = selectedRow[field as keyof Row]
+            rowValue[name] = field == null ? null : selectedRow[field as keyof Row]
         }
         target.setContext(action as Action<Row>, rowValue)
     }

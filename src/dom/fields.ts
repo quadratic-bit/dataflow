@@ -52,12 +52,14 @@ export function createField<Row>(table: Table<Row>, column: TableColumn, rowValu
         } else if (data != null) {
             input.value = data + ""
         }
-    } else if (column.type === "datetime-local" && column.now) {
-        if (column.now === true) {
-            let now: Date = new Date(Date.now())
-            now = new Date(Date.now() - now.getTimezoneOffset() * 60000)
-            input.value = now.toISOString().split(".")[0]
-        }
+    }
+    if ((rowValue == null || rowValue[column.name as keyof Row] == null) &&
+            column.type === "datetime-local" &&
+            column.now &&
+            column.now === true) {
+        let now: Date = new Date(Date.now())
+        now = new Date(Date.now() - now.getTimezoneOffset() * 60000)
+        input.value = now.toISOString().split(".")[0]
     }
 
     field.appendChild(label)
