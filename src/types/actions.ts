@@ -6,7 +6,7 @@ interface _BaseAction<Row> {
     label: string
     showColumns: boolean
     activateOnSelect: boolean
-    columns?: string[]
+    exclude?: string[]
     // TODO: come up with a more clever name
     preprocess?(selector: FormSelector): Promise<void>
     predicate?(table: Table<Row>): boolean
@@ -47,3 +47,9 @@ export interface ButtonLink<Row> {
 }
 
 export type Action<Row> = ActionNew<Row> | ActionEdit<Row> | ActionBlank<Row>
+
+export interface ActionConfig<Row> {
+    callback(data: FormData, table: Table<Row>): Promise<void | boolean>
+    preprocess?(selector: FormSelector): Promise<void>
+    exclude?: string[]
+}
