@@ -34,8 +34,7 @@ export class FilterDOM {
             populateSelect(select, col, this._table)
 
             const optionAll = document.createElement("option")
-            // TODO: add localization
-            optionAll.textContent = "Все"
+            optionAll.textContent = this._table.config.collection.locale.pagination.all
 
             optionAll.dataset.all = ""
             select.insertBefore(optionAll, select.firstElementChild)
