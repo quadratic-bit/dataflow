@@ -47,18 +47,18 @@ export function populateSelect<Row>(element: HTMLSelectElement,
                                     column: TableColumn,
                                     table: Table<Row>,
                                     rowValue?: Row) {
-    if (column.type !== "select") throw Error("Cannot repopulate non-select field");
+    if (column.type !== "select") throw Error("Cannot populate non-select field");
     const choices = resolveDependencyAll(table, column.choices)
     let chosen: string | null = null
     if (rowValue != null) {
-        const chosenRaw = rowValue[column.name as keyof Row]
-        chosen = resolveDependency(table, column.choices, chosenRaw)
+        const tmp = rowValue[column.name as keyof Row]
+        chosen = resolveDependency(table, column.choices, tmp)
     }
     for (const entry of choices) {
         const option = document.createElement("option")
-        option.textContent = typeof entry === "string" ? entry : entry.label
-        option.value = typeof entry === "string" ? entry : entry.value + ""
-        if (typeof entry === "string" ? chosen == entry : chosen == entry.label) {
+        option.textContent = entry.label
+        option.value = entry.value + ""
+        if (chosen == entry.label) {
             option.selected = true
         }
         element.appendChild(option)
