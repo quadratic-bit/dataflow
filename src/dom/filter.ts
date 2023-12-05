@@ -1,5 +1,5 @@
 import { Table } from "common/table"
-import { isSelectDependency } from "common/subscription"
+import { resolveDependencyAll } from "common/subscription"
 import { Filter } from "components/filter"
 
 export class FilterDOM {
@@ -31,9 +31,7 @@ export class FilterDOM {
             const box = document.createElement("label")
             box.textContent = (col.title ?? col.name) + ": "
             const select = document.createElement("select")
-            const choices = isSelectDependency(col.choices) ?
-                            this._table.resolveSelectDependency(col.choices) :
-                            col.choices
+            const choices = resolveDependencyAll(this._table, col.choices)
             const optionAll = document.createElement("option")
             // TODO: add localization
             optionAll.textContent = "Все"

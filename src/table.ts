@@ -1,5 +1,4 @@
 import { TableDOM } from "dom/table"
-import type { SelectDependency } from "./subscription"
 import { Pagination } from "components/pagination"
 import { Status } from "components/status"
 import { SearchBar } from "components/search"
@@ -137,26 +136,6 @@ export class Table<Row> {
             subscriber.refresh()
             subscriber.filterTray.dom.refresh()
         }
-    }
-
-    resolveDependency(dependency: SelectDependency, query: any): string | null {
-        const table = this._config.collection.find(dependency.table)
-        if (table == null) throw Error(`Couldn't resolve dependency of ${dependency.table}`);
-        table.subscribe(this._config.id)
-        for (const row of table._data) {
-            if (row[dependency.reference] === query) {
-                return row[dependency.column]
-            }
-        }
-        return null
-    }
-
-    resolveSelectDependency(dependency: SelectDependency): { value: unknown, label: string }[] {
-        const table = this._config.collection.find(dependency.table)
-        if (table == null) throw Error(`Couldn't resolve dependency of ${dependency.table}`);
-        return table.data.map((r: any) => {
-            return { value: r[dependency.reference], label: r[dependency.column] }
-        })
     }
 
     mount(): void {

@@ -1,6 +1,6 @@
 import { Table } from "common/table"
 import type { TableColumn } from "types/columns"
-import { isSelectDependency } from "common/subscription"
+import { resolveDependency } from "common/subscription"
 
 export class TableDOM<Row> {
     private _container: Element
@@ -87,8 +87,8 @@ export class TableDOM<Row> {
                     }
                 }
 
-                if (header.type === "select" && isSelectDependency(header.choices)) {
-                    value = this._owner.resolveDependency(header.choices, value)
+                if (header.type === "select") {
+                    value = resolveDependency(this._owner, header.choices, value)
                 }
 
                 if (header.render != null) {

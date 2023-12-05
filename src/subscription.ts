@@ -2,14 +2,41 @@ import { Table } from "./table"
 import { TableColumn } from "types/columns"
 import { createField } from "dom/fields"
 
+interface LabelledResult<Row> {
+    value: Row[keyof Row]
+    label: string
+}
+
+export function resolveDependency<Row>(table: Table<Row>,
+                                       dependency: SelectDependency,
+                                       query: any): string | null {
+    const other = table.config.collection.find(dependency.table)
+    if (other == null) throw Error(`Couldn't resolve dependency of ${dependency.table}`);
+
+    other.subscribe(table.config.id)
+
+    for (const row of other.data) {
+        if (row[dependency.reference] === query) {
+            return row[dependency.column]
+        }
+    }
+    return null
+}
+
+export function resolveDependencyAll<Row>(table: Table<Row>,
+                                             dependency: SelectDependency): LabelledResult<Row>[] {
+    const other = table.config.collection.find(dependency.table)
+    if (other == null) throw Error(`Couldn't resolve dependency of ${dependency.table}`);
+
+    return other.data.map((r: any) => {
+        return { value: r[dependency.reference], label: r[dependency.column] }
+    })
+}
+
 export interface SelectDependency {
     table: string
     column: string
     reference: string
-}
-
-export function isSelectDependency(obj: any): obj is SelectDependency {
-    return "table" in obj && "column" in obj && "reference" in obj
 }
 
 export function createDependency(tableID: string, columnName: string, referenceName: string): SelectDependency {
@@ -20,19 +47,12 @@ export function populateSelect<Row>(element: HTMLSelectElement,
                                     column: TableColumn,
                                     table: Table<Row>,
                                     rowValue?: Row) {
-    // TODO: isSelectDependency was a bad idea
     if (column.type !== "select") throw Error("Cannot repopulate non-select field");
-    const choices = isSelectDependency(column.choices) ?
-                    table.resolveSelectDependency(column.choices) :
-                    column.choices
+    const choices = resolveDependencyAll(table, column.choices)
     let chosen: string | null = null
     if (rowValue != null) {
         const chosenRaw = rowValue[column.name as keyof Row]
-        if (isSelectDependency(column.choices)) {
-            chosen = table.resolveDependency(column.choices, chosenRaw)
-        } else {
-            chosen = chosenRaw + ""
-        }
+        chosen = resolveDependency(table, column.choices, chosenRaw)
     }
     for (const entry of choices) {
         const option = document.createElement("option")
@@ -43,7 +63,6 @@ export function populateSelect<Row>(element: HTMLSelectElement,
         }
         element.appendChild(option)
     }
-
 }
 
 export class FormSelector {
