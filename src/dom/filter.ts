@@ -1,5 +1,5 @@
 import { Table } from "common/table"
-import { resolveDependencyAll } from "common/subscription"
+import { populateSelect } from "common/subscription"
 import { Filter } from "components/filter"
 
 export class FilterDOM {
@@ -31,19 +31,15 @@ export class FilterDOM {
             const box = document.createElement("label")
             box.textContent = (col.title ?? col.name) + ": "
             const select = document.createElement("select")
-            const choices = resolveDependencyAll(this._table, col.choices)
+            populateSelect(select, col, this._table)
+
             const optionAll = document.createElement("option")
             // TODO: add localization
             optionAll.textContent = "Все"
             // TODO: come up with a better candidate for this
             optionAll.value = "-1"
-            select.appendChild(optionAll)
-            for (const entry of choices) {
-                const option = document.createElement("option")
-                option.textContent = typeof entry === "string" ? entry : entry.label
-                option.value = typeof entry === "string" ? entry : entry.value + ""
-                select.appendChild(option)
-            }
+
+            select.insertBefore(optionAll, select.firstElementChild)
             select.addEventListener("change", _ => {
                 this._owner.updateFilterResults(col.name, select.value)
             })
