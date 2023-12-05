@@ -13,7 +13,9 @@
         "dist/css/*.css"
     ],
     "scripts": {
-        "build": "tsc && resolve-tspaths && sass --no-source-map ./src/scss/main.scss:./dist/css/dataflow.css"
+        "compile-ts": "tsc && resolve-tspaths",
+        "compile-sass": "sass --no-source-map ./src/scss/main.scss:./dist/css/dataflow.css",
+        "build": "yarn compile-ts && yarn compile-sass"
     },
     "devDependencies": {
         "resolve-tspaths": "^0.8.17",
