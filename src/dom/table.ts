@@ -1,4 +1,4 @@
-import { Table } from "common/dataflow"
+import { Table } from "common/table"
 import type { TableColumn } from "types/columns"
 import { isSelectDependency } from "common/subscription"
 

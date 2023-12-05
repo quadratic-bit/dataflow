@@ -1,4 +1,4 @@
-import { Table } from "common/dataflow"
+import { Table } from "common/table"
 import { ActionTray } from "components/actionset"
 import { Action, ButtonLink } from "types/actions"
 

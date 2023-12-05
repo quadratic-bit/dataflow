@@ -1,4 +1,4 @@
-import { Table } from "./dataflow"
+import { Table } from "./table"
 import { Localization, PartialLocale } from "./locale"
 import { TableColumn } from "types/columns"
 import { PageLength, PagesSome, PagesAll } from "types/pagination"

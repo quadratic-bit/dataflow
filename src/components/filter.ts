@@ -1,4 +1,4 @@
-import { Table } from "common/dataflow"
+import { Table } from "common/table"
 import { FilterDOM } from "dom/filter"
 
 export class Filter<Row> {

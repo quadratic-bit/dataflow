@@ -1,4 +1,4 @@
-import { Table } from "common/dataflow";
+import { Table } from "common/table";
 import { Action } from "types/actions";
 import { FormSelector } from "common/subscription";
 import { LocaleForm } from "common/locale";

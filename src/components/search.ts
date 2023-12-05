@@ -1,4 +1,4 @@
-import { Table } from "common/dataflow"
+import { Table } from "common/table"
 import { SearchBarDOM } from "dom/searchbar"
 
 export class SearchBar<Row> {

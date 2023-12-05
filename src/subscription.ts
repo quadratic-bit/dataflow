@@ -1,5 +1,5 @@
+import { Table } from "./table"
 import { TableColumn } from "types/columns"
-import { Table } from "./dataflow"
 import { createField } from "dom/fields"
 
 export interface SelectDependency {

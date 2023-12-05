@@ -1,4 +1,4 @@
-import { Table } from "common/dataflow"
+import { Table } from "common/table"
 import { PaginationDOM } from "dom/pagination"
 import { LocalePagination } from "common/locale"
 import { PageLength } from "types/pagination"

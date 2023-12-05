@@ -1,4 +1,4 @@
-import { Table } from "common/dataflow";
+import { Table } from "common/table";
 import { TableColumn } from "types/columns";
 import { populateSelect } from "common/subscription";
 

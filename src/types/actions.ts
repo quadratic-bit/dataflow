@@ -1,4 +1,4 @@
-import { Table } from "common/dataflow"
+import { Table } from "common/table"
 import { FormSelector } from "common/subscription"
 
 interface _BaseAction<Row> {

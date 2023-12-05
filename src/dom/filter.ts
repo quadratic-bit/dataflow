@@ -1,4 +1,4 @@
-import { Table } from "common/dataflow"
+import { Table } from "common/table"
 import { isSelectDependency } from "common/subscription"
 import { Filter } from "components/filter"
 
