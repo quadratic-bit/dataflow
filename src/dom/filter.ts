@@ -36,13 +36,15 @@ export class FilterDOM {
             const optionAll = document.createElement("option")
             // TODO: add localization
             optionAll.textContent = "Все"
-            // TODO: come up with a better candidate for this
-            optionAll.value = "-1"
 
+            optionAll.dataset.all = ""
             select.insertBefore(optionAll, select.firstElementChild)
             select.addEventListener("change", _ => {
-                this._owner.updateFilterResults(col.name, select.value)
+                const selectedOption = select.children[select.selectedIndex] as HTMLOptionElement
+                const isAll = "all" in selectedOption.dataset
+                this._owner.updateFilterResults(col.name, select.value, isAll)
             })
+
             box.appendChild(select)
             this._container.appendChild(box)
         }

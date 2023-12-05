@@ -10,9 +10,9 @@ export class Filter<Row> {
         this._owner = table
     }
 
-    updateFilterResults(column: string, value: any): void {
+    updateFilterResults(column: string, value: unknown, selectAll: boolean): void {
         const searchBar = this._owner.searchbar.dom.container.children[0] as HTMLInputElement
-        if (value == "-1") {
+        if (selectAll) {
             searchBar.disabled = false
             this._owner.mask = null
             this._owner.refresh()
