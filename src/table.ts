@@ -10,14 +10,15 @@ import { Filter } from "components/filter"
 import { TableConfig } from "./factory"
 
 export class Table<Row> {
-    private _config: TableConfig<Row>
-    private _dom: TableDOM<Row>
-    private _pagination: Pagination
-    private _status: Status
+    dom: TableDOM<Row>
+    config: TableConfig<Row>
+    pagination: Pagination
+    searchbar: SearchBar<Row>
+    actionTray: ActionTray<Row>
+    filterTray: Filter<Row>
+    status: Status
+
     private _formManager: FormManager<Row>
-    private _actionTray: ActionTray<Row>
-    private _searchbar: SearchBar<Row>
-    private _filterTray: Filter<Row>
     private _data: Row[] = []
     private _mask: number[] | null = null
     private _listedRows: Row[] = []
@@ -25,24 +26,24 @@ export class Table<Row> {
     private _subscribers: Set<string>
 
     constructor(config: TableConfig<Row>, early_subs?: Set<string>) {
-        this._config = config
+        this.config = config
         this._subscribers = early_subs ?? new Set()
-        this._dom = new TableDOM(config.collection.mountDOM, config.columns, this)
-        this._status = new Status(config.collection.locale.status)
-        this._pagination = new Pagination(
+        this.dom = new TableDOM(config.collection.mountDOM, config.columns, this)
+        this.status = new Status(config.collection.locale.status)
+        this.pagination = new Pagination(
             this,
-            this._config.pageSizes,
+            this.config.pageSizes,
             config.collection.locale.pagination)
-        this._actionTray = new ActionTray(config.actions, this)
-        this._searchbar = new SearchBar(this)
-        this._filterTray = new Filter(this)
+        this.actionTray = new ActionTray(config.actions, this)
+        this.searchbar = new SearchBar(this)
+        this.filterTray = new Filter(this)
 
-        this._dom.footer.append(this._status.dom.container,
-                                this._pagination.dom.container)
-        this._dom.header.append(this._pagination.dom.sizeSelector.container,
-                                this._actionTray.dom.container,
-                                this._searchbar.dom.container,
-                                this._filterTray.dom.container)
+        this.dom.footer.append(this.status.dom.container,
+                               this.pagination.dom.container)
+        this.dom.header.append(this.pagination.dom.sizeSelector.container,
+                               this.actionTray.dom.container,
+                               this.searchbar.dom.container,
+                               this.filterTray.dom.container)
         this._formManager = new FormManager(this, config.collection.locale.form)
         this._updateStatus()
 
@@ -52,17 +53,17 @@ export class Table<Row> {
     }
 
     private async _init(): Promise<void> {
-        const data = await this._config.collection.getter(this._config.init) as Row[]
+        const data = await this.config.collection.getter(this.config.init) as Row[]
         this.add(data)
     }
 
     private _updateStatus(): void {
         if (this.rows.length == 0) {
-            this._status.setEmpty()
+            this.status.setEmpty()
             return;
         }
-        const [start, end] = this._pagination.retrieveDisplayRange(this.rows.length)
-        this._status.setRange(start + 1, Math.min(end, this.rows.length), this.rows.length)
+        const [start, end] = this.pagination.retrieveDisplayRange(this.rows.length)
+        this.status.setRange(start + 1, Math.min(end, this.rows.length), this.rows.length)
     }
 
     add(rows: Row[]): void {
@@ -75,22 +76,22 @@ export class Table<Row> {
 
     replace(chunk: Row[]): void {
         // TODO: Address performance
-        const [pageStart, pageEnd] = this._pagination.retrieveDisplayRange(this.rows.length)
-        this._dom.clear()
-        this._dom.add(chunk)
-        this._pagination.updatePagination(this.rows.length)
+        const [pageStart, pageEnd] = this.pagination.retrieveDisplayRange(this.rows.length)
+        this.dom.clear()
+        this.dom.add(chunk)
+        this.pagination.updatePagination(this.rows.length)
         this._updateStatus()
         if (this._selectedRowIndex != null &&
             this._selectedRowIndex >= pageStart &&
                 this._selectedRowIndex < pageEnd) {
-            this._dom.highlight(this._selectedRowIndex - pageStart)
+            this.dom.highlight(this._selectedRowIndex - pageStart)
         }
         this._mask = null
     }
 
     refresh(): void {
         // TODO: Address performance
-        const [pageStart, pageEnd] = this._pagination.retrieveDisplayRange(this.rows.length)
+        const [pageStart, pageEnd] = this.pagination.retrieveDisplayRange(this.rows.length)
         this.replace(this.rows.slice(pageStart, pageEnd))
     }
 
@@ -102,18 +103,18 @@ export class Table<Row> {
 
     toggleRow(relativeRowIndex: number): void {
         // TODO: Address performance
-        const [pageStart, pageEnd] = this._pagination.retrieveDisplayRange(this.rows.length)
+        const [pageStart, pageEnd] = this.pagination.retrieveDisplayRange(this.rows.length)
         const absoluteRowIndex = relativeRowIndex + pageStart
         if (absoluteRowIndex == this._selectedRowIndex) {
             this.selectedRowIndex = null
-            this._dom.clearHighlight(relativeRowIndex)
+            this.dom.clearHighlight(relativeRowIndex)
         } else {
             if (this._selectedRowIndex != null &&
                 this._selectedRowIndex >= pageStart &&
                 this._selectedRowIndex < pageEnd) {
-                this._dom.clearHighlight(this._selectedRowIndex - pageStart)
+                this.dom.clearHighlight(this._selectedRowIndex - pageStart)
             }
-            this._dom.highlight(relativeRowIndex)
+            this.dom.highlight(relativeRowIndex)
             this.selectedRowIndex = absoluteRowIndex
         }
     }
@@ -128,7 +129,7 @@ export class Table<Row> {
 
     serveUpdates(): void {
         for (const subID of this._subscribers) {
-            const subscriber = this._config.collection.find(subID)
+            const subscriber = this.config.collection.find(subID)
             if (subscriber == null) {
                 console.warn(`Couldn't resolve subscription of ${subID}`)
                 return
@@ -182,30 +183,6 @@ export class Table<Row> {
         return this._listedRows
     }
 
-    get config(): TableConfig<Row> {
-        return this._config
-    }
-
-    get dom(): TableDOM<Row> {
-        return this._dom
-    }
-
-    get pagination(): Pagination {
-        return this._pagination
-    }
-
-    get searchBar(): SearchBar<Row> {
-        return this._searchbar
-    }
-
-    get actionTray(): ActionTray<Row> {
-        return this._actionTray
-    }
-
-    get filterTray(): Filter<Row> {
-        return this._filterTray
-    }
-
     get selectedRow(): Row | null {
         return this.selectedRowIndex == null ? null : this.rows[this.selectedRowIndex]
     }
@@ -225,12 +202,12 @@ export class Table<Row> {
             this._listedRows = newMask.map((e: number) => this._data[e])
         }
         this._mask = newMask
-        this._pagination.activePage = 0
+        this.pagination.activePage = 0
         this.selectedRowIndex = null
     }
 
     set activePage(pageIndex: number) {
-        this._pagination.activePage = pageIndex
+        this.pagination.activePage = pageIndex
         this.refresh()
     }
 

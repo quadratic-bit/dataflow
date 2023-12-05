@@ -11,7 +11,7 @@ export class Filter<Row> {
     }
 
     updateFilterResults(column: string, value: any): void {
-        const searchBar = this._owner.searchBar.dom.container.children[0] as HTMLInputElement
+        const searchBar = this._owner.searchbar.dom.container.children[0] as HTMLInputElement
         if (value == "-1") {
             searchBar.disabled = false
             this._owner.mask = null
