@@ -65,12 +65,24 @@ export class Table<Row> {
         this.status.setRange(start + 1, Math.min(end, this.rows.length), this.rows.length)
     }
 
+    private _serveUpdates(): void {
+        for (const subID of this.subscribers) {
+            const subscriber = this.config.collection.find(subID)
+            if (subscriber == null) {
+                console.warn(`Couldn't resolve subscription of ${subID}`)
+                return
+            }
+            subscriber.refresh()
+            subscriber.filterTray.dom.refresh()
+        }
+    }
+
     add(rows: Row[]): void {
         this._data = this._data.concat(rows)
         // TODO: add possible optimization
         this.mask = this.mask
         this.refresh()
-        this.serveUpdates()
+        this._serveUpdates()
     }
 
     replace(chunk: Row[]): void {
@@ -97,7 +109,6 @@ export class Table<Row> {
     reinit(): void {
         this._data = []
         this._init()
-        this.refresh()
     }
 
     toggleRow(relativeRowIndex: number): void {
@@ -126,18 +137,6 @@ export class Table<Row> {
         this._subscribers.add(subscriberID)
     }
 
-    serveUpdates(): void {
-        for (const subID of this._subscribers) {
-            const subscriber = this.config.collection.find(subID)
-            if (subscriber == null) {
-                console.warn(`Couldn't resolve subscription of ${subID}`)
-                return
-            }
-            subscriber.refresh()
-            subscriber.filterTray.dom.refresh()
-        }
-    }
-
     mount(): void {
         if (this._formManager.active && !this._formManager.visible) {
             this._formManager.mount()
@@ -160,6 +159,10 @@ export class Table<Row> {
 
     get rows(): Row[] {
         return this._listedRows
+    }
+
+    get subscribers(): Set<string> {
+        return this._subscribers
     }
 
     get selectedRow(): Row | null {
