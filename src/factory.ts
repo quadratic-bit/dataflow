@@ -108,8 +108,8 @@ class _TableFactory<Row> {
         this._callback = callback
     }
 
-    describe(definition: TableColumn): _TableFactory<Row> {
-        this._data.columns.push(definition)
+    describe(...definitions: TableColumn[]): _TableFactory<Row> {
+        this._data.columns.push(...definitions)
         return this
     }
 
