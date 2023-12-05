@@ -11,7 +11,7 @@ export class Filter<Row> {
     }
 
     updateFilterResults(column: string, value: unknown, selectAll: boolean): void {
-        const searchBar = this._owner.searchbar.dom.container.children[0] as HTMLInputElement
+        const searchBar = this._owner.searchbar.dom.children[0] as HTMLInputElement
         if (selectAll) {
             searchBar.disabled = false
             this._owner.mask = null
@@ -31,7 +31,11 @@ export class Filter<Row> {
         this._owner.refresh()
     }
 
-    get dom(): FilterDOM {
-        return this._dom
+    refresh(): void {
+        this._dom.refresh()
+    }
+
+    get dom(): HTMLDivElement {
+        return this._dom.container
     }
 }

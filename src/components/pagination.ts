@@ -36,8 +36,12 @@ export class Pagination {
         }
     }
 
-    get dom(): PaginationDOM {
-        return this._dom
+    get dom(): HTMLDivElement {
+        return this._dom.container
+    }
+
+    get sizeSelector(): HTMLSpanElement {
+        return this._dom.sizeSelector.container
     }
 
     set activePage(pageIndex: number) {

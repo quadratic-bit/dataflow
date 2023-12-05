@@ -32,7 +32,8 @@ export class SearchBar<Row> {
         this._owner.refresh()
     }
 
-    get dom(): SearchBarDOM {
-        return this._dom
+    get dom(): HTMLDivElement {
+        return this._dom.container
     }
+
 }

@@ -1,5 +1,5 @@
 import { Table } from "common/table"
-import { ActionTrayDOM } from "dom/buttons"
+import { ActionTrayDOM } from "dom/actiontray"
 import { Action, ButtonLink } from "types/actions"
 
 export class ActionTray<Row> {
@@ -40,7 +40,7 @@ export class ActionTray<Row> {
         target.setContext(action as Action<Row>, rowValue)
     }
 
-    get dom(): ActionTrayDOM {
-        return this._dom
+    get dom(): HTMLDivElement {
+        return this._dom.container
     }
 }

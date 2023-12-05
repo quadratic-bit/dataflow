@@ -3,7 +3,7 @@ import { Pagination } from "components/pagination"
 import { Status } from "components/status"
 import { SearchBar } from "components/search"
 import { Action } from "types/actions"
-import { ActionTray } from "components/actionset"
+import { ActionTray } from "components/actiontray"
 import { FormManager } from "dom/form"
 import { Filter } from "components/filter"
 import { TableConfig } from "./factory"
@@ -37,12 +37,12 @@ export class Table<Row> {
         this.searchbar = new SearchBar(this)
         this.filterTray = new Filter(this)
 
-        this.dom.footer.append(this.status.dom.container,
-                               this.pagination.dom.container)
-        this.dom.header.append(this.pagination.dom.sizeSelector.container,
-                               this.actionTray.dom.container,
-                               this.searchbar.dom.container,
-                               this.filterTray.dom.container)
+        this.dom.footer.append(this.status.dom,
+                               this.pagination.dom)
+        this.dom.header.append(this.pagination.sizeSelector,
+                               this.actionTray.dom,
+                               this.searchbar.dom,
+                               this.filterTray.dom)
         this._formManager = new FormManager(this, config.collection.locale.form)
         this._updateStatus()
 
@@ -73,7 +73,7 @@ export class Table<Row> {
                 return
             }
             subscriber.refresh()
-            subscriber.filterTray.dom.refresh()
+            subscriber.filterTray.refresh()
         }
     }
 

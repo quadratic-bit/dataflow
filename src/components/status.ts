@@ -27,8 +27,8 @@ export class Status {
         this.content = this._locale.showEmpty
     }
 
-    get dom(): StatusDOM {
-        return this._dom
+    get dom(): HTMLSpanElement {
+        return this._dom.container
     }
 
     get content(): string {

@@ -1,5 +1,5 @@
 import { Table } from "common/table"
-import { ActionTray } from "components/actionset"
+import { ActionTray } from "components/actiontray"
 import { Action, ButtonLink } from "types/actions"
 
 export class ActionTrayDOM {
