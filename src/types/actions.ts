@@ -48,8 +48,8 @@ export interface ButtonLink<Row> {
 
 export type Action<Row> = ActionNew<Row> | ActionEdit<Row> | ActionBlank<Row>
 
-export interface ActionConfig<Row> {
-    callback(data: FormData, table: Table<Row>): Promise<void | boolean>
+export type ActionCallback<Row> = (data: FormData, table: Table<Row>) => Promise<void | boolean>
+export interface ActionConfig {
     preprocess?(selector: FormSelector): Promise<void>
     exclude?: string[]
 }

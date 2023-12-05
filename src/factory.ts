@@ -2,7 +2,7 @@ import { Table } from "./dataflow"
 import { Localization, PartialLocale } from "./locale"
 import { TableColumn } from "types/columns"
 import { PageLength, PagesSome, PagesAll } from "types/pagination"
-import { Action, ActionConfig, ButtonLink } from "types/actions"
+import { Action, ActionCallback, ActionConfig, ButtonLink } from "types/actions"
 
 export class TableCollection {
     private _mount: Element
@@ -132,40 +132,40 @@ class _TableFactory<Row> {
         return this
     }
 
-    actionAdd(config: ActionConfig<Row>): _TableFactory<Row> {
+    actionAdd(callback: ActionCallback<Row>, config?: ActionConfig): _TableFactory<Row> {
         this._data.actions.push({
             label: this._data.collection.locale.actions.add,
             showColumns: true,
             fillColumns: false,
             activateOnSelect: false,
-            callback: config.callback,
-            preprocess: config.preprocess,
-            exclude: config.exclude
+            callback: callback,
+            preprocess: config != null ? config.preprocess : undefined,
+            exclude: config != null ? config.exclude : undefined
         })
         return this
     }
 
-    actionEdit(config: ActionConfig<Row>): _TableFactory<Row> {
+    actionEdit(callback: ActionCallback<Row>, config?: ActionConfig): _TableFactory<Row> {
         this._data.actions.push({
             label: this._data.collection.locale.actions.edit,
             showColumns: true,
             fillColumns: true,
             activateOnSelect: true,
-            callback: config.callback,
-            preprocess: config.preprocess,
-            exclude: config.exclude
+            callback: callback,
+            preprocess: config != null ? config.preprocess : undefined,
+            exclude: config != null ? config.exclude : undefined
         })
         return this
     }
 
-    actionDelete(config: ActionConfig<Row>): _TableFactory<Row> {
+    actionDelete(callback: ActionCallback<Row>, config?: ActionConfig): _TableFactory<Row> {
         this._data.actions.push({
             label: this._data.collection.locale.actions.delete,
             showColumns: false,
             activateOnSelect: true,
-            callback: config.callback,
-            preprocess: config.preprocess,
-            exclude: config.exclude
+            callback: callback,
+            preprocess: config != null ? config.preprocess : undefined,
+            exclude: config != null ? config.exclude : undefined
         })
         return this
     }
@@ -203,4 +203,3 @@ class _TableFactory<Row> {
         return table
     }
 }
-
