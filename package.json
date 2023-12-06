@@ -7,7 +7,9 @@
     "exports": {
         ".": "./dist/dataflow.js",
         "./pagination": "./dist/types/pagination.js",
-        "./subscription": "./dist/subscription.js"
+        "./subscription": "./dist/subscription.js",
+        "./data": "./dist/dom/extraction.js",
+        "./columns": "./dist/types/columns.js"
     },
     "files": [
         "dist/css/*.css"

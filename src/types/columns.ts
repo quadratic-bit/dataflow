@@ -76,53 +76,53 @@ interface BaseTableColumn {
     overflow?: boolean
 }
 
-interface HiddenTableColumn extends BaseTableColumn {
+export interface HiddenTableColumn extends BaseTableColumn {
     type: "hidden"
     props?: HiddenInputProps
 }
 
-interface TextTableColumn extends BaseTableColumn {
+export interface TextTableColumn extends BaseTableColumn {
     type: "text"
     props?: TextInputProps
 }
 
-interface TextAreaTableColumn extends BaseTableColumn {
+export interface TextAreaTableColumn extends BaseTableColumn {
     type: "textarea"
     props?: TextAreaProps
 }
 
-interface EmailTableColumn extends BaseTableColumn {
+export interface EmailTableColumn extends BaseTableColumn {
     type: "email"
     props?: EmailInputProps
 }
 
-interface TelTableColumn extends BaseTableColumn {
+export interface TelTableColumn extends BaseTableColumn {
     type: "tel"
     props?: TelInputProps
 }
 
-interface NumberTableColumn extends BaseTableColumn {
+export interface NumberTableColumn extends BaseTableColumn {
     type: "number"
     props?: NumberInputProps
 }
 
-interface CheckboxTableColumns extends BaseTableColumn {
+export interface CheckboxTableColumns extends BaseTableColumn {
     type: "checkbox"
     props?: CheckboxInputProps
 }
 
-interface DateTableColumn extends BaseTableColumn {
+export interface DateTableColumn extends BaseTableColumn {
     type: "date"
     props?: DateInputProps
 }
 
-interface DateTimeTableColumn extends BaseTableColumn {
+export interface DateTimeTableColumn extends BaseTableColumn {
     type: "datetime-local"
     now?: boolean
     props?: DateTimeInputProps
 }
 
-interface SelectTableColumn extends BaseTableColumn {
+export interface SelectTableColumn extends BaseTableColumn {
     type: "select"
     choices: SelectDependency
     filterable?: boolean

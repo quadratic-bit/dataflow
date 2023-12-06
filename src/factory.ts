@@ -6,7 +6,6 @@ import { Action, ActionCallback, ActionConfig, ButtonLink } from "types/actions"
 
 export class TableCollection {
     private _mount: Element
-    handler: () => void
     getter: (query: any) => Promise<any>
     currentTable: string | null = null
     private _tables: Table<any>[]
@@ -14,7 +13,6 @@ export class TableCollection {
 
     constructor(
         mount: string,
-        handler: () => void,
         getter: (query: any) => Promise<any>,
         locale?: Partial<PartialLocale>)
     {
@@ -24,7 +22,6 @@ export class TableCollection {
         }
         mountDOM.classList.add("dataflow-table-wrapper")
         this._mount = mountDOM
-        this.handler = handler
         this.getter = getter
         this._tables = []
         this._localization = new Localization(locale)
