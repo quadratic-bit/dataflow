@@ -59,8 +59,11 @@ interface DateTimeInputProps extends BaseInputProps {
 
 interface DateInputProps extends DateTimeInputProps {}
 
-interface SelectProps extends BaseInputProps {}
 interface TimeInputProps extends DateTimeInputProps {}
+
+interface SelectProps extends BaseInputProps {
+    multiple?: boolean
+}
 
 interface BaseTableColumn {
     type: string

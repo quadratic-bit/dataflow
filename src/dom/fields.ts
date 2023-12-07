@@ -31,7 +31,12 @@ export function createField<Row>(table: Table<Row>, column: TableColumn, rowValu
         input.type = column.type
     }
 
-    input.name = column.name
+    if (column.type === "select" && column.props && column.props.multiple) {
+        input.name = column.name + "[]"
+    } else {
+        input.name = column.name
+    }
+
     input.required = column.required ?? false
     if (column.props != null) {
         for (const [prop, value] of Object.entries(column.props)) {
