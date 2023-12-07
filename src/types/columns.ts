@@ -51,15 +51,16 @@ interface NumberInputProps extends BaseInputProps {
 
 interface CheckboxInputProps extends BaseInputProps {}
 
-interface DateInputProps extends BaseInputProps {
+interface DateTimeInputProps extends BaseInputProps {
     max?: string
     min?: string
     step?: number
 }
 
-interface DateTimeInputProps extends DateInputProps {}
+interface DateInputProps extends DateTimeInputProps {}
 
 interface SelectProps extends BaseInputProps {}
+interface TimeInputProps extends DateTimeInputProps {}
 
 interface BaseTableColumn {
     type: string
@@ -113,6 +114,7 @@ export interface CheckboxTableColumns extends BaseTableColumn {
 
 export interface DateTableColumn extends BaseTableColumn {
     type: "date"
+    today?: boolean
     props?: DateInputProps
 }
 
@@ -120,6 +122,12 @@ export interface DateTimeTableColumn extends BaseTableColumn {
     type: "datetime-local"
     now?: boolean
     props?: DateTimeInputProps
+}
+
+export interface TimeTableColumn extends BaseTableColumn {
+    type: "time"
+    now?: boolean
+    props?: TimeInputProps
 }
 
 export interface SelectTableColumn extends BaseTableColumn {
@@ -136,6 +144,7 @@ export type TableColumn = HiddenTableColumn |
                           TelTableColumn |
                           NumberTableColumn |
                           CheckboxTableColumns |
-                          DateTableColumn |
                           DateTimeTableColumn |
-                          SelectTableColumn
+                          DateTableColumn |
+                          TimeTableColumn |
+                          SelectTableColumn |
