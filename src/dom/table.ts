@@ -87,7 +87,7 @@ export class TableDOM<Row> {
                     }
                 }
 
-                if (header.type === "select") {
+                if (header.type === "select" && !header.preventRenderTimeResolution) {
                     value = resolveDependency(this._owner, header.choices, value)
                 }
 

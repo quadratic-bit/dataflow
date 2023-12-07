@@ -133,6 +133,20 @@ export interface TimeTableColumn extends BaseTableColumn {
 export interface SelectTableColumn extends BaseTableColumn {
     type: "select"
     choices: SelectDependency
+    preventRenderTimeResolution?: boolean
+    filterable?: boolean
+    props?: SelectProps
+}
+
+export interface ConstSelectOption {
+    value: string
+    label: string
+}
+
+export interface ConstSelectTableColumn extends BaseTableColumn {
+    type: "select"
+    choices: ConstSelectOption[]
+    preventRenderTimeResolution?: boolean
     filterable?: boolean
     props?: SelectProps
 }
@@ -148,3 +162,4 @@ export type TableColumn = HiddenTableColumn |
                           DateTableColumn |
                           TimeTableColumn |
                           SelectTableColumn |
+                          ConstSelectTableColumn

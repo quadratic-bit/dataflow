@@ -1,5 +1,5 @@
 import { Table } from "./table"
-import { TableColumn } from "types/columns"
+import { ConstSelectOption, TableColumn } from "types/columns"
 import { createField } from "dom/fields"
 
 interface LabelledResult<Row> {
@@ -8,8 +8,13 @@ interface LabelledResult<Row> {
 }
 
 export function resolveDependency<Row>(table: Table<Row>,
-                                       dependency: SelectDependency,
+                                       dependency: SelectDependency | ConstSelectOption[],
                                        query: any): string | null {
+    if (Array.isArray(dependency)) {
+        const result = dependency.find(opt => opt.value == query)
+        return result == null ? null : result.label
+    }
+
     const other = table.config.collection.find(dependency.table)
     if (other == null) throw Error(`Couldn't resolve dependency of ${dependency.table}`);
 
@@ -24,7 +29,10 @@ export function resolveDependency<Row>(table: Table<Row>,
 }
 
 export function resolveDependencyAll<Row>(table: Table<Row>,
-                                             dependency: SelectDependency): LabelledResult<Row>[] {
+                                          dependency: SelectDependency |
+                                                      ConstSelectOption[]): LabelledResult<Row>[] {
+    if (Array.isArray(dependency)) return dependency as LabelledResult<Row>[];
+
     const other = table.config.collection.find(dependency.table)
     if (other == null) throw Error(`Couldn't resolve dependency of ${dependency.table}`);
 
