@@ -55,8 +55,9 @@ export class FormManager<Row> {
             const dest = container.querySelector(`[name="${col.name}"]`) as HTMLInputElement
             source.addEventListener("change", async _ => {
                 dest.value = await col.relies?.callback(source.value) as string
+                dest.dispatchEvent(new Event("change"))
             })
-            if (apply) dest.value = await col.relies?.callback(source.value) as string;
+            if (apply) dest.value = await col.relies.callback(source.value) as string;
         }
     }
 
