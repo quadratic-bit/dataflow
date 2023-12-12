@@ -1,4 +1,3 @@
-import { StatusDOM } from "dom/status"
 import { LocaleStatus } from "common/locale"
 
 export class Status {
@@ -39,5 +38,20 @@ export class Status {
         this.__content = text
         this._dom.set(text)
     }
+}
 
+class StatusDOM {
+    private _container: HTMLSpanElement
+
+    constructor() {
+        this._container = document.createElement("span")
+    }
+
+    set(text: string): void {
+        this._container.textContent = text
+    }
+
+    get container(): HTMLSpanElement {
+        return this._container
+    }
 }
