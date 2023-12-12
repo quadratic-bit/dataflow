@@ -1,8 +1,8 @@
 import { Table } from "./table"
 import { Localization, PartialLocale } from "./locale"
 import { TableColumn } from "types/columns"
-import { PageLength, PagesSome, PagesAll } from "types/pagination"
 import { Action, ActionCallback, ActionConfig, ButtonLink } from "types/actions"
+import { PageLength, PagesSome, PagesAll } from "components/pagination"
 
 export class TableCollection {
     private _mount: Element

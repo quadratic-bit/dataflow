@@ -6,7 +6,7 @@
     "typings": "./dist/dataflow.d.ts",
     "exports": {
         ".": "./dist/dataflow.js",
-        "./pagination": "./dist/types/pagination.js",
+        "./pagination": "./dist/components/pagination.js",
         "./subscription": "./dist/subscription.js",
         "./data": "./dist/dom/extraction.js",
         "./columns": "./dist/types/columns.js"
