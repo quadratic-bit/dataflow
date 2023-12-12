@@ -1,5 +1,5 @@
-import { Table } from "common/table"
-import { FormSelector } from "common/fields"
+import type { Table } from "common/table"
+import type { FormSelector } from "common/fields"
 
 interface _BaseAction<Row> {
     callback(data: FormData, table: Table<Row>): Promise<void | boolean>

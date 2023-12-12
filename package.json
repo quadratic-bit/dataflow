@@ -8,7 +8,6 @@
         ".": "./dist/dataflow.js",
         "./pagination": "./dist/components/pagination.js",
         "./fields": "./dist/fields.js",
-        "./data": "./dist/dom/extraction.js",
         "./columns": "./dist/types/columns.js"
     },
     "files": [
