@@ -4,6 +4,18 @@ import { TableColumn } from "types/columns"
 import { Action, ActionCallback, ActionConfig, ButtonLink } from "types/actions"
 import { PageLength, PagesSome, PagesAll } from "components/pagination"
 
+export interface TableConfig<Row> {
+    id: string
+    title: string
+    init: any
+    columns: TableColumn[]
+    collection: TableCollection
+    pageSizes: PageLength[]
+    actions: (Action<Row> | ButtonLink<Row>)[]
+    // TODO: remove or remake after the 5th task
+    colors: Map<string, [any, string][]>
+}
+
 export class TableCollection {
     private _mount: Element
     getter: (query: any) => Promise<any>
@@ -80,18 +92,6 @@ export class TableCollection {
     get locale(): Localization {
         return this._localization
     }
-}
-
-export interface TableConfig<Row> {
-    id: string
-    title: string
-    init: any
-    columns: TableColumn[]
-    collection: TableCollection
-    pageSizes: PageLength[]
-    actions: (Action<Row> | ButtonLink<Row>)[]
-    // TODO: remove or remake after the 5th task
-    colors: Map<string, [any, string][]>
 }
 
 class _TableFactory<Row> {

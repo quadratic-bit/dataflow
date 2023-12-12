@@ -6,7 +6,7 @@ import { Action } from "types/actions"
 import { ActionTray } from "components/actiontray"
 import { FormManager } from "dom/form"
 import { Filter } from "components/filter"
-import { TableConfig } from "./factory"
+import { TableConfig } from "./collection"
 
 export class Table<Row> {
     dom: TableDOM<Row>

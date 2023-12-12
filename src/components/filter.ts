@@ -1,5 +1,5 @@
 import { Table } from "common/table"
-import { populateSelect } from "common/subscription"
+import { populateSelect } from "common/fields"
 
 export class Filter<Row> {
     private _dom: FilterDOM

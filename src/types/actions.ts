@@ -1,5 +1,5 @@
 import { Table } from "common/table"
-import { FormSelector } from "common/subscription"
+import { FormSelector } from "common/fields"
 
 interface _BaseAction<Row> {
     callback(data: FormData, table: Table<Row>): Promise<void | boolean>

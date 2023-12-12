@@ -1,8 +1,7 @@
 import { Table } from "common/table";
 import { Action } from "types/actions";
-import { FormSelector } from "common/subscription";
+import { FormSelector, createField } from "common/fields";
 import { LocaleForm } from "common/locale";
-import { createField } from "./fields";
 
 export class FormManager<Row> {
     private _owner: Table<Row>
