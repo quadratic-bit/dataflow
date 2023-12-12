@@ -100,7 +100,11 @@ export class TableDOM<Row> {
                 if (header.overflow === false) {
                     divcell.style.whiteSpace = "nowrap"
                 }
-                td.appendChild(divcell)
+                if (header.lineBreaks === true) {
+                    td.textContent = value + ""
+                } else {
+                    td.appendChild(divcell)
+                }
                 tr.appendChild(td)
             }
             this._tableBody.appendChild(tr)

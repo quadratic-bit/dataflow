@@ -78,6 +78,7 @@ interface BaseTableColumn {
     render?(value: unknown): string
     preprocess?(value: unknown): string
     overflow?: boolean
+    lineBreaks?: boolean
 }
 
 export interface HiddenTableColumn extends BaseTableColumn {
