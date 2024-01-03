@@ -3,18 +3,7 @@
 Dependency-free TypeScript library making your HTML tables interactive
 
 > [!WARNING]
-> This project is under active development, meaning most features are still unavailable and API **will** change rapidly until first release. That implies no usage guidelines will stay for a long time so no docs until release.
-
-## Table of contents
-
-- [Getting started](#getting-started)
-    - [Installation](#installation)
-        - [Building from source](#building-from-source)
-        - [NPM package](#npm-package)
-    - [Usage](#usage)
-- [Contributing](#contributing)
-- [Versioning](#versioning)
-- [License](#license)
+> The project is under active development.
 
 ## Getting started
 
@@ -49,7 +38,7 @@ Coming soon!
 
 ### Usage
 
-Coming soon!
+Refer to [documentation website](https://quadratic-bit.github.io/).
 
 ## Contributing
 
@@ -57,7 +46,7 @@ Your contributions are always welcome and highly appreciated. Please have a look
 
 ## Versioning
 
-We use [Semantic Versioning](https://semver.org/spec/v2.0.0.html), version 2.0, for versioning.
+I use [Semantic Versioning](https://semver.org/spec/v2.0.0.html), version 2.0, for versioning.
 
 ## License
 
