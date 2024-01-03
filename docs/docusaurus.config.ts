@@ -1,4 +1,5 @@
-import { themes as prismThemes } from "prism-react-renderer";
+import DarkTheme from "./src/themes/dark";
+import LightTheme from "./src/themes/light";
 import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
 
@@ -7,16 +8,18 @@ const config: Config = {
     tagline: "Dependency-free TypeScript library making your HTML tables interactive",
     favicon: "img/favicon.ico",
 
-    url: "https://production-url.example.com",
+    url: "https://quadratic-bit.github.io",
 
-    // For GitHub pages deployment set "/dataflow/"
     baseUrl: "/",
 
     organizationName: "quadratic-bit",
-    projectName: "dataflow",
+    projectName: "quadratic-bit.github.io",
+    deploymentBranch: "main",
 
     onBrokenLinks: "throw",
     onBrokenMarkdownLinks: "warn",
+
+    trailingSlash: true,
 
     i18n: {
         defaultLocale: "en",
@@ -64,8 +67,9 @@ const config: Config = {
             copyright: `Copyleft 🄯 ${new Date().getFullYear()} Dataflow. Built with Docusaurus.`
         },
         prism: {
-            theme: prismThemes.github,
-            darkTheme: prismThemes.dracula
+            theme: LightTheme,
+            darkTheme: DarkTheme,
+            additionalLanguages: ["json", "bash"]
         },
     } satisfies Preset.ThemeConfig
 };

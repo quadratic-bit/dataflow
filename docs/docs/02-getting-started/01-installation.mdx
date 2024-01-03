@@ -1,0 +1,51 @@
+---
+sidebar_position: 1
+title: Installation
+---
+
+import Tabs from "@theme/Tabs"
+import TabItem from "@theme/TabItem"
+
+# Installation
+
+### NPM package
+
+Coming soon!
+
+### Build from source
+
+To build the package from source, first clone the repository:
+
+```bash
+git clone git@github.com:quadratic-bit/dataflow.git
+cd ./dataflow
+```
+
+Then build it with your favourite package manager:
+
+<Tabs>
+    <TabItem value="yarn" label="Yarn" default>
+        ```bash
+        yarn build
+        ```
+    </TabItem>
+    <TabItem value="npm" label="npm">
+        ```bash
+        npm run build
+        ```
+    </TabItem>
+    <TabItem value="pnpm" label="pnpm">
+        ```bash
+        pnpm run build
+        ```
+    </TabItem>
+</Tabs>
+
+You can now reference it in `package.json` of your project like this:
+
+```json title="package.json"
+"dependencies": {
+    // highlight-next-line
+    "dataflow": "link:<path_to_dataflow>"
+}
+```

@@ -1,7 +1,8 @@
 ---
 sidebar_position: 1
+title: Introduction
 ---
 
-# Intro
+# Introduction
 
 Here will be introductory information about the project
