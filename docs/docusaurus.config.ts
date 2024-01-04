@@ -10,11 +10,11 @@ const config: Config = {
 
     url: "https://quadratic-bit.github.io",
 
-    baseUrl: "/",
+    baseUrl: "/dataflow/",
 
     organizationName: "quadratic-bit",
-    projectName: "quadratic-bit.github.io",
-    deploymentBranch: "main",
+    projectName: "dataflow",
+    deploymentBranch: "gh-pages",
 
     onBrokenLinks: "throw",
     onBrokenMarkdownLinks: "warn",
