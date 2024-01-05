@@ -56,6 +56,11 @@ const config: Config = {
                     position: "left"
                 },
                 {
+                    label: "Reference",
+                    type: "docSidebar",
+                    sidebarId: "reference",
+                },
+                {
                     href: "https://github.com/quadratic-bit/dataflow",
                     label: "GitHub",
                     position: "right"
