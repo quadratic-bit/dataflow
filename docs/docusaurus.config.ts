@@ -50,10 +50,10 @@ const config: Config = {
             },
             items: [
                 {
+                    label: "Tutorial",
                     type: "docSidebar",
-                    sidebarId: "tutorialSidebar",
-                    position: "left",
-                    label: "Tutorial"
+                    sidebarId: "tutorial",
+                    position: "left"
                 },
                 {
                     href: "https://github.com/quadratic-bit/dataflow",
