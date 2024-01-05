@@ -9,10 +9,9 @@ interface HiddenInputProps extends BaseInputProps {}
 interface TextInputProps extends BaseInputProps {
     maxlength?: number
     minlength?: number
-    pattern?: number
+    pattern?: string
     placeholder?: string
-    readonly?: boolean
-    size?: string
+    size?: number
     spellcheck?: boolean
 }
 
@@ -23,7 +22,6 @@ interface TextAreaProps extends BaseInputProps {
     maxlength?: number
     minlength?: number
     placeholder?: string
-    readonly?: boolean
     rows?: number
     spellcheck?: boolean
     wrap?: "hard" | "soft" | "off"
