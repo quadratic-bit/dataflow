@@ -10,7 +10,7 @@ Reading and following these guidelines will help us make the contribution proces
 * [Getting Started](#getting-started)
     * [Issues](#issues)
     * [Pull Requests](#pull-requests)
-* [Getting Help](#getting-help)
+* [Attribution](#attribution)
 
 ## Code of Conduct
 
