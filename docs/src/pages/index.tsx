@@ -19,7 +19,7 @@ export default function Home(): JSX.Element {
                     <div className={styles.buttons}>
                         <Link
                             className="button button--secondary button--lg"
-                            to="/docs/tutorial/intro/">
+                            to="/docs/tutorial/getting-started/installation/">
                             Let's get started
                         </Link>
                     </div>
