@@ -4,8 +4,8 @@ import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
 
 const config: Config = {
-    title: "Dataflow Docs",
-    tagline: "Dependency-free TypeScript library making your HTML tables interactive",
+    title: "Data:Flow",
+    tagline: "Dependency-free TypeScript library designed to make your HTML tables interactive",
     favicon: "img/favicon.ico",
 
     url: "https://quadratic-bit.github.io",
