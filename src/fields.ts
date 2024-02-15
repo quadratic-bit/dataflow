@@ -14,10 +14,10 @@ export function resolveDependency<Row>(table: Table<Row>,
         return result == null ? null : result.label
     }
 
-    const other = table.config.collection.find(dependency.table)
+    const other = table.collection.find(dependency.table)
     if (other == null) throw Error(`Couldn't resolve dependency of ${dependency.table}`);
 
-    other.subscribe(table.config.id)
+    other.subscribe(table.id)
 
     for (const row of other.data) {
         if (row[dependency.reference] === query) {
@@ -32,7 +32,7 @@ export function resolveDependencyAll<Row>(table: Table<Row>,
                                                       ConstSelectOption[]): LabelledResult<Row>[] {
     if (Array.isArray(dependency)) return dependency as LabelledResult<Row>[];
 
-    const other = table.config.collection.find(dependency.table)
+    const other = table.collection.find(dependency.table)
     if (other == null) throw Error(`Couldn't resolve dependency of ${dependency.table}`);
 
     return other.data.map((r: any) => {
@@ -199,7 +199,7 @@ export class FormSelector {
     }
 
     repopulate(name: string): void {
-        const col: TableColumn | undefined = this._owner.config.columns.find(
+        const col: TableColumn | undefined = this._owner.columns.find(
             (col: TableColumn) => col.name == name)
         if (col == null) throw Error("Cannot find column with such name");
         if (col.type !== "select") throw Error("Cannot repopulate non-select field");

@@ -62,7 +62,7 @@ class FilterDOM {
 
     // TODO: allow multiple filters at once
     private _fill() {
-        for (const col of this._table.config.columns) {
+        for (const col of this._table.columns) {
             if (col.type !== "select" || col.filterable !== true) {
                 continue
             }
@@ -72,7 +72,7 @@ class FilterDOM {
             populateSelect(select, col, this._table)
 
             const optionAll = document.createElement("option")
-            optionAll.textContent = this._table.config.collection.locale.pagination.all
+            optionAll.textContent = this._table.collection.locale.pagination.all
 
             optionAll.dataset.all = ""
             select.insertBefore(optionAll, select.firstElementChild)

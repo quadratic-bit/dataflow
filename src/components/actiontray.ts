@@ -24,11 +24,11 @@ export class ActionTray<Row> {
 
     // Dangerous thing, need to reimagine
     link(anchor: ButtonLink<Row>): void {
-        this._owner.config.collection.swap(anchor.target)
+        this._owner.collection.swap(anchor.target)
         if (anchor.callback != null) anchor.callback();
         // Could've optimized that
-        const target = this._owner.config.collection.find(anchor.target)!
-        const action = target.config.actions.find((ac) => ac.label == anchor.action &&
+        const target = this._owner.collection.find(anchor.target)!
+        const action = target.actions.find((ac) => ac.label == anchor.action &&
                                                           "showColumns" in ac)
         if (action == null) throw Error("Failed to find an action from a link");
         const rowValue: any = {}

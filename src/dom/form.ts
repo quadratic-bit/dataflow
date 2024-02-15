@@ -29,7 +29,7 @@ export class FormManager<Row> {
         exitButton.textContent = this._locale.goBack
         exitButton.href = "javascript:void(0)"
         exitButton.addEventListener("click", () => { this.finish() })
-        header.appendChild(document.createTextNode(`${this._owner.config.title} / ${title}`))
+        header.appendChild(document.createTextNode(`${this._owner.title} / ${title}`))
         header.appendChild(exitButton)
 
         const wrapper = document.createElement("div")
@@ -48,7 +48,7 @@ export class FormManager<Row> {
     }
 
     private async _spreadRelations(container: HTMLFormElement, apply: boolean = true): Promise<void> {
-        for (const col of this._owner.config.columns) {
+        for (const col of this._owner.columns) {
             if (col.relies == null) continue;
             const source = container.querySelector(`[name="${col.relies.source}"]`) as HTMLInputElement
             const dest = container.querySelector(`[name="${col.name}"]`) as HTMLInputElement
@@ -61,7 +61,7 @@ export class FormManager<Row> {
     }
 
     private async _applyFilledInputs(container: HTMLFormElement, row: Row, action: Action<Row>): Promise<void> {
-        for (const col of this._owner.config.columns) {
+        for (const col of this._owner.columns) {
             if (action.exclude != null && action.exclude.includes(col.name)) continue;
             const field = createField(this._owner, col, row)
             container.appendChild(field)
@@ -74,7 +74,7 @@ export class FormManager<Row> {
 
     private _applyFilledHiddenInputs(container: HTMLFormElement, row: Row): void {
         container.appendChild(document.createTextNode(this._locale.confirmation))
-        for (const col of this._owner.config.columns) {
+        for (const col of this._owner.columns) {
             const input = document.createElement("input")
             input.name = col.name
             // TODO: handle missing field case
@@ -85,7 +85,7 @@ export class FormManager<Row> {
     }
 
     private async _applyEmptyInputs(container: HTMLFormElement, action: Action<Row>, rowValue?: Partial<Row>): Promise<void> {
-        for (const col of this._owner.config.columns) {
+        for (const col of this._owner.columns) {
             const field = createField(this._owner, col, rowValue)
             container.appendChild(field)
         }

@@ -1,4 +1,3 @@
-import { TableCollection } from "./collection"
-import { Table } from "./table"
+import { Table, TableCollection } from "./table"
 
 export { TableCollection, Table }

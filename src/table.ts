@@ -2,15 +2,116 @@ import { TableDOM } from "dom/table"
 import { Pagination } from "components/pagination"
 import { Status } from "components/status"
 import { SearchBar } from "components/search"
-import { Action } from "types/actions"
+import { Action, ButtonLink } from "types/actions"
 import { ActionTray } from "components/actiontray"
 import { FormManager } from "dom/form"
 import { Filter } from "components/filter"
-import { TableConfig } from "./collection"
+import { TableColumn } from "types/columns"
+import { PageLength } from "components/pagination"
+import { Localization, PartialLocale } from "./locale"
+
+export interface TableConfig<Row> {
+    id: string
+    title?: string
+    init: any
+    columns: TableColumn[]
+    pageSizes: PageLength[]
+    actions: (Action<Row> | ButtonLink<Row>)[]
+    // TODO: remove or remake after the 5th task
+    colors: Map<string, [any, string][]>
+}
+
+export class TableCollection {
+    private _mount: Element
+    getter: (query: any) => Promise<any>
+    currentTable: string | null = null
+    private _tables: Table<any>[]
+    private _localization: Localization
+
+    constructor(
+        mount: string,
+        getter: (query: any) => Promise<any>,
+        locale?: Partial<PartialLocale>)
+    {
+        const mountDOM = document.querySelector(mount)
+        if (mountDOM == null) {
+            throw Error(`Mount point "${mount}" does not exist in DOM`)
+        }
+        mountDOM.classList.add("dataflow-table-wrapper")
+        this._mount = mountDOM
+        this.getter = getter
+        this._tables = []
+        this._localization = new Localization(locale)
+    }
+
+    public get tables(): Table<any>[] {
+        return this._tables
+    }
+
+    public get mountDOM(): Element {
+        return this._mount
+    }
+
+    find(id: string): Table<any> | null {
+        for (const tbl of this._tables) {
+            if (tbl.id === id) {
+                return tbl
+            }
+        }
+        return null
+    }
+
+    mount(id: string): void {
+        if (this.currentTable != null) throw Error(`Cannot mount: ${this.currentTable} is up`);
+        const table = this.find(id)
+        if (table == null) throw Error(`No table found with id ${id}`);
+        this.mountDOM.textContent = ""
+        this.mountDOM.classList.remove("dataflow-table-filler")
+        table.mount();
+        this.currentTable = id
+    }
+
+    unmount(): void {
+        if (this.currentTable == null) throw Error(`Cannot unmount: no table is up`);
+        const table = this.find(this.currentTable)!
+        table.unmount();
+        this.currentTable = null
+        this.mountDOM.textContent = this._localization.frame.empty
+        this.mountDOM.classList.add("dataflow-table-filler")
+    }
+
+    swap(id: string): void {
+        // TODO: Deal with swaps during actions
+        if (this.currentTable == id) return;
+        this.unmount()
+        this.mount(id)
+    }
+
+    new<Row>(config: TableConfig<Row>, early_subs?: Set<string>): Table<Row> {
+        let table = new Table(config, this, early_subs)
+        this.currentTable = this.currentTable ?? table.id
+        this._tables.push(table)
+        return table
+    }
+
+    get locale(): Localization {
+        return this._localization
+    }
+}
 
 export class Table<Row> {
+    id: string
+    title: string
+    init: any
+    columns: TableColumn[]
+    collection: TableCollection
+    pageSizes: PageLength[]
+    actions: (Action<Row> | ButtonLink<Row>)[]
+
+    // TODO: remove or remake after the 5th task
+    colors: Map<string, [any, string][]>
+
     dom: TableDOM<Row>
-    config: TableConfig<Row>
     pagination: Pagination
     searchbar: SearchBar<Row>
     actionTray: ActionTray<Row>
@@ -24,15 +125,22 @@ export class Table<Row> {
     private _selectedRowIndex: number | null = null
     private _subscribers: Set<string>
 
-    constructor(config: TableConfig<Row>, early_subs?: Set<string>) {
-        this.config = config
+    constructor(config: TableConfig<Row>, collection: TableCollection, early_subs?: Set<string>) {
+        this.id = config.id
+        this.title = config.title ?? config.id
+        this.init = config.init
+        this.columns = config.columns
+        this.collection = collection
+        this.pageSizes = config.pageSizes
+        this.actions = config.actions
+        this.colors = config.colors
         this._subscribers = early_subs ?? new Set()
-        this.dom = new TableDOM(config.collection.mountDOM, config.columns, this)
-        this.status = new Status(config.collection.locale.status)
+        this.dom = new TableDOM(collection.mountDOM, config.columns, this)
+        this.status = new Status(collection.locale.status)
         this.pagination = new Pagination(
             this,
-            this.config.pageSizes,
-            config.collection.locale.pagination)
+            this.pageSizes,
+            collection.locale.pagination)
         this.actionTray = new ActionTray(config.actions, this)
         this.searchbar = new SearchBar(this)
         this.filterTray = new Filter(this)
@@ -43,16 +151,16 @@ export class Table<Row> {
                                this.actionTray.dom,
                                this.searchbar.dom,
                                this.filterTray.dom)
-        this._formManager = new FormManager(this, config.collection.locale.form)
+        this._formManager = new FormManager(this, collection.locale.form)
         this._updateStatus()
 
         this._init()
 
-        if (this.config.collection.tables.length === 0) this.dom.mount();
+        if (this.collection.tables.length === 0) this.dom.mount();
     }
 
     private async _init(): Promise<void> {
-        const data = await this.config.collection.getter(this.config.init) as Row[]
+        const data = await this.collection.getter(this.init) as Row[]
         this.add(data)
     }
 
@@ -67,7 +175,7 @@ export class Table<Row> {
 
     private _serveUpdates(): void {
         for (const subID of this.subscribers) {
-            const subscriber = this.config.collection.find(subID)
+            const subscriber = this.collection.find(subID)
             if (subscriber == null) {
                 console.warn(`Couldn't resolve subscription of ${subID}`)
                 return
