@@ -3,6 +3,10 @@ Data:Flow
 
 Dependency-free TypeScript library designed to make your HTML tables interactive.
 
+> [!WARNING]
+> This codebase will undermine multiple breaking changes,
+> so no documentation will be up-to-date up until the 20th of March.
+
 > [!NOTE]
 > The project is under active development and your contributions are welcome.
 
