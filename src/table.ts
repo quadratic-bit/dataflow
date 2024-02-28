@@ -12,13 +12,13 @@ import { Localization, PartialLocale } from "./locale"
 
 export interface TableConfig<Row> {
     id: string
-    title?: string
     init: any
     columns: TableColumn[]
-    pageSizes: PageLength[]
     actions: (Action<Row> | ButtonLink<Row>)[]
+    title?: string
+    pageSizes?: PageLength[]
     // TODO: remove or remake after the 5th task
-    colors: Map<string, [any, string][]>
+    colors?: Map<string, [any, string][]>
 }
 
 export class TableCollection {
@@ -118,7 +118,8 @@ export class Table<Row> {
     filterTray: Filter<Row>
     status: Status
 
-    private _formManager: FormManager<Row>
+    formManager: FormManager<Row>
+
     private _data: Row[] = []
     private _mask: number[] | null = null
     private _listedRows: Row[] = []
@@ -127,13 +128,13 @@ export class Table<Row> {
 
     constructor(config: TableConfig<Row>, collection: TableCollection, early_subs?: Set<string>) {
         this.id = config.id
-        this.title = config.title ?? config.id
+        this.title = config.title ?? config.id.charAt(0).toUpperCase() + config.id.slice(1)
         this.init = config.init
         this.columns = config.columns
         this.collection = collection
-        this.pageSizes = config.pageSizes
-        this.actions = config.actions
-        this.colors = config.colors
+        this.pageSizes = config.pageSizes ?? [PagesSome(15), PagesSome(25), PagesAll]
+        this.actions = config.actions ?? []
+        this.colors = config.colors ?? new Map()
         this._subscribers = early_subs ?? new Set()
         this.dom = new TableDOM(collection.mountDOM, config.columns, this)
         this.status = new Status(collection.locale.status)
@@ -141,7 +142,7 @@ export class Table<Row> {
             this,
             this.pageSizes,
             collection.locale.pagination)
-        this.actionTray = new ActionTray(config.actions, this)
+        this.actionTray = new ActionTray(this.actions, this)
         this.searchbar = new SearchBar(this)
         this.filterTray = new Filter(this)
 
@@ -151,7 +152,7 @@ export class Table<Row> {
                                this.actionTray.dom,
                                this.searchbar.dom,
                                this.filterTray.dom)
-        this._formManager = new FormManager(this, collection.locale.form)
+        this.formManager = new FormManager(this, collection.locale.form)
         this._updateStatus()
 
         this._init()
@@ -237,26 +238,22 @@ export class Table<Row> {
         }
     }
 
-    setContext(action: Action<Row>, rowValue?: Partial<Row>): void {
-        this._formManager.apply(action, rowValue)
-    }
-
     subscribe(subscriberID: string): void {
         this._subscribers.add(subscriberID)
     }
 
     mount(): void {
-        if (this._formManager.active && !this._formManager.visible) {
-            this._formManager.mount()
-        } else if (!this._formManager.active && !this.dom.active) {
+        if (this.formManager.active && !this.formManager.visible) {
+            this.formManager.mount()
+        } else if (!this.formManager.active && !this.dom.active) {
             this.dom.mount()
         }
     }
 
     unmount(): void {
-        if (this._formManager.active && this._formManager.visible) {
-            this._formManager.unmount()
-        } else if (!this._formManager.active && this.dom.active) {
+        if (this.formManager.active && this.formManager.visible) {
+            this.formManager.unmount()
+        } else if (!this.formManager.active && this.dom.active) {
             this.dom.unmount()
         }
     }
