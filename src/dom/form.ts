@@ -1,5 +1,4 @@
 import { Table } from "common/table";
-import { Action } from "types/actions";
 import { FormSelector, createField } from "common/fields";
 import { LocaleForm } from "common/locale";
 
@@ -60,15 +59,15 @@ export class FormManager<Row> {
         }
     }
 
-    private async _applyFilledInputs(container: HTMLFormElement, row: Row, action: Action<Row>): Promise<void> {
+    private async _applyFilledInputs(container: HTMLFormElement, row: Row, preprocess?: (selector: FormSelector) => Promise<void>, exclude?: string[]): Promise<void> {
         for (const col of this._owner.columns) {
-            if (action.exclude != null && action.exclude.includes(col.name)) continue;
+            if (exclude != null && exclude.includes(col.name)) continue;
             const field = createField(this._owner, col, row)
             container.appendChild(field)
         }
         await this._spreadRelations(container, false)
-        if (action.preprocess) {
-            await action.preprocess(new FormSelector(container, this._owner))
+        if (preprocess) {
+            await preprocess(new FormSelector(container, this._owner))
         }
     }
 
@@ -84,14 +83,14 @@ export class FormManager<Row> {
         }
     }
 
-    private async _applyEmptyInputs(container: HTMLFormElement, action: Action<Row>, rowValue?: Partial<Row>): Promise<void> {
+    private async _applyEmptyInputs(container: HTMLFormElement, preprocess?: (selector: FormSelector) => Promise<void>, rowValue?: Partial<Row>): Promise<void> {
         for (const col of this._owner.columns) {
             const field = createField(this._owner, col, rowValue)
             container.appendChild(field)
         }
         await this._spreadRelations(container)
-        if (action.preprocess) {
-            await action.preprocess(new FormSelector(container, this._owner))
+        if (preprocess) {
+            await preprocess(new FormSelector(container, this._owner))
         }
     }
 
@@ -113,30 +112,55 @@ export class FormManager<Row> {
         return footer
     }
 
-    apply(action: Action<Row>, rowValue?: Partial<Row>): void {
-        const contentContainer = this._prepareContainer(action.label)
-        if (action.showColumns) {
-            if (action.fillColumns) {
-                const row: Row | null = this._owner.selectedRow
-                if (row == null) {
-                    throw Error(`Cannot perform action "${action.label}" with no column selected`)
-                }
-                this._applyFilledInputs(contentContainer, row, action)
-            } else {
-                this._applyEmptyInputs(contentContainer, action, rowValue)
-            }
-        } else {
-            const row: Row | null = this._owner.selectedRow
-            if (row == null) {
-                throw Error(`Cannot perform action "${action.label}" with no column selected`)
-            }
-            this._applyFilledHiddenInputs(contentContainer, row)
-        }
+    applyAdd(label: string, callback: (data: FormData, table: Table<Row>) => Promise<void | boolean>, preprocess?: (selector: FormSelector) => Promise<void>): void {
+        const contentContainer = this._prepareContainer(label)
+        this._applyEmptyInputs(contentContainer, preprocess, undefined)
+        // TODO: extract footer (duplicate code)
         const footer = this._createButtons()
         contentContainer.appendChild(footer)
         contentContainer.addEventListener("submit", async (e: SubmitEvent) => {
             e.preventDefault()
-            const response = await action.callback(new FormData(contentContainer), this._owner)
+            const response = await callback(new FormData(contentContainer), this._owner)
+            if (response !== false) {
+                this.finish()
+            }
+        })
+        this._active = true
+        this._visible = true
+    }
+
+    applyEdit(label: string, callback: (data: FormData, table: Table<Row>) => Promise<void | boolean>, preprocess?: (selector: FormSelector) => Promise<void>): void {
+        const contentContainer = this._prepareContainer(label)
+        const row: Row | null = this._owner.selectedRow
+        if (row == null) {
+            throw Error(`Cannot perform action "${label}" with no column selected`)
+        }
+        this._applyFilledInputs(contentContainer, row, preprocess)
+        const footer = this._createButtons()
+        contentContainer.appendChild(footer)
+        contentContainer.addEventListener("submit", async (e: SubmitEvent) => {
+            e.preventDefault()
+            const response = await callback(new FormData(contentContainer), this._owner)
+            if (response !== false) {
+                this.finish()
+            }
+        })
+        this._active = true
+        this._visible = true
+    }
+
+    applyDelete(label: string, callback: (data: FormData, table: Table<Row>) => Promise<void | boolean>): void {
+        const contentContainer = this._prepareContainer(label)
+        const row: Row | null = this._owner.selectedRow
+        if (row == null) {
+            throw Error(`Cannot perform action "${label}" with no column selected`)
+        }
+        this._applyFilledHiddenInputs(contentContainer, row)
+        const footer = this._createButtons()
+        contentContainer.appendChild(footer)
+        contentContainer.addEventListener("submit", async (e: SubmitEvent) => {
+            e.preventDefault()
+            const response = await callback(new FormData(contentContainer), this._owner)
             if (response !== false) {
                 this.finish()
             }

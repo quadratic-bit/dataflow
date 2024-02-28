@@ -1,8 +1,8 @@
 import { TableDOM } from "dom/table"
-import { Pagination } from "components/pagination"
+import { PagesAll, PagesSome, Pagination } from "components/pagination"
 import { Status } from "components/status"
 import { SearchBar } from "components/search"
-import { Action, ButtonLink } from "types/actions"
+import { ActionHook, Action } from "types/actions"
 import { ActionTray } from "components/actiontray"
 import { FormManager } from "dom/form"
 import { Filter } from "components/filter"
@@ -14,9 +14,9 @@ export interface TableConfig<Row> {
     id: string
     init: any
     columns: TableColumn[]
-    actions: (Action<Row> | ButtonLink<Row>)[]
     title?: string
     pageSizes?: PageLength[]
+    actions?: Action<Row>[]
     // TODO: remove or remake after the 5th task
     colors?: Map<string, [any, string][]>
 }
@@ -50,6 +50,33 @@ export class TableCollection {
 
     public get mountDOM(): Element {
         return this._mount
+    }
+
+    actionAdd(callback: (data: FormData, table: Table<any>) => Promise<void | boolean>): Action<any> {
+        return {
+            label: this.locale.actions.add,
+            hook: ActionHook.Always,
+            callback,
+            act: function (table: Table<any>) { table.formManager.applyAdd(this.label, this.callback) }
+        }
+    }
+
+    actionEdit(callback: (data: FormData, table: Table<any>) => Promise<void | boolean>): Action<any> {
+        return {
+            label: this.locale.actions.edit,
+            hook: ActionHook.OnSelect,
+            callback,
+            act: function (table: Table<any>) { table.formManager.applyEdit(this.label, this.callback) }
+        }
+    }
+
+    actionDelete(callback: (data: FormData, table: Table<any>) => Promise<void | boolean>): Action<any> {
+        return {
+            label: this.locale.actions.delete,
+            hook: ActionHook.OnSelect,
+            callback,
+            act: function (table: Table<any>) { table.formManager.applyDelete(this.label, this.callback) }
+        }
     }
 
     find(id: string): Table<any> | null {
@@ -106,7 +133,7 @@ export class Table<Row> {
     columns: TableColumn[]
     collection: TableCollection
     pageSizes: PageLength[]
-    actions: (Action<Row> | ButtonLink<Row>)[]
+    actions: Action<Row>[]
 
     // TODO: remove or remake after the 5th task
     colors: Map<string, [any, string][]>
