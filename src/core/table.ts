@@ -10,38 +10,30 @@ import { TableColumn } from "types/columns"
 import { PageLength } from "components/pagination"
 import { Localization, PartialLocale } from "./locale"
 
-export interface TableConfig<Row> {
-    id: string
-    init: any
-    columns: TableColumn[]
-    title?: string
-    pageSizes?: PageLength[]
-    actions?: Action<Row>[]
-    // TODO: remove or remake after the 5th task
-    colors?: Map<string, [any, string][]>
+export interface TableCollectionConfig {
+    mount: string,
+    receiver: (query: any) => Promise<any>,
+    locale?: Partial<PartialLocale>
 }
 
 export class TableCollection {
     private _mount: Element
-    getter: (query: any) => Promise<any>
+    receiver: (query: any) => Promise<any>
     currentTable: string | null = null
     private _tables: Table<any>[]
     private _localization: Localization
 
-    constructor(
-        mount: string,
-        getter: (query: any) => Promise<any>,
-        locale?: Partial<PartialLocale>)
+    constructor(config: TableCollectionConfig)
     {
-        const mountDOM = document.querySelector(mount)
+        const mountDOM = document.querySelector(config.mount)
         if (mountDOM == null) {
-            throw Error(`Mount point "${mount}" does not exist in DOM`)
+            throw Error(`Mount point "${config.mount}" does not exist in DOM`)
         }
         mountDOM.classList.add("dataflow-table-wrapper")
         this._mount = mountDOM
-        this.getter = getter
+        this.receiver = config.receiver
         this._tables = []
-        this._localization = new Localization(locale)
+        this._localization = new Localization(config.locale)
     }
 
     public get tables(): Table<any>[] {
@@ -126,6 +118,17 @@ export class TableCollection {
     }
 }
 
+export interface TableConfig<Row> {
+    id: string
+    init: any
+    columns: TableColumn[]
+    title?: string
+    pageSizes?: PageLength[]
+    actions?: Action<Row>[]
+    // TODO: remove or remake after the 5th task
+    colors?: Map<string, [any, string][]>
+}
+
 export class Table<Row> {
     id: string
     title: string
@@ -188,7 +191,7 @@ export class Table<Row> {
     }
 
     private async _init(): Promise<void> {
-        const data = await this.collection.getter(this.init) as Row[]
+        const data = await this.collection.receiver(this.init) as Row[]
         this.add(data)
     }
 
