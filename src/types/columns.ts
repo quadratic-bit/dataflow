@@ -1,4 +1,4 @@
-import type { SelectDependency } from "common/fields"
+import type { SelectDependency } from "core/fields"
 
 interface BaseInputProps {
     readonly?: boolean

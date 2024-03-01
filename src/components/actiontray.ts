@@ -1,4 +1,4 @@
-import { Table } from "common/table"
+import { Table } from "core/table"
 import { ActionHook, Action } from "types/actions"
 
 export class ActionTray<Row> {

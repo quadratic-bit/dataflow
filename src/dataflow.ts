@@ -1,3 +1,2 @@
-import { Table, TableCollection } from "./table"
-
+import { Table, TableCollection } from "core/table"
 export { TableCollection, Table }

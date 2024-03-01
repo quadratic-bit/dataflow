@@ -1,4 +1,4 @@
-import { Table } from "./table"
+import { Table } from "core/table"
 import { ConstSelectOption, TableColumn } from "types/columns"
 
 interface LabelledResult<Row> {

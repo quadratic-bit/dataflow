@@ -1,5 +1,5 @@
-import { Table } from "common/table"
-import { LocalePagination } from "common/locale"
+import { Table } from "core/table"
+import { LocalePagination } from "core/locale"
 
 interface PaginationSome {
     kind: "some"

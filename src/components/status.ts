@@ -1,4 +1,4 @@
-import { LocaleStatus } from "common/locale"
+import { LocaleStatus } from "core/locale"
 
 export class Status {
     private __content!: string

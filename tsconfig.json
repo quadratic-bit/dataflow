@@ -13,7 +13,7 @@
         "dom/*": ["./dom/*"],
         "components/*": ["./components/*"],
         "types/*": ["./types/*"],
-        "common/*": ["./*"]
+        "core/*": ["./core/*"]
     },
 
     "moduleResolution": "node",

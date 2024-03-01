@@ -1,6 +1,6 @@
-import { Table } from "common/table";
-import { FormSelector, createField } from "common/fields";
-import { LocaleForm } from "common/locale";
+import { Table } from "core/table";
+import { FormSelector, createField } from "core/fields";
+import { LocaleForm } from "core/locale";
 
 export class FormManager<Row> {
     private _owner: Table<Row>

@@ -1,6 +1,6 @@
-import { Table } from "common/table"
+import { Table } from "core/table"
+import { resolveDependency } from "core/fields"
 import type { TableColumn } from "types/columns"
-import { resolveDependency } from "common/fields"
 
 export class TableDOM<Row> {
     private _container: Element

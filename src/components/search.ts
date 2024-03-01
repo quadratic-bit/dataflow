@@ -1,4 +1,4 @@
-import { Table } from "common/table"
+import { Table } from "core/table"
 
 export class SearchBar<Row> {
     private _dom: SearchBarDOM

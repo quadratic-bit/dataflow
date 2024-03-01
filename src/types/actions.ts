@@ -1,5 +1,5 @@
-import type { Table } from "common/table"
-import type { FormSelector } from "common/fields"
+import type { Table } from "core/table"
+import type { FormSelector } from "core/fields"
 
 export enum ActionHook {
     Always,
