@@ -64,27 +64,39 @@ async function tableGetter(action: string): Promise<Person[]> {
     return await response.json()
 }
 
-let collection = new TableCollection("main#my-table", tableGetter)
+let collection = new TableCollection({
+    mount: "main#my-table",
+    receiver: tableGetter
+})
 ```
 
 3. Add your table within a `collection`, describing each column to display (and maybe an action):
 
 ```ts
-let table = collection
-    .new<Person>("group", "get_group") // Specify table ID and its getter
-    .describe({ name: "full_name", type: "text" }) // `name` should match some Person's property name
-    .describe({ name: "age", type: "number" })
-    .actionDelete(async () => console.log("Some row has been deleted"))
-    .init()
+let table = collection.new<Person>({
+    id: "group",
+    init: "get_group",
+    columns: [
+        { name: "full_name", type: "text" },
+        { name: "age", type: "number" }
+    ],
+    actions: [
+        collection.actionDelete(async () => console.log("Some row has been deleted"))
+    ]
+})
 ```
 
-4. Voilà! There should be a pretty table at `main#my-table` filled with data pulled from `https://example.com/api?action=get_group`.
+4. Voilà! There should be a pretty table at `main#my-table`
+filled with data pulled from `https://example.com/api?action=get_group`.
 
-For more info, tips and tricks please refer to the [documentation website](https://quadratic-bit.github.io/dataflow/).
+For more info, tips and tricks please refer to the
+[documentation website](https://quadratic-bit.github.io/dataflow/).
 
 ### Contributing
 
-Your contributions are always welcome and highly appreciated. Please have a look at the [contribution guidelines](.github/CONTRIBUTING.md) and [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) for details.
+Your contributions are always welcome and highly appreciated.
+Please have a look at the [contribution guidelines](.github/CONTRIBUTING.md)
+and [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) for details.
 
 ### License
 

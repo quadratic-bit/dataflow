@@ -36,25 +36,29 @@ interface Person {
 }
 ```
 
-Then, we'll need to define a table collection, from which tables will be derived.
-The signature for the constructor is as follows:
-
-```ts
-TableCollection(
-    mount: string, // HTML selector
-    getter: (query: any) => Promise<any>, // Callback for retrieving data
-    // locale?: Locale
-)
-```
-
-So, let's define both collection and our first table:
+Then, we'll define both collection and our first table:
 
 ```ts
 import { TableCollection } from "dataflow"
 
-let collection = new TableCollection("tag#id", async (query: string) => { ... })
-let table = collection.new<Person>("group", "get_group").init()
+let collection = new TableCollection({
+    mount: "tag#id",
+    receiver: async (query: string) => { ... }
+})
+let table = collection.new<Person>({
+    id: "group",
+    init: "get_group",
+    columns: [
+        { name: "full_name", type: "text" },
+        { name: "age", type: "number" }
+    ]
+})
 ```
+
+:::note
+Make sure that value in a `name` field of each column mathches with an actual property of
+a described object.
+:::
 
 Data retrieval callback allows user-defined implementations, e.g, using js `fetch`.
 The function itself, as its purpose suggests, should return a list of rows:
@@ -65,23 +69,16 @@ async function tableGetter(operation: string): Promise<Person[]> {
     return await response.json()
 }
 
-let collection = new TableCollection("tag#id", tableGetter)
+let collection = new TableCollection({
+    mount: "tag#id",
+    receiver: tableGetter
+})
 ```
 
 :::info
-The "option" that will be passed to an above-specified getter is constant
-(and often unique) for each table and is determined by the second argument `init`
-of a `Table` constructor, `"get_group"` in our case:
-
-```ts
-// class TableCollection {
-new<Row>(
-    id: string, // Unique table identifier
-    init: string, // Will be passed to `getter`
-    title?: string // Human-readable table title, defaults to `id` capitalized
-): TableFactory<Row>
-// }
-```
+The "operation" that will be passed to an above-specified getter is constant
+(and often unique) for each table and is determined by the `init` argument
+of a `Table` constructor, `"get_group"` in our case
 :::
 
 :::tip
@@ -91,48 +88,19 @@ function as a getter:
 ```ts
 import { invoke } from "@tauri-apps/api"
 
-let collection = new TableCollection("tag#id", invoke)
+let collection = new TableCollection({
+    mount: "tag#id",
+    receiver: invoke
+})
 ```
 :::
 
-But the table isn't showing up! That's because the script didn't *describe*
-the columns it wants to render in HTML.
-
-![Example of a table without column description](../assets/quick-start-1.png)
-
-For every column that needs to be displayed, add `.describe()` in a
-table initialization section.
-
-```ts
-let table = collection.new<Person>("group", "get_group")
-    // highlight-start
-    .describe({ name: "full_name", type: "text" })
-    .describe({ name: "age", type: "number" })
-    // highlight-end
-    .init()
-```
-
-Single call would also do:
-
-```ts
-let table = collection.new<Person>("group", "get_group")
-    .describe(
-    // highlight-start
-        { name: "full_name", type: "text" },
-        { name: "age", type: "number" }
-    // highlight-end
-    )
-    .init()
-```
-
-:::note
-Make sure that value in a `name` field mathches with an actual property of
-a described object.
-:::
+You should now be seeing table filled with data,
+pulled from `"https://example.com/api?operation=get_group"`
 
 ![Example of a filled table](../assets/quick-start-2.png)
 
-Great! The complete code for the setup:
+The complete code for the setup:
 
 ```ts
 import "../node_modules/dataflow/dist/css/dataflow.css"
@@ -143,13 +111,20 @@ interface Person {
     age: number,
 }
 
-let collection = new TableCollection("main", async (query: string) => [])
-let table = collection.new<Person>("group", "get_group")
-    .describe({ name: "full_name", type: "text" })
-    .describe({ name: "age", type: "number" })
-    .init()
+let collection = new TableCollection({
+    mount: "tag#id",
+    receiver: async (query: string) => []
+})
+let table = collection.new<Person>({
+    id: "group",
+    init: "get_group",
+    columns: [
+        { name: "full_name", type: "text" },
+        { name: "age", type: "number" }
+    ]
+})
 
-// It's also possible to imperatively add rows to our table!
+// It's also possible to imperatively add rows to the table
 table.add([
     { name: "Mary Fee", age: 47 },
     { name: "Jerome Gutowski", age: 63 },
@@ -159,26 +134,32 @@ table.add([
 
 #### Adding actions
 
-There are 3 built-in actions available: `actionAdd`, `actionEdit` and `actionDelete`.
-Their differences are limited to button text and when they are active &mdash;
-the rest is up to user's implementation.
+There are 3 built-in actions available: `actionAdd`, `actionEdit` and `actionDelete`,
+available at `TableCollection` interface. Their differences are limited to
+button text and when they are active &mdash; the rest is up to user's implementation.
 
 To add an action, include any of those at the initialization step:
 
 ```ts
 import type { Table } from "dataflow"
 
-let table = collection.new<Person>("group", "get_group")
-    .describe({ name: "name", type: "text" })
-    .describe({ name: "age", type: "number" })
+let table = collection.new<Person>({
+    id: "group",
+    init: "get_group",
+    columns: [
+        { name: "full_name", type: "text" },
+        { name: "age", type: "number" }
+    ],
     // highlight-start
-    .actionEdit(async (data: FormData, table: Table<Person>) => {
-        // send data to server and confirm update
-        table.reinit()
-        return true;
-    })
+    actions: [
+        collection.actionEdit(async (data: FormData, table: Table<Person>) => {
+            // send data to server and confirm update
+            table.reinit()
+            return true;
+        })
+    ]
     // highlight-end
-    .init()
+})
 ```
 
 ![Example of a table with edit action](../assets/quick-start-3.png)
@@ -206,4 +187,5 @@ a "frame", as it has more components than just a table. By default, it includes:
 - Search bar (top right corner)
 - Status span (bottom left corner)
 - Pagination (the remaining two corners)
-- Filter (if specified, top left corner)
+
+With some more conifguration, filters can be added as well.
