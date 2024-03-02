@@ -134,14 +134,12 @@ table.add([
 
 #### Adding actions
 
-There are 3 built-in actions available: `actionAdd`, `actionEdit` and `actionDelete`,
-available at `TableCollection` interface. Their differences are limited to
-button text and when they are active &mdash; the rest is up to user's implementation.
-
-To add an action, include any of those at the initialization step:
+There are 4 built-in actions available: `actionAdd`, `actionEdit`, `actionDelete` and `actionLink`.
+To add one, include it at the initialization step:
 
 ```ts
 import type { Table } from "dataflow"
+import { actionEdit } from "dataflow/actions"
 
 let table = collection.new<Person>({
     id: "group",
@@ -152,7 +150,7 @@ let table = collection.new<Person>({
     ],
     // highlight-start
     actions: [
-        collection.actionEdit(async (data: FormData, table: Table<Person>) => {
+        actionEdit(async (data: FormData, table: Table<Person>) => {
             // send data to server and confirm update
             table.reinit()
             return true;

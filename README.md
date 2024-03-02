@@ -73,6 +73,8 @@ let collection = new TableCollection({
 3. Add your table within a `collection`, describing each column to display (and maybe an action):
 
 ```ts
+import { actionDelete } from "dataflow/actions"
+
 let table = collection.new<Person>({
     id: "group",
     init: "get_group",
@@ -81,7 +83,7 @@ let table = collection.new<Person>({
         { name: "age", type: "number" }
     ],
     actions: [
-        collection.actionDelete(async () => console.log("Some row has been deleted"))
+        actionDelete(async () => console.log("Some row has been deleted"))
     ]
 })
 ```
