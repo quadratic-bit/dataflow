@@ -60,41 +60,6 @@ export class FormManager<Row> {
         }
     }
 
-    private async _applyFilledInputs(container: HTMLFormElement, row: Row, preprocess?: (selector: FormSelector) => Promise<void>, exclude?: string[]): Promise<void> {
-        for (const col of this._owner.columns) {
-            if (exclude != null && exclude.includes(col.name)) continue;
-            const field = createField(this._owner, col, row)
-            container.appendChild(field)
-        }
-        await this._spreadRelations(container, false)
-        if (preprocess) {
-            await preprocess(new FormSelector(container, this._owner))
-        }
-    }
-
-    private _applyFilledHiddenInputs(container: HTMLFormElement, row: Row): void {
-        container.appendChild(document.createTextNode(this._locale.confirmation))
-        for (const col of this._owner.columns) {
-            const input = document.createElement("input")
-            input.name = col.name
-            // TODO: handle missing field case
-            input.value = row[input.name as keyof Row] + ""
-            input.type = "hidden"
-            container.appendChild(input)
-        }
-    }
-
-    private async _applyEmptyInputs(container: HTMLFormElement, preprocess?: (selector: FormSelector) => Promise<void>, rowValue?: Partial<Row>): Promise<void> {
-        for (const col of this._owner.columns) {
-            const field = createField(this._owner, col, rowValue)
-            container.appendChild(field)
-        }
-        await this._spreadRelations(container)
-        if (preprocess) {
-            await preprocess(new FormSelector(container, this._owner))
-        }
-    }
-
     private _createButtons(): HTMLDivElement {
         const footer = document.createElement("div")
         footer.classList.add("dataflow-form-footer")
@@ -127,19 +92,34 @@ export class FormManager<Row> {
         this._visible = true
     }
 
-    applyEmpty(label: string, callback: ActionCallback<Row>, rowValue?: Partial<Row>, preprocess?: (selector: FormSelector) => Promise<void>): void {
+    async applyEmpty(label: string, callback: ActionCallback<Row>, rowValue?: Partial<Row>, preprocess?: (selector: FormSelector) => Promise<void>): Promise<void> {
         const contentContainer = this._prepareContainer(label)
-        this._applyEmptyInputs(contentContainer, preprocess, rowValue)
+        for (const col of this._owner.columns) {
+            const field = createField(this._owner, col, rowValue)
+            contentContainer.appendChild(field)
+        }
+        await this._spreadRelations(contentContainer)
+        if (preprocess) {
+            await preprocess(new FormSelector(contentContainer, this._owner))
+        }
         this._createFooter(contentContainer, callback)
     }
 
-    applyFilled(label: string, callback: ActionCallback<Row>, preprocess?: (selector: FormSelector) => Promise<void>): void {
+    async applyFilled(label: string, callback: ActionCallback<Row>, preprocess?: (selector: FormSelector) => Promise<void>, exclude?: string[]): Promise<void> {
         const contentContainer = this._prepareContainer(label)
         const row: Row | null = this._owner.selectedRow
         if (row == null) {
             throw Error(`Cannot perform action "${label}" with no column selected`)
         }
-        this._applyFilledInputs(contentContainer, row, preprocess)
+        for (const col of this._owner.columns) {
+            if (exclude != null && exclude.includes(col.name)) continue;
+            const field = createField(this._owner, col, row)
+            contentContainer.appendChild(field)
+        }
+        await this._spreadRelations(contentContainer, false)
+        if (preprocess) {
+            await preprocess(new FormSelector(contentContainer, this._owner))
+        }
         this._createFooter(contentContainer, callback)
     }
 
@@ -149,7 +129,15 @@ export class FormManager<Row> {
         if (row == null) {
             throw Error(`Cannot perform action "${label}" with no column selected`)
         }
-        this._applyFilledHiddenInputs(contentContainer, row)
+        contentContainer.appendChild(document.createTextNode(this._locale.confirmation))
+        for (const col of this._owner.columns) {
+            const input = document.createElement("input")
+            input.name = col.name
+            // TODO: handle missing field case
+            input.value = row[input.name as keyof Row] + ""
+            input.type = "hidden"
+            contentContainer.appendChild(input)
+        }
         this._createFooter(contentContainer, callback)
     }
 
