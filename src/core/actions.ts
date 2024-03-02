@@ -12,44 +12,77 @@ export enum ActionType {
     Add,
     Edit,
     Delete,
+    Link,
     Custom
 }
 
 export interface Action<Row> {
     type: ActionType
     label: string
-    act(table: Table<Row>): void
-    callback: ActionCallback<Row>
+    act(table: Table<Row>, rowData?: Partial<Row>): void
     hook: ActionHook
 }
 
-export function actionAdd<Row>(callback: ActionCallback<Row>, label?: string): Action<Row> {
+// TODO: allow custom label
+export function actionAdd<Row>(callback: ActionCallback<Row>): Action<Row> {
     return {
         type: ActionType.Add,
-        label: label ?? LOCALE_DEFAULT.actions.add,
+        label: LOCALE_DEFAULT.actions.add,
         hook: ActionHook.Always,
-        callback,
-        act: function (table: Table<Row>) { table.formManager.applyEmpty(this) }
+        act: function (table: Table<Row>, rowData?: Partial<Row>) {
+            table.formManager.applyEmpty(this.label, callback, rowData)
+        }
     }
 }
 
-export function actionEdit<Row>(callback: ActionCallback<Row>, label?: string): Action<Row> {
+export function actionEdit<Row>(callback: ActionCallback<Row>): Action<Row> {
     return {
         type: ActionType.Edit,
-        label: label ?? LOCALE_DEFAULT.actions.edit,
+        label: LOCALE_DEFAULT.actions.edit,
         hook: ActionHook.OnSelect,
-        callback,
-        act: function (table: Table<Row>) { table.formManager.applyFilled(this) }
+        act: function (table: Table<Row>) {
+            table.formManager.applyFilled(this.label, callback)
+        }
     }
 }
 
-export function actionDelete<Row>(callback: ActionCallback<Row>, label?: string): Action<Row> {
+export function actionDelete<Row>(callback: ActionCallback<Row>): Action<Row> {
     return {
         type: ActionType.Delete,
-        label: label ?? LOCALE_DEFAULT.actions.delete,
+        label: LOCALE_DEFAULT.actions.delete,
         hook: ActionHook.OnSelect,
-        callback,
-        act: function (table: Table<Row>) { table.formManager.applyDialogue(this) }
+        act: function (table: Table<Row>) {
+            table.formManager.applyDialogue(this.label, callback)
+        }
+    }
+}
+
+interface ActionLinkConfig<TargetRow> {
+    label: string
+    targetId: string
+    actionIndex: number
+    dataMap: any
+    callback?: (table: Table<TargetRow>) => void
+}
+
+export function actionLink<Row, TargetRow>(config: ActionLinkConfig<TargetRow>): Action<Row> {
+    return {
+        type: ActionType.Link,
+        hook: ActionHook.OnSelect,
+        label: config.label,
+        act: function (table: Table<Row>) {
+            let target: Table<TargetRow> = table.collection.swap(config.targetId)!
+            const selectedRow = table.selectedRow!
+
+            const rowValue: Partial<TargetRow> = {}
+            for (const [name, field] of Object.entries(config.dataMap)) {
+                if (field == null) continue;
+                rowValue[name as keyof TargetRow] =
+                    selectedRow[field as keyof Row] as unknown as TargetRow[keyof TargetRow]
+            }
+            target.actions[config.actionIndex].act(target, rowValue)
+            if (config.callback != null) config.callback(target);
+        }
     }
 }
 

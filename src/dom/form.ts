@@ -1,7 +1,7 @@
 import { Table } from "core/table";
 import { FormSelector, createField } from "core/fields";
 import { LocaleForm } from "core/locale";
-import { Action } from "core/actions";
+import { ActionCallback } from "core/actions";
 
 export class FormManager<Row> {
     private _owner: Table<Row>
@@ -113,12 +113,12 @@ export class FormManager<Row> {
         return footer
     }
 
-    private _createFooter(container: HTMLFormElement, action: Action<Row>): void {
+    private _createFooter(container: HTMLFormElement, callback: ActionCallback<Row>): void {
         const footer = this._createButtons()
         container.appendChild(footer)
         container.addEventListener("submit", async (e: SubmitEvent) => {
             e.preventDefault()
-            const response = await action.callback(new FormData(container), this._owner)
+            const response = await callback(new FormData(container), this._owner)
             if (response !== false) {
                 this.finish()
             }
@@ -127,30 +127,30 @@ export class FormManager<Row> {
         this._visible = true
     }
 
-    applyEmpty(action: Action<Row>, preprocess?: (selector: FormSelector) => Promise<void>): void {
-        const contentContainer = this._prepareContainer(action.label)
-        this._applyEmptyInputs(contentContainer, preprocess, undefined)
-        this._createFooter(contentContainer, action)
+    applyEmpty(label: string, callback: ActionCallback<Row>, rowValue?: Partial<Row>, preprocess?: (selector: FormSelector) => Promise<void>): void {
+        const contentContainer = this._prepareContainer(label)
+        this._applyEmptyInputs(contentContainer, preprocess, rowValue)
+        this._createFooter(contentContainer, callback)
     }
 
-    applyFilled(action: Action<Row>, preprocess?: (selector: FormSelector) => Promise<void>): void {
-        const contentContainer = this._prepareContainer(action.label)
+    applyFilled(label: string, callback: ActionCallback<Row>, preprocess?: (selector: FormSelector) => Promise<void>): void {
+        const contentContainer = this._prepareContainer(label)
         const row: Row | null = this._owner.selectedRow
         if (row == null) {
-            throw Error(`Cannot perform action "${action.label}" with no column selected`)
+            throw Error(`Cannot perform action "${label}" with no column selected`)
         }
         this._applyFilledInputs(contentContainer, row, preprocess)
-        this._createFooter(contentContainer, action)
+        this._createFooter(contentContainer, callback)
     }
 
-    applyDialogue(action: Action<Row>): void {
-        const contentContainer = this._prepareContainer(action.label)
+    applyDialogue(label: string, callback: ActionCallback<Row>): void {
+        const contentContainer = this._prepareContainer(label)
         const row: Row | null = this._owner.selectedRow
         if (row == null) {
-            throw Error(`Cannot perform action "${action.label}" with no column selected`)
+            throw Error(`Cannot perform action "${label}" with no column selected`)
         }
         this._applyFilledHiddenInputs(contentContainer, row)
-        this._createFooter(contentContainer, action)
+        this._createFooter(contentContainer, callback)
     }
 
     finish(): void {

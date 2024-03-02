@@ -44,7 +44,7 @@ export class TableCollection {
         return null
     }
 
-    mount(id: string): void {
+    mount(id: string): Table<any> {
         if (this.currentTable != null) throw Error(`Cannot mount: ${this.currentTable} is up`);
         const table = this.find(id)
         if (table == null) throw Error(`No table found with id ${id}`);
@@ -52,6 +52,7 @@ export class TableCollection {
         this.mountDOM.classList.remove("dataflow-table-filler")
         table.mount();
         this.currentTable = id
+        return table
     }
 
     unmount(): void {
@@ -63,11 +64,11 @@ export class TableCollection {
         this.mountDOM.classList.add("dataflow-table-filler")
     }
 
-    swap(id: string): void {
+    swap(id: string): Table<any> | null {
         // TODO: Deal with swaps during actions
-        if (this.currentTable == id) return;
+        if (this.currentTable == id) return null;
         this.unmount()
-        this.mount(id)
+        return this.mount(id)
     }
 
     new<Row>(config: TableConfig<Row>, early_subs?: Set<string>): Table<Row> {
