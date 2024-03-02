@@ -1,5 +1,5 @@
 import { Table } from "core/table"
-import { ActionHook, Action } from "types/actions"
+import { ActionHook, Action } from "core/actions"
 
 export class ActionTray<Row> {
     private _dom: ActionTrayDOM

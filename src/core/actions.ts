@@ -1,5 +1,4 @@
 import type { Table } from "core/table"
-import type { FormSelector } from "core/fields"
 
 export enum ActionHook {
     Always,
@@ -14,6 +13,7 @@ export interface Action<Row> {
     hook: ActionHook
 }
 
+/*
 export interface ButtonLink<Row> {
     label: string
     target: string
@@ -23,9 +23,4 @@ export interface ButtonLink<Row> {
     callback?(): void
     predicate?(table: Table<Row>): boolean
 }
-
-export type ActionCallback<Row> = (data: FormData, table: Table<Row>) => Promise<void | boolean>
-export interface ActionConfig {
-    preprocess?(selector: FormSelector): Promise<void>
-    exclude?: string[]
-}
+*/

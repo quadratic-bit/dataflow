@@ -1,5 +1,5 @@
 import { Localization, PartialLocale } from "./locale"
-import { ActionHook, Action } from "types/actions"
+import { ActionHook, Action } from "core/actions"
 import { Table, TableConfig } from "core/table"
 
 export interface TableCollectionConfig {
