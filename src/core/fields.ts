@@ -53,7 +53,7 @@ export function createDependency(tableID: string, columnName: string, referenceN
 export function populateSelect<Row>(element: HTMLSelectElement,
                                     column: TableColumn,
                                     table: Table<Row>,
-                                    rowValue?: Row) {
+                                    rowValue?: Partial<Row>) {
     if (column.type !== "select") throw Error("Cannot populate non-select field");
     const choices = resolveDependencyAll(table, column.choices)
     let chosen: string | null = null
@@ -72,7 +72,7 @@ export function populateSelect<Row>(element: HTMLSelectElement,
     }
 }
 
-export function createField<Row>(table: Table<Row>, column: TableColumn, rowValue?: Row): HTMLDivElement {
+export function createField<Row>(table: Table<Row>, column: TableColumn, rowValue?: Partial<Row>): HTMLDivElement {
     const field = document.createElement("div")
     const label = document.createElement("label")
     label.textContent = column.title ??

@@ -2,7 +2,7 @@ import { TableDOM } from "dom/table"
 import { PagesAll, PagesSome, Pagination } from "components/pagination"
 import { Status } from "components/status"
 import { SearchBar } from "components/search"
-import { Action } from "core/actions"
+import { Action, ActionType } from "core/actions"
 import { ActionTray } from "components/actiontray"
 import { FormManager } from "dom/form"
 import { Filter } from "components/filter"
@@ -56,6 +56,19 @@ export class Table<Row> {
         this.collection = collection
         this.pageSizes = config.pageSizes ?? [PagesSome(15), PagesSome(25), PagesAll]
         this.actions = config.actions ?? []
+        for (const action of this.actions) {
+            switch (action.type) {
+            case ActionType.Add:
+                action.label = collection.locale.actions.add
+                break;
+            case ActionType.Edit:
+                action.label = collection.locale.actions.edit
+                break;
+            case ActionType.Delete:
+                action.label = collection.locale.actions.delete
+                break;
+            }
+        }
         this.colors = config.colors ?? new Map()
         this._subscribers = early_subs ?? new Set()
         this.dom = new TableDOM(collection.mountDOM, config.columns, this)

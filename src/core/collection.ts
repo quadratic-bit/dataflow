@@ -1,5 +1,4 @@
 import { Localization, PartialLocale } from "./locale"
-import { ActionHook, Action } from "core/actions"
 import { Table, TableConfig } from "core/table"
 
 export interface TableCollectionConfig {
@@ -34,33 +33,6 @@ export class TableCollection {
 
     public get mountDOM(): Element {
         return this._mount
-    }
-
-    actionAdd(callback: (data: FormData, table: Table<any>) => Promise<void | boolean>): Action<any> {
-        return {
-            label: this.locale.actions.add,
-            hook: ActionHook.Always,
-            callback,
-            act: function (table: Table<any>) { table.formManager.applyAdd(this.label, this.callback) }
-        }
-    }
-
-    actionEdit(callback: (data: FormData, table: Table<any>) => Promise<void | boolean>): Action<any> {
-        return {
-            label: this.locale.actions.edit,
-            hook: ActionHook.OnSelect,
-            callback,
-            act: function (table: Table<any>) { table.formManager.applyEdit(this.label, this.callback) }
-        }
-    }
-
-    actionDelete(callback: (data: FormData, table: Table<any>) => Promise<void | boolean>): Action<any> {
-        return {
-            label: this.locale.actions.delete,
-            hook: ActionHook.OnSelect,
-            callback,
-            act: function (table: Table<any>) { table.formManager.applyDelete(this.label, this.callback) }
-        }
     }
 
     find(id: string): Table<any> | null {

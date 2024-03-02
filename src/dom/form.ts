@@ -1,6 +1,7 @@
 import { Table } from "core/table";
 import { FormSelector, createField } from "core/fields";
 import { LocaleForm } from "core/locale";
+import { Action } from "core/actions";
 
 export class FormManager<Row> {
     private _owner: Table<Row>
@@ -112,15 +113,12 @@ export class FormManager<Row> {
         return footer
     }
 
-    applyAdd(label: string, callback: (data: FormData, table: Table<Row>) => Promise<void | boolean>, preprocess?: (selector: FormSelector) => Promise<void>): void {
-        const contentContainer = this._prepareContainer(label)
-        this._applyEmptyInputs(contentContainer, preprocess, undefined)
-        // TODO: extract footer (duplicate code)
+    private _createFooter(container: HTMLFormElement, action: Action<Row>): void {
         const footer = this._createButtons()
-        contentContainer.appendChild(footer)
-        contentContainer.addEventListener("submit", async (e: SubmitEvent) => {
+        container.appendChild(footer)
+        container.addEventListener("submit", async (e: SubmitEvent) => {
             e.preventDefault()
-            const response = await callback(new FormData(contentContainer), this._owner)
+            const response = await action.callback(new FormData(container), this._owner)
             if (response !== false) {
                 this.finish()
             }
@@ -129,44 +127,30 @@ export class FormManager<Row> {
         this._visible = true
     }
 
-    applyEdit(label: string, callback: (data: FormData, table: Table<Row>) => Promise<void | boolean>, preprocess?: (selector: FormSelector) => Promise<void>): void {
-        const contentContainer = this._prepareContainer(label)
+    applyEmpty(action: Action<Row>, preprocess?: (selector: FormSelector) => Promise<void>): void {
+        const contentContainer = this._prepareContainer(action.label)
+        this._applyEmptyInputs(contentContainer, preprocess, undefined)
+        this._createFooter(contentContainer, action)
+    }
+
+    applyFilled(action: Action<Row>, preprocess?: (selector: FormSelector) => Promise<void>): void {
+        const contentContainer = this._prepareContainer(action.label)
         const row: Row | null = this._owner.selectedRow
         if (row == null) {
-            throw Error(`Cannot perform action "${label}" with no column selected`)
+            throw Error(`Cannot perform action "${action.label}" with no column selected`)
         }
         this._applyFilledInputs(contentContainer, row, preprocess)
-        const footer = this._createButtons()
-        contentContainer.appendChild(footer)
-        contentContainer.addEventListener("submit", async (e: SubmitEvent) => {
-            e.preventDefault()
-            const response = await callback(new FormData(contentContainer), this._owner)
-            if (response !== false) {
-                this.finish()
-            }
-        })
-        this._active = true
-        this._visible = true
+        this._createFooter(contentContainer, action)
     }
 
-    applyDelete(label: string, callback: (data: FormData, table: Table<Row>) => Promise<void | boolean>): void {
-        const contentContainer = this._prepareContainer(label)
+    applyDialogue(action: Action<Row>): void {
+        const contentContainer = this._prepareContainer(action.label)
         const row: Row | null = this._owner.selectedRow
         if (row == null) {
-            throw Error(`Cannot perform action "${label}" with no column selected`)
+            throw Error(`Cannot perform action "${action.label}" with no column selected`)
         }
         this._applyFilledHiddenInputs(contentContainer, row)
-        const footer = this._createButtons()
-        contentContainer.appendChild(footer)
-        contentContainer.addEventListener("submit", async (e: SubmitEvent) => {
-            e.preventDefault()
-            const response = await callback(new FormData(contentContainer), this._owner)
-            if (response !== false) {
-                this.finish()
-            }
-        })
-        this._active = true
-        this._visible = true
+        this._createFooter(contentContainer, action)
     }
 
     finish(): void {
