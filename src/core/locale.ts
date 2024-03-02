@@ -64,7 +64,7 @@ export const LOCALE_DEFAULT: Locale = {
         buttonCancel: "Cancel"
     },
     frame: {
-        empty: "Похоже, здесь ничего нет"
+        empty: "Looks like there's nothing here"
     }
 }
 
