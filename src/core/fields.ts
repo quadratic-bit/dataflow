@@ -116,7 +116,7 @@ export function createField<Row>(table: Table<Row>, column: TableColumn, rowValu
 
     if (rowValue != null && column.type !== "select") {
         let data = null
-        if (column.preprocess != null) {
+        if (column.preprocess != null && rowValue[column.name as keyof Row] != null) {
             // TODO: handle missing field case
             data = column.preprocess(rowValue[column.name as keyof Row])
         } else if (column.name in (rowValue as object)) {
