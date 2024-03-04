@@ -1,5 +1,9 @@
 import type { SelectDependency } from "core/fields"
 
+export type Nullable<T> = {
+    [P in keyof T]: T[P] | null;
+};
+
 interface BaseInputProps {
     readonly?: boolean
 }

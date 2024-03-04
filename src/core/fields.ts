@@ -1,5 +1,5 @@
 import { Table } from "core/table"
-import { ConstSelectOption, TableColumn } from "types/columns"
+import { ConstSelectOption, Nullable, TableColumn } from "types/columns"
 
 interface LabelledResult<Row> {
     value: Row[keyof Row]
@@ -72,7 +72,7 @@ export function populateSelect<Row>(element: HTMLSelectElement,
     }
 }
 
-export function createField<Row>(table: Table<Row>, column: TableColumn, rowValue?: Partial<Row>): HTMLDivElement {
+export function createField<Row>(table: Table<Row>, column: TableColumn, rowValue?: Partial<Nullable<Row>>): HTMLDivElement {
     const field = document.createElement("div")
     const label = document.createElement("label")
     label.textContent = column.title ??

@@ -1,7 +1,8 @@
 import { Table } from "core/table";
 import { FormSelector, createField } from "core/fields";
 import { LocaleForm } from "core/locale";
-import { ActionCallback } from "core/actions";
+import { ActionCallback, ActionEmptyConfig, ActionFilledConfig } from "core/actions";
+import { Nullable } from "types/columns";
 
 export class FormManager<Row> {
     private _owner: Table<Row>
@@ -92,33 +93,33 @@ export class FormManager<Row> {
         this._visible = true
     }
 
-    async applyEmpty(label: string, callback: ActionCallback<Row>, rowValue?: Partial<Row>, preprocess?: (selector: FormSelector) => Promise<void>): Promise<void> {
+    async applyEmpty(label: string, callback: ActionCallback<Row>, rowValue?: Partial<Nullable<Row>>, config?: ActionEmptyConfig): Promise<void> {
         const contentContainer = this._prepareContainer(label)
         for (const col of this._owner.columns) {
             const field = createField(this._owner, col, rowValue)
             contentContainer.appendChild(field)
         }
         await this._spreadRelations(contentContainer)
-        if (preprocess) {
-            await preprocess(new FormSelector(contentContainer, this._owner))
+        if (config?.preprocess != null) {
+            await config.preprocess(new FormSelector(contentContainer, this._owner))
         }
         this._createFooter(contentContainer, callback)
     }
 
-    async applyFilled(label: string, callback: ActionCallback<Row>, preprocess?: (selector: FormSelector) => Promise<void>, exclude?: string[]): Promise<void> {
+    async applyFilled(label: string, callback: ActionCallback<Row>, config?: ActionFilledConfig): Promise<void> {
         const contentContainer = this._prepareContainer(label)
         const row: Row | null = this._owner.selectedRow
         if (row == null) {
             throw Error(`Cannot perform action "${label}" with no column selected`)
         }
         for (const col of this._owner.columns) {
-            if (exclude != null && exclude.includes(col.name)) continue;
+            if (config?.exclude?.includes(col.name)) continue;
             const field = createField(this._owner, col, row)
             contentContainer.appendChild(field)
         }
         await this._spreadRelations(contentContainer, false)
-        if (preprocess) {
-            await preprocess(new FormSelector(contentContainer, this._owner))
+        if (config?.preprocess != null) {
+            await config.preprocess(new FormSelector(contentContainer, this._owner))
         }
         this._createFooter(contentContainer, callback)
     }

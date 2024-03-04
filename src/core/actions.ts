@@ -1,5 +1,7 @@
 import type { Table } from "core/table"
 import { LOCALE_DEFAULT } from "./locale"
+import { FormSelector } from "./fields"
+import { Nullable } from "types/columns"
 
 export enum ActionHook {
     Always,
@@ -19,29 +21,38 @@ export enum ActionType {
 export interface Action<Row> {
     type: ActionType
     label: string
-    act(table: Table<Row>, rowData?: Partial<Row>): void
+    act(table: Table<Row>, rowData?: Partial<Nullable<Row>>): void
     hook: ActionHook
 }
 
+export interface ActionEmptyConfig {
+    preprocess?(selector: FormSelector): Promise<void>
+}
+
 // TODO: allow custom label
-export function actionAdd<Row>(callback: ActionCallback<Row>): Action<Row> {
+export function actionAdd<Row>(callback: ActionCallback<Row>, config?: ActionEmptyConfig): Action<Row> {
     return {
         type: ActionType.Add,
         label: LOCALE_DEFAULT.actions.add,
         hook: ActionHook.Always,
-        act: function (table: Table<Row>, rowData?: Partial<Row>) {
-            table.formManager.applyEmpty(this.label, callback, rowData)
+        act: function (table: Table<Row>, rowData?: Partial<Nullable<Row>>) {
+            table.formManager.applyEmpty(this.label, callback, rowData, config)
         }
     }
 }
 
-export function actionEdit<Row>(callback: ActionCallback<Row>): Action<Row> {
+export interface ActionFilledConfig {
+    preprocess?(selector: FormSelector): Promise<void>
+    exclude?: string[]
+}
+
+export function actionEdit<Row>(callback: ActionCallback<Row>, config?: ActionFilledConfig): Action<Row> {
     return {
         type: ActionType.Edit,
         label: LOCALE_DEFAULT.actions.edit,
         hook: ActionHook.OnSelect,
         act: function (table: Table<Row>) {
-            table.formManager.applyFilled(this.label, callback)
+            table.formManager.applyFilled(this.label, callback, config)
         }
     }
 }
@@ -74,10 +85,12 @@ export function actionLink<Row, TargetRow>(config: ActionLinkConfig<TargetRow>):
             let target: Table<TargetRow> = table.collection.swap(config.targetId)!
             const selectedRow = table.selectedRow!
 
-            const rowValue: Partial<TargetRow> = {}
+            const rowValue: Partial<Nullable<TargetRow>> = {}
+            // TODO: deal with null values
             for (const [name, field] of Object.entries(config.dataMap)) {
-                if (field == null) continue;
                 rowValue[name as keyof TargetRow] =
+                    field == null ?
+                    null :
                     selectedRow[field as keyof Row] as unknown as TargetRow[keyof TargetRow]
             }
             target.actions[config.actionIndex].act(target, rowValue)
