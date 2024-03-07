@@ -35,6 +35,8 @@ export function resolveDependencyAll<Row>(table: Table<Row>,
     const other = table.collection.find(dependency.table)
     if (other == null) throw Error(`Couldn't resolve dependency of ${dependency.table}`);
 
+    other.subscribe(table.id)
+
     return other.data.map((r: any) => {
         return { value: r[dependency.reference], label: r[dependency.column] }
     })
