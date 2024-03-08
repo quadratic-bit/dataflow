@@ -1,4 +1,7 @@
 import { Table } from "core/table"
+import { Nullable } from "types/columns"
+
+const SEARCH_ID: string = "%dataflow_search"
 
 export class SearchBar<Row> {
     private _dom: SearchBarDOM
@@ -9,26 +12,24 @@ export class SearchBar<Row> {
         this._owner = table
     }
 
-    updateSearchResults(token: string): void {
-        // TODO: It works, but limited and pretty slowly
+    setToken(token: string): void {
         if (token.length == 0) {
-            this._owner.mask = null
-            this._owner.refresh()
+            this._owner.filter.filters.delete(SEARCH_ID)
+            this._owner.filter.updateFilterResults()
             return;
         }
         token = token.toLowerCase()
-        let mask: number[] = []
-        for (let i = 0; i < this._owner.data.length; ++i) {
-            const row = this._owner.data[i]
-            for (const key in row) {
-                if ((row[key] + "").toLowerCase().includes(token)) {
-                    mask.push(i)
-                    break
-                }
+        // TODO: performance?
+        this._owner.filter.filters.set(
+            SEARCH_ID,
+            (row: Nullable<Row>) => {
+                for (const key in row)
+                    if ((row[key] + "").toLowerCase().includes(token))
+                        return true
+                return false
             }
-        }
-        this._owner.mask = mask
-        this._owner.refresh()
+        )
+        this._owner.filter.updateFilterResults()
     }
 
     get dom(): HTMLDivElement {
@@ -44,7 +45,7 @@ export class SearchBarDOM {
         bar.type = "text"
         bar.addEventListener("input", (e: Event) => {
             const target = e.target as HTMLInputElement
-            owner.updateSearchResults(target.value)
+            owner.setToken(target.value)
         })
         const wrapper = document.createElement("div")
         wrapper.classList.add("dataflow-table-searchbar")

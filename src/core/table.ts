@@ -37,14 +37,12 @@ export class Table<Row> {
     pagination: Pagination
     searchbar: SearchBar<Row>
     actionTray: ActionTray<Row>
-    filterTray: Filter<Row>
+    filter: Filter<Row>
     status: Status
 
     formManager: FormManager<Row>
 
     private _data: Row[] = []
-    private _mask: number[] | null = null
-    private _listedRows: Row[] = []
     private _selectedRowIndex: number | null = null
     private _subscribers: Set<string>
 
@@ -79,14 +77,14 @@ export class Table<Row> {
             collection.locale.pagination)
         this.actionTray = new ActionTray(this.actions, this)
         this.searchbar = new SearchBar(this)
-        this.filterTray = new Filter(this)
+        this.filter = new Filter(this)
 
         this.dom.footer.append(this.status.dom,
                                this.pagination.dom)
         this.dom.header.append(this.pagination.sizeSelector,
                                this.actionTray.dom,
                                this.searchbar.dom,
-                               this.filterTray.dom)
+                               this.filter.dom)
         this.formManager = new FormManager(this, collection.locale.form)
         this._updateStatus()
 
@@ -117,14 +115,14 @@ export class Table<Row> {
                 return
             }
             subscriber.refresh()
-            subscriber.filterTray.refresh()
+            subscriber.filter.refreshTray()
         }
     }
 
     add(rows: Row[]): void {
         this._data = this._data.concat(rows)
         // TODO: add possible optimization
-        this.mask = this.mask
+        this.filter.refreshMask()
         this.refresh()
         this._serveUpdates()
     }
@@ -141,7 +139,6 @@ export class Table<Row> {
                 this._selectedRowIndex < pageEnd) {
             this.dom.highlight(this._selectedRowIndex - pageStart)
         }
-        this._mask = null
     }
 
     refresh(): void {
@@ -198,7 +195,7 @@ export class Table<Row> {
     }
 
     get rows(): Row[] {
-        return this._listedRows
+        return this.filter.listedRows
     }
 
     get subscribers(): Set<string> {
@@ -211,21 +208,6 @@ export class Table<Row> {
 
     get selectedRowIndex(): number | null {
         return this._selectedRowIndex
-    }
-
-    get mask(): number[] | null {
-        return this._mask
-    }
-
-    set mask(newMask: number[] | null) {
-        if (newMask == null) {
-            this._listedRows = this._data
-        } else {
-            this._listedRows = newMask.map((e: number) => this._data[e])
-        }
-        this._mask = newMask
-        this.pagination.activePage = 0
-        this.selectedRowIndex = null
     }
 
     set activePage(pageIndex: number) {

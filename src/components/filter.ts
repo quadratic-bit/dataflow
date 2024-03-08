@@ -1,51 +1,79 @@
 import { Table } from "core/table"
 import { populateSelect } from "core/fields"
+import { Nullable } from "types/columns"
 
 export class Filter<Row> {
-    private _dom: FilterDOM
+    private _dom: FilterDOM<Row>
     private _owner: Table<Row>
+
+    private _mask: number[] | null = null
+    private _listedRows: Row[] = []
+
+    filters: Map<string, (row: Nullable<Row>) => boolean> = new Map()
 
     constructor(table: Table<Row>) {
         this._dom = new FilterDOM(this, table)
         this._owner = table
     }
 
-    updateFilterResults(column: string, value: unknown, selectAll: boolean): void {
-        const searchBar = this._owner.searchbar.dom.children[0] as HTMLInputElement
-        if (selectAll) {
-            searchBar.disabled = false
-            this._owner.mask = null
-            this._owner.refresh()
-            return;
-        }
-        searchBar.value = ""
-        searchBar.disabled = true
+    updateFilterResults(): void {
         let mask: number[] = []
+        let someFiltered = false;
         for (let i = 0; i < this._owner.data.length; ++i) {
             const row = this._owner.data[i]
-            if (row[column as keyof Row] + "" === value) {
-                mask.push(i)
+            let passed = true;
+            for (const predicate of this.filters.values()) {
+                if (!predicate(row)) {
+                    passed = false;
+                    someFiltered = true;
+                    break;
+                }
             }
+            if (passed) mask.push(i);
         }
-        this._owner.mask = mask
+        this.mask = someFiltered ? mask : null;
         this._owner.refresh()
     }
 
-    refresh(): void {
+    refreshTray(): void {
         this._dom.refresh()
+    }
+
+    refreshMask(): void {
+        this.mask = this.mask
     }
 
     get dom(): HTMLDivElement {
         return this._dom.container
     }
+
+    get listedRows(): Row[] {
+        return this._listedRows
+    }
+
+    get mask(): number[] | null {
+        return this._mask
+    }
+
+    set mask(newMask: number[] | null) {
+        if (newMask == null) {
+            this._listedRows = this._owner.data
+        } else {
+            this._listedRows = newMask.map((e: number) => this._owner.data[e])
+        }
+        this._mask = newMask
+        this._owner.pagination.activePage = 0
+        this._owner.selectedRowIndex = null
+    }
+
 }
 
-class FilterDOM {
+class FilterDOM<Row> {
     private _container: HTMLDivElement
-    private _owner: Filter<any>
-    private _table: Table<any>
+    private _owner: Filter<Row>
+    private _table: Table<Row>
 
-    constructor(owner: Filter<any>, table: Table<any>) {
+    constructor(owner: Filter<Row>, table: Table<Row>) {
         const filters = document.createElement("div")
         filters.classList.add("dataflow-table-filtertray")
         this._container = filters
@@ -60,7 +88,6 @@ class FilterDOM {
         }
     }
 
-    // TODO: allow multiple filters at once
     private _fill() {
         for (const col of this._table.columns) {
             if (col.type !== "select" || col.filterable !== true) {
@@ -79,7 +106,15 @@ class FilterDOM {
             select.addEventListener("change", _ => {
                 const selectedOption = select.children[select.selectedIndex] as HTMLOptionElement
                 const isAll = "all" in selectedOption.dataset
-                this._owner.updateFilterResults(col.name, select.value, isAll)
+                if (isAll) {
+                    this._owner.filters.delete(col.name)
+                } else {
+                    this._owner.filters.set(
+                        col.name,
+                        (row: Nullable<Row>) => row[col.name as keyof Row] + "" === select.value
+                    )
+                }
+                this._owner.updateFilterResults()
             })
 
             box.appendChild(select)
