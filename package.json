@@ -1,6 +1,10 @@
 {
-    "name": "dataflow",
-    "version": "0.0.0",
+    "name": "@ashooww/dataflow",
+    "version": "0.1.1",
+    "description": "TypeScript library for interactive tables",
+    "homepage": "https://github.com/quadratic-bit/dataflow",
+    "license": "GPL-3.0",
+    "author": "ashooww <fynjyxbrjd@gmail.com> (https://github.com/quadratic-bit/)",
     "main": "./dist/dataflow.js",
     "style": "./dist/css/dataflow.css",
     "typings": "./dist/dataflow.d.ts",
@@ -12,7 +16,7 @@
         "./columns": "./dist/types/columns.js"
     },
     "files": [
-        "dist/css/*.css"
+        "dist/*"
     ],
     "scripts": {
         "compile-ts": "tsc && resolve-tspaths",
