@@ -84,9 +84,13 @@ export class FormManager<Row> {
         container.appendChild(footer)
         container.addEventListener("submit", async (e: SubmitEvent) => {
             e.preventDefault()
+            let buttonSubmit = footer.querySelector("button[type=submit]") as HTMLButtonElement
+            buttonSubmit.disabled = true;
             const response = await callback(new FormData(container), this._owner)
             if (response !== false) {
                 this.finish()
+            } else {
+                buttonSubmit.disabled = false;
             }
         })
         this._active = true
