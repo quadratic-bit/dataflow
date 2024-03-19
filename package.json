@@ -1,6 +1,6 @@
 {
     "name": "@ashooww/dataflow",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "TypeScript library for interactive tables",
     "homepage": "https://github.com/quadratic-bit/dataflow",
     "license": "GPL-3.0",
