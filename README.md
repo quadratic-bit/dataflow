@@ -3,6 +3,8 @@ Data->Flow
 
 Dependency-free TypeScript library designed to make your HTML tables interactive.
 
+<img src=".github/showcase.jpg" alt="Data->Flow" />
+
 ### Getting started
 
 #### Installation
