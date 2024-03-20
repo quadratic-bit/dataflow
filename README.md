@@ -1,18 +1,19 @@
-Data:Flow
+Data->Flow
 ---------
 
 Dependency-free TypeScript library designed to make your HTML tables interactive.
 
-> [!WARNING]
-> This codebase will undermine multiple breaking changes,
-> so no documentation will be up-to-date up until the 20th of March.
-
-> [!NOTE]
-> The project is under active development and your contributions are welcome.
-
 ### Getting started
 
 #### Installation
+
+##### NPM package
+
+You can install latest stable release with your favourite package manager:
+
+```console
+$ yarn add @ashooww/dataflow # npm install @ashooww/dataflow
+```
 
 ##### Building from source
 
@@ -23,7 +24,7 @@ $ git clone git@github.com:quadratic-bit/dataflow.git
 $ cd ./dataflow
 ```
 
-... then build it with your favourite package manager:
+... then build it with a package manager:
 
 ```console
 $ yarn build # npm run build
@@ -36,10 +37,6 @@ You can now reference it in `package.json` of your project like this:
     "dataflow": "link:<path_to_dataflow>"
 }
 ```
-
-##### NPM package
-
-Coming soon!
 
 #### Usage
 
