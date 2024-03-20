@@ -61,7 +61,6 @@ export class TableDOM<Row> {
     }
 
     clear(): void {
-        // TODO: Address performance
         while (this._tableBody.lastChild) {
             this._tableBody.removeChild(this._tableBody.lastChild)
         }

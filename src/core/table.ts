@@ -124,14 +124,12 @@ export class Table<Row> {
 
     add(rows: Row[]): void {
         this._data = this._data.concat(rows)
-        // TODO: add possible optimization
         this.filter.refreshMask()
         this.refresh()
         this._serveUpdates()
     }
 
     replace(chunk: Row[]): void {
-        // TODO: Address performance
         const [pageStart, pageEnd] = this.pagination.retrieveDisplayRange(this.rows.length)
         this.dom.clear()
         this.dom.add(chunk)
@@ -145,7 +143,6 @@ export class Table<Row> {
     }
 
     refresh(): void {
-        // TODO: Address performance
         const [pageStart, pageEnd] = this.pagination.retrieveDisplayRange(this.rows.length)
         this.replace(this.rows.slice(pageStart, pageEnd))
     }
@@ -156,7 +153,6 @@ export class Table<Row> {
     }
 
     toggleRow(relativeRowIndex: number): void {
-        // TODO: Address performance
         const [pageStart, pageEnd] = this.pagination.retrieveDisplayRange(this.rows.length)
         const absoluteRowIndex = relativeRowIndex + pageStart
         if (absoluteRowIndex == this._selectedRowIndex) {

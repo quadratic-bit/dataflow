@@ -19,7 +19,6 @@ export class SearchBar<Row> {
             return;
         }
         token = token.toLowerCase()
-        // TODO: performance?
         this._owner.filter.filters.set(
             SEARCH_ID,
             (row: Nullable<Row>) => {
