@@ -17,8 +17,13 @@ export interface TableConfig<Row> {
     title?: string
     pageSizes?: PageLength[]
     actions?: Action<Row>[]
-    // TODO: remove or remake after the 5th task
-    colors?: Map<string, [any, string][]>
+    styles?: StyleEntry[]
+}
+
+export interface StyleEntry {
+    property: string
+    value(rowData: any): string
+    columns: string[]
 }
 
 export class Table<Row> {
@@ -29,9 +34,7 @@ export class Table<Row> {
     collection: TableCollection
     pageSizes: PageLength[]
     actions: Action<Row>[]
-
-    // TODO: remove or remake after the 5th task
-    colors: Map<string, [any, string][]>
+    styles: StyleEntry[]
 
     dom: TableDOM<Row>
     pagination: Pagination
@@ -67,7 +70,7 @@ export class Table<Row> {
                 break;
             }
         }
-        this.colors = config.colors ?? new Map()
+        this.styles = config.styles ?? []
         this._subscribers = early_subs ?? new Set()
         this.dom = new TableDOM(collection.mountDOM, config.columns, this)
         this.status = new Status(collection.locale.status)

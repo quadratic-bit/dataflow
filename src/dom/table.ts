@@ -1,4 +1,4 @@
-import { Table } from "core/table"
+import { StyleEntry, Table } from "core/table"
 import { resolveDependency } from "core/fields"
 import type { TableColumn } from "types/columns"
 
@@ -78,14 +78,11 @@ export class TableDOM<Row> {
                 // TODO: I've successfully stolen this line but some checks should be here I feel
                 let value: any = row[header.name as keyof Row]
 
-                if (this._owner.colors.has(header.name)) {
-                    const specs: [any, string][] = this._owner.colors.get(header.name)!
-                    for (const [spec, color] of specs) {
-                        if (value === spec) {
-                            td.style.backgroundColor = color
-                        }
-                    }
-                }
+                this._owner.styles.forEach((entry: StyleEntry) => {
+                    if (!entry.columns.includes(header.name)) return;
+                    console.log(entry.property, entry.value(value))
+                    td.style.setProperty(entry.property, entry.value(value))
+                })
 
                 if (header.type === "select" && !header.preventRenderTimeResolution) {
                     value = resolveDependency(this._owner, header.choices, value)
