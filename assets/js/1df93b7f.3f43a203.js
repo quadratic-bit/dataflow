@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[583],{6866:(t,s,a)=>{a.r(s),a.d(s,{default:()=>n});var e=a(6347),d=a(4848);function n(){return(0,d.jsx)(e.rd,{to:"/dataflow/docs/tutorial/getting-started/installation/"})}}}]);
