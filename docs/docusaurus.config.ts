@@ -4,7 +4,7 @@ import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
 
 const config: Config = {
-    title: "Data:Flow",
+    title: "Data->Flow",
     tagline: "Dependency-free TypeScript library designed to make your HTML tables interactive",
     favicon: "img/favicon.ico",
 
@@ -43,9 +43,9 @@ const config: Config = {
             respectPrefersColorScheme: true
         },
         navbar: {
-            title: "Dataflow",
+            title: "Data->Flow",
             logo: {
-                alt: "Dataflow Logo",
+                alt: "Logo",
                 src: "img/logo.svg"
             },
             items: [
@@ -69,7 +69,7 @@ const config: Config = {
         },
         footer: {
             style: "dark",
-            copyright: `Copyleft 🄯 ${new Date().getFullYear()} Dataflow. Built with Docusaurus.`
+            copyright: `Copyleft 🄯 ${new Date().getFullYear()} quadratic-bit. Built with Docusaurus.`
         },
         prism: {
             theme: LightTheme,
