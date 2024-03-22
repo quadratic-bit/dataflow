@@ -36,7 +36,7 @@ You can now reference it in `package.json` of your project like this:
 
 ```json
 "dependencies": {
-    "dataflow": "link:<path_to_dataflow>"
+    "@ashooww/dataflow": "link:<path_to_dataflow>"
 }
 ```
 
@@ -56,7 +56,7 @@ interface Person {
 2. Create a common `TableCollection`, specify its selector and a callback to retrieve data from:
 
 ```ts
-import { TableCollection } from "dataflow"
+import { TableCollection } from "@ashooww/dataflow"
 
 async function tableGetter(action: string): Promise<Person[]> {
     const response = await fetch("https://example.com/api?action=" + action)
@@ -72,7 +72,7 @@ let collection = new TableCollection({
 3. Add your table within a `collection`, describing each column to display (and maybe an action):
 
 ```ts
-import { actionDelete } from "dataflow/actions"
+import { actionDelete } from "@ashooww/dataflow/actions"
 
 let table = collection.new<Person>({
     id: "group",

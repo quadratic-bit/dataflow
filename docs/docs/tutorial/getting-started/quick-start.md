@@ -39,7 +39,7 @@ interface Person {
 Then, we'll define both collection and our first table:
 
 ```ts
-import { TableCollection } from "dataflow"
+import { TableCollection } from "@ashooww/dataflow"
 
 let collection = new TableCollection({
     mount: "tag#id",
@@ -104,7 +104,7 @@ The complete code for the setup:
 
 ```ts
 import "../node_modules/dataflow/dist/css/dataflow.css"
-import { TableCollection } from "dataflow"
+import { TableCollection } from "@ashooww/dataflow"
 
 interface Person {
     full_name: string,
@@ -138,8 +138,8 @@ There are 4 built-in actions available: `actionAdd`, `actionEdit`, `actionDelete
 To add one, include it at the initialization step:
 
 ```ts
-import type { Table } from "dataflow"
-import { actionEdit } from "dataflow/actions"
+import type { Table } from "@ashooww/dataflow"
+import { actionEdit } from "@ashooww/dataflow/actions"
 
 let table = collection.new<Person>({
     id: "group",

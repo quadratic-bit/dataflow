@@ -53,7 +53,7 @@ What if we want to show corresponding `User.name` instead of `User.id` for each 
 without touching the underlying data? That's where *dependencies* come in:
 
 FILENAME dataflow/fields
-```ts
+```ts title="@ashooww/dataflow/fields"
 function createDependency(tableID: string, column: string, reference: string): SelectDependency
 ```
 
@@ -61,7 +61,7 @@ If some other table within the same collection (like `User` in our case) contain
 we can change the type of our column slightly:
 
 ```ts
-import { createDependency } from "dataflow/fields"
+import { createDependency } from "@ashooww/dataflow/fields"
 
 let itemTable = collection.new<Item>({
     id: "items",
@@ -85,7 +85,7 @@ where value of `Item.owner` matches with `User.id`
 
 PICTURE
 
-HTML field for `owner` field has also changed -- it is now
+HTML field for `owner` field has also changed &mdash; it is now
 `<select>` tag with all values pulled from `users` table
 
 ### Filters
