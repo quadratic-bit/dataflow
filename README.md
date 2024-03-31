@@ -1,5 +1,6 @@
-Data->Flow
+Data->Flow <br>
 ---------
+[![NPM version](https://img.shields.io/npm/v/@ashooww/dataflow.svg?style=flat)](https://www.npmjs.com/package/@ashooww/dataflow)
 
 Dependency-free TypeScript library designed to make your HTML tables interactive.
 
